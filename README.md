@@ -34,8 +34,27 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
 + callback as class
 ```
     xlb_module(L, MODULE_NAME) ({
-        xlb_class<xlb_cbf<DLGPROC>>("DLGPROC").constructor<xlb_luafunc>()
+        xlb_class<xlb_cbf<WNDENUMPROC>>("EnumWindowsProc").constructor<xlb_luafunc>(),
     });
+```
+    Lua script:
+```
+    function EnumWindows()
+        luawin.load_wmsg();
+        local len = 1024;
+        local buff = string.rep('\0', len);
+        local EnumWindowsProc = luawin.EnumWindowsProc(function(hwnd, lParam) 
+            local len = luawin.GetWindowText(hwnd, buff, len);
+            print('---' .. string.sub(buff, 1, len) .. ',' .. lParam);
+            return true; 
+        end);
+        luawin.EnumWindows(EnumWindowsProc, 999);
+    end
+```
+  maybe Output is :
+```
+    ---MSCTFIME UI,999
+    ---Default IME,999
 ```
 + inherited
 ```
