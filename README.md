@@ -56,7 +56,7 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
 ```
             
 ## Sample
-+ bind Windows API to Lua ( SNMP, MESSAGE, GUI and Dialog )
++ bind Windows API to Lua ( BASE, MESSAGE, GUI, Dialog and SNMP )
 
 ## License
 + Licensed under the [MIT License](https://www.lua.org/license.html).
