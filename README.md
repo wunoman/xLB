@@ -19,26 +19,25 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
 
 ## Usage
 + module and const integral
-```    
+```c++
     xlb_module(L, MODULE_NAME) ({
             xlb_const("WINVER", WINVER)
     });
 ```
 + function
-```
+```c++
     xlb_module(L, MODULE_NAME) ({
             xlb_f("malloc", malloc),
             xlb_f("free", free)
     });
 ```
 + callback as class
-```
-    // C++
+```c++
     xlb_module(L, MODULE_NAME) ({
         xlb_class<xlb_cbf<WNDENUMPROC>>("EnumWindowsProc").constructor<xlb_luafunc>(),
     });
-
-    -- Lua script:
+```
+```lua
     function EnumWindows()
         luawin.load_wmsg();
         local len = 1024;
@@ -57,7 +56,7 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
     ---Default IME,999
 ```
 + inherited
-```
+```c++
     xlb_module(L, MODULE_NAME) ({
         xlb_class<classB>("classB")
             .inherited<classA>()
@@ -66,7 +65,7 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
     });
 ```
 + tag struct and property
-```
+```c++
     xlb_module(L, MODULE_NAME) ({
         xlb_class<PRINTPAGERANGE>("PRINTPAGERANGE") .constructor<>() .destructor()
             .property("nFromPage", &PRINTPAGERANGE::nFromPage)
@@ -74,7 +73,7 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
     });
 ```
 + create object with new in place ( malloc and free )
-```
+```lua
     require 'luawin'
     luawin.load_base();
     function BASE()
