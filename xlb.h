@@ -154,18 +154,8 @@ struct xlb_cbcf_base {
 //-----------------------------------------------------------------------------
 // type support
 //-----------------------------------------------------------------------------
-template <bool, typename choose_if_true, typename choose_if_false>
-struct xlt_ifelse 
-{
-    using type = choose_if_true;
-};
-template <typename choose_if_true, typename choose_if_false>
-struct xlt_ifelse<false,  choose_if_true,  choose_if_false> 
-{
-    using type = choose_if_false;
-};
-template<bool cond, typename true_t, typename false_t>
-using xlt_ifelse_t = typename xlt_ifelse<cond, true_t, false_t>::type;
+template <bool B, class T, class F>
+using xlt_ifelse_t = std::conditional_t<B,T,F>;
 
 //--------------------------------------------------------------------------
 template<typename T> struct is_cp : std::false_type {};
@@ -186,10 +176,11 @@ template<typename Vt, typename T> inline constexpr auto is_lstruct_v = is_lstruc
 
 template<typename T, typename = void> struct is_complete : std::false_type {};
 template<typename T> struct is_complete< T, decltype(void(sizeof(T))) > : std::true_type {};
+template<typename T> inline constexpr auto is_complete_v = is_complete<T>::value;
 
 template<typename T>
 struct xlb_completetype {
-    using type = xlt_ifelse_t<is_complete<T>::value, T, void>;
+    using type = xlt_ifelse_t<is_complete_v<T>, T, void>;
 };
 
 
