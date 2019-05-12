@@ -33,12 +33,12 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
 ```
 + callback as class
 ```
+    // C++
     xlb_module(L, MODULE_NAME) ({
         xlb_class<xlb_cbf<WNDENUMPROC>>("EnumWindowsProc").constructor<xlb_luafunc>(),
     });
-```
-    Lua script:
-```
+
+    -- Lua script:
     function EnumWindows()
         luawin.load_wmsg();
         local len = 1024;
