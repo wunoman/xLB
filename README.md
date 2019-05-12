@@ -15,11 +15,40 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
 + get address of value
 
 ## Do not support yet
-+ in-place new (come soon with malloc and free)
 + operator overload
 
+## Usage
++ module and const integral
+```    
+    xlb_module(L, MODULE_NAME) ({
+            xlb_const("WINVER", WINVER)
+    });
+```
++ function
+```
+    xlb_module(L, MODULE_NAME) ({
+            xlb_f("malloc", malloc),
+            xlb_f("free", free)
+    });
+```
++ callback as class
+```
+    xlb_module(L, MODULE_NAME) ({
+        xlb_class<xlb_cbf<DLGPROC>>("DLGPROC").constructor<xlb_luafunc>()
+    });
+```
++ inherited
+```
+    xlb_module(L, MODULE_NAME) ({
+        xlb_class<classB>("classB")
+            .inherited<classA>()
+            .constructor<>()
+            .destructor()
+    });
+```
 ## Sample
 + bind Windows API to Lua ( SNMP, MESSAGE, GUI and Dialog )
 
 ## License
 + Licensed under the [MIT License](https://www.lua.org/license.html).
+
