@@ -54,7 +54,28 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
             .property("nToPage", &PRINTPAGERANGE::nToPage)
     });
 ```
-            
++ create object with new in place ( malloc and free )
+```
+    require 'luawin'
+    luawin.load_base();
+    function BASE()
+        luawin.load_dialog();
+        print('---sizeof PRINTPAGERANGE=' .. luawin.PRINTPAGERANGE.typesize); 
+        local a = luawin.malloc(luawin.PRINTPAGERANGE.typesize);
+        print('---a=' .. luawin.type(a));
+        local b = luawin.PRINTPAGERANGE:newin(a);
+        b.nFromPage = 1;
+        b.nToPage = 2;
+        print('---b.nFromPage=' .. b.nFromPage);
+        print('---b.nToPage=' .. b.nToPage);
+        print('---b=' .. luawin.type(b));
+        b = nil;
+        collectgarbage();
+        print('--');
+        luawin.free(a);
+    end
+```
+                
 ## Sample
 + bind Windows API to Lua ( BASE, MESSAGE, GUI, Dialog and SNMP )
 
