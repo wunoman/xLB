@@ -75,6 +75,14 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
         luawin.free(a);
     end
 ```
+  maybe Output is:
+```
+    ---sizeof PRINTPAGERANGE=8
+    ---a=(0x000001B028EA7720 : T*)
+    ---b.nFromPage=1
+    ---b.nToPage=2
+    ---b=(0x000001B028EA7720 : T)
+```
                 
 ## Sample
 + bind Windows API to Lua ( BASE, MESSAGE, GUI, Dialog and SNMP )
