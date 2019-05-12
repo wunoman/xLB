@@ -46,6 +46,15 @@ xlb is another library for binding C++ to Lua. It depends on C++17, It just one 
             .destructor()
     });
 ```
++ tag struct and property
+```
+    xlb_module(L, MODULE_NAME) ({
+        xlb_class<PRINTPAGERANGE>("PRINTPAGERANGE") .constructor<>() .destructor()
+            .property("nFromPage", &PRINTPAGERANGE::nFromPage)
+            .property("nToPage", &PRINTPAGERANGE::nToPage)
+    });
+```
+            
 ## Sample
 + bind Windows API to Lua ( SNMP, MESSAGE, GUI and Dialog )
 
