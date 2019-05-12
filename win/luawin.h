@@ -10,6 +10,7 @@
 
 //-----------------------------------------------------------------------------
 #define MODULE_NAME "luawin"
+#define BIND_WIN_CHECKED 0x1
 
 //-----------------------------------------------------------------------------
 #include <windows.h>
@@ -92,6 +93,8 @@
 #pragma comment(lib, "Comctl32.lib") // Comctl32.dll
 #pragma comment(lib, "Shell32.lib")
 //#pragma comment(lib, "ntoskrnl.lib")
+#pragma comment(lib, "OneCore.lib") // KernelBase.dll
+
 
 #ifdef BIND_WIN_8_1_MINCORE_LIB
 #pragma comment(lib, "Mincore.lib") 
@@ -196,8 +199,13 @@ using PROPSHEETPAGEPROC = UINT CALLBACK (*)(HWND hwnd, UINT uMsg, LPPROPSHEETPAG
 
 //-----------------------------------------------------------------------------
 
-void bind_win_api_function(lua_State* L);
-void bind_win_api_desktop_tech(lua_State* L);
+int load_base(lua_State*);
+int load_snmp(lua_State*);
+int load_gui(lua_State*);
+int load_wmsg(lua_State*);
+int load_dialog(lua_State*);
+
+int bind_win_api_desktop_tech(lua_State* L);
 
 //-----------------------------------------------------------------------------
 
