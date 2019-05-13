@@ -1,7 +1,7 @@
 <img src="https://www.lua.org/images/logo.gif" />
 
 # xLB ( ver 0.0.1 )
-xlb is another library for binding C++ to Lua. It depends on C++17, It just one header file and do not need nothing else.
+xlb is another library for binding C++ to Lua. It depends on C++17, and it's just one header file.
 
 ## Features
 + function
