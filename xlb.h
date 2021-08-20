@@ -13,6 +13,7 @@
 #include <string>
 #include <functional>
 #include <iostream>
+#include <sstream>
 #include <memory>
 #include <tuple>
 #include <type_traits>
@@ -129,7 +130,7 @@ template <typename Vt, typename T> struct xlb_lstruct;
 struct xlb_vter;
 struct xlb_util;
 struct xlb_property;
-struct xlb_basewrap;
+struct xlb_base_wrap;
 struct xlb_delete;
 
 struct xlb_notpointer {
@@ -845,56 +846,56 @@ int xlb_pushrefaspointer( lua_State* L, P pointer, xlf_gc gcf, void* place = nul
 }  // xlb_pushrefaspointer
 
 //------------------------------------------------------------------------------------------------
-// xlb_basewrap : wrap lightuserdata(pointer) which have xlb_base_class to user data
+// xlb_base_wrap : wrap lightuserdata(pointer) which have xlb_base_class to user data
 //------------------------------------------------------------------------------------------------
 
-struct xlb_basewrap {
+struct xlb_base_wrap {
     xlf_gc gcFlag;
     xlf_qlf tQlf;
-    xlb_basewrap( xlf_gc gcf, xlf_qlf tqlf ) : gcFlag( gcf ), tQlf( tqlf ) {}
+    xlb_base_wrap( xlf_gc gcf, xlf_qlf tqlf ) : gcFlag( gcf ), tQlf( tqlf ) {}
     virtual void* getpointer() = 0;
     virtual int dereference( lua_State* L ) { return 0; };
     virtual int lvaluereference( lua_State* L ) { return 0; };
-    virtual int getaddress( lua_State* L ) { return 0; };
+    virtual int pushaddress( lua_State* L ) { return 0; };
     virtual int issametypeindex( const std::type_index& ) = 0;
-    virtual ~xlb_basewrap() = default;
-};  // xlb_basewrap
+    virtual ~xlb_base_wrap() = default;
+};  // xlb_base_wrap
 
-inline auto xlb_wpispointer(xlb_basewrap* wp) {
+inline auto xlb_wpispointer(xlb_base_wrap* wp) {
     return wp->tQlf>=xlf_qlf::cp && wp->tQlf<=xlf_qlf::vp;
 }
 
-inline auto xlb_wpisref(xlb_basewrap* wp) {
+inline auto xlb_wpisref(xlb_base_wrap* wp) {
     return wp->tQlf==xlf_qlf::ref || wp->tQlf==xlf_qlf::cref;
 }
 
-inline auto xlb_wpisconst(xlb_basewrap* wp) {
+inline auto xlb_wpisconst(xlb_base_wrap* wp) {
     return wp->tQlf==xlf_qlf::cref || wp->tQlf==xlf_qlf::cval || wp->tQlf==xlf_qlf::carrayval;
 }
 
-inline auto xlb_wpisentity(xlb_basewrap* wp) {
+inline auto xlb_wpisentity(xlb_base_wrap* wp) {
     return wp->tQlf == xlf_qlf::ref || wp->tQlf == xlf_qlf::val;
 }
 
-inline auto xlb_wpiscopyable(xlb_basewrap* wp) {
+inline auto xlb_wpiscopyable(xlb_base_wrap* wp) {
     return wp->tQlf==xlf_qlf::ref
         || wp->tQlf==xlf_qlf::cref
         || wp->tQlf==xlf_qlf::val
         || wp->tQlf==xlf_qlf::cval;
 }
 
-inline auto xlb_wpiscv(xlb_basewrap* wp) {
+inline auto xlb_wpiscv(xlb_base_wrap* wp) {
     return wp->tQlf==xlf_qlf::p2cv
         || wp->tQlf==xlf_qlf::cp2cv;
 }
 
-inline auto xlb_wpisconstfeignpointer(xlb_basewrap* wp) {
+inline auto xlb_wpisconstfeignpointer(xlb_base_wrap* wp) {
     return wp->tQlf==xlf_qlf::p2cv
         || wp->tQlf==xlf_qlf::cref
         || wp->tQlf==xlf_qlf::carrayval;
 }
 
-//inline auto xlb_wpcompaddr(xlb_basewrap* wp) {
+//inline auto xlb_wpcompaddr(xlb_base_wrap* wp) {
 //    return wp->tQlf==xlf_qlf::cp
 //        || wp->tQlf==xlf_qlf::p2cv
 //        || wp->tQlf==xlf_qlf::cp2cv
@@ -915,8 +916,8 @@ XLB_SIT xlb_touserdata(lua_State* L, int index) {
 }
 
 XLB_SIT xlb_tobasewrap( lua_State* L, int index ) {
-    xlb_basewrap* wp { xlb_testwrapuservalue( L, index )
-                          ? reinterpret_cast<xlb_basewrap*>( lua_touserdata( L, index ) )
+    xlb_base_wrap* wp { xlb_testwrapuservalue( L, index )
+                          ? reinterpret_cast<xlb_base_wrap*>( lua_touserdata( L, index ) )
                           : nullptr };
     return wp;
 }
@@ -962,7 +963,7 @@ XLB_SIT xlb_getwppointer( WP* wp ) {
 }
 
 template <typename T>
-XLB_SIT xlb_issametypeindex( xlb_basewrap* wp ) {
+XLB_SIT xlb_issametypeindex( xlb_base_wrap* wp ) {
     return wp->issametypeindex( xlb_wrap<T>::typeidx );
 }
 
@@ -1132,8 +1133,8 @@ static bool xlu_checkmetaprefix( lua_State* L, int index, const char* prefix) {
     if ( lua_getmetatable( L, index ) ) {
         lua_pushstring( L, "__name" );
         lua_rawget( L, -2);
-        auto meta_name = lua_tostring( L, -1 );
-        ret = (nullptr != strstr(meta_name, prefix) );
+        auto meta_name { lua_tostring( L, -1 ) };
+        ret = (nullptr==meta_name) ? false : (nullptr != strstr(meta_name, prefix) );
     }
     lua_settop( L, top );
     return ret;
@@ -1142,7 +1143,7 @@ static bool xlu_checkmetaprefix( lua_State* L, int index, const char* prefix) {
 static auto xlb_tobasewphaveprefix( lua_State* L, int index, const char* prefix ) {
     return ( xlu_checkmetaprefix( L, index, XLB_META_PREFIX_POINTER ) )
                ? xlb_tobasewrap( L, index )
-               : ( xlb_basewrap* ) nullptr;
+               : ( xlb_base_wrap* ) nullptr;
 }
 
 //------------------------------------------------------------------------------------------------
@@ -1176,7 +1177,7 @@ struct xlb_assignarrary {
 //------------------------------------------------------------------------------------------------
 
 template <typename T, typename Deref_AT, typename WRO_DEL>
-class xlb_wrap : public xlb_basewrap 
+class xlb_wrap : public xlb_base_wrap 
 {
     using type = T;
     using deref_at = Deref_AT;
@@ -1187,7 +1188,7 @@ public:
     T* pointer { nullptr };
     size_t len { 0 }; // for array
 
-    xlb_wrap(const T* p, xlf_gc gcf, xlf_qlf tqlf) : xlb_basewrap(gcf, tqlf) { 
+    xlb_wrap(const T* p, xlf_gc gcf, xlf_qlf tqlf) : xlb_base_wrap(gcf, tqlf) { 
         if constexpr ( std::is_function_v<T> ) {
             gcf = xlf_gc::no;
             pointer = p;
@@ -1252,7 +1253,7 @@ public:
                 using ref_t = std::add_lvalue_reference_t<origin_t>; // T&
                 using ref_at = xlb_at<typename deref_at::vter, ref_t>;
                 using pointer_t = std::add_pointer_t<origin_t>; // T*
-                auto wp = xlb_touserdata<xlb_basewrap>( L, 1 );
+                auto wp = xlb_touserdata<xlb_base_wrap>( L, 1 );
                 auto p = xlb_getwppointer<pointer_t>( wp );
                 ref_at ref( p );
                 ref.pusharg( L, rc );
@@ -1262,7 +1263,7 @@ public:
     }
 
     //// T* (*)(wp) { return (pointer); }
-    virtual int getaddress( lua_State* L ) override {
+    virtual int pushaddress( lua_State* L ) override {
         int rc { 0 };
         if constexpr ( std::is_pointer_v<T> ) {
             using unref1_t = std::remove_pointer_t<T>;
@@ -1297,7 +1298,7 @@ public:
     static int cf___dereference( lua_State* L ) {
         auto rc { 0 };
         if constexpr ( ! std::is_same_v<deref_at, xlb_notpointer> ) {
-            auto wp = xlb_touserdata<xlb_basewrap>( L, 1 );
+            auto wp = xlb_touserdata<xlb_base_wrap>( L, 1 );
             if ( wp && ( xlb_wpispointer( wp ) || xlb_wpisref(wp) )) {
                 rc = wp->dereference( L );
             } else {
@@ -1309,9 +1310,9 @@ public:
 
     static int cf___getaddress( lua_State* L ) {
         auto rc { 0 };
-        auto wp = xlb_touserdata<xlb_basewrap>( L, 1 );
+        auto wp = xlb_touserdata<xlb_base_wrap>( L, 1 );
         if ( wp ) {
-            rc = wp->getaddress( L );
+            rc = wp->pushaddress( L );
         } else {
             xlb_debug( "warning: function called with self\n" );
         }
@@ -1320,7 +1321,7 @@ public:
 
     static int cf___lightuserdata( lua_State* L ) {
         auto rc { 1 };
-        auto wp = xlb_touserdata<xlb_basewrap>( L, 1 );
+        auto wp = xlb_touserdata<xlb_base_wrap>( L, 1 );
         ( wp ) ? lua_pushlightuserdata( L, wp->getpointer() ) : lua_pushnil( L );
         return rc;
     }
@@ -1329,7 +1330,7 @@ public:
     static int cf___lvaluereference( lua_State* L ) {
         auto rc { 0 };
         if constexpr ( ! std::is_same_v<deref_at, xlb_notpointer> ) {
-            auto wp = xlb_touserdata<xlb_basewrap>( L, 1 );
+            auto wp = xlb_touserdata<xlb_base_wrap>( L, 1 );
             //xlb_debug( "%p, %d\n", wp, xlb_wpisref( wp ) );
             if ( wp && (xlb_wpisref( wp ) || xlb_wpispointer(wp)) ) {
                 rc = wp->lvaluereference( L );
@@ -1422,7 +1423,7 @@ int xlb_pushpointer( lua_State* L, P pointer, void* place = nullptr,
 // xlb argument agent
 //------------------------------------------------------------------------------------------------
 template <typename T>
-struct xlb_selftype {
+struct xlb_selfagent {
     XLB_SIV getarg( lua_State* L, xlb_ami& ami ) {
         auto extmsg { "xlb: invalid self" };
         auto wp { xlb_towrap<T>( L, 1 ) };  // assert(1 == ami.arg_index)
@@ -1442,7 +1443,7 @@ struct xlb_selftype {
 };
 
 template <typename T>
-struct xlb_selftype<const T> {
+struct xlb_selfagent<const T> {
     XLB_SIV getarg( lua_State* L, xlb_ami& ami ) {
         if ( auto pobj { xlb_toself<T>( L, 1 ) } ) {
             ami.obj = pobj;
@@ -1589,6 +1590,7 @@ struct xlb_lpointer<Vt, T*, U, Dtor> : public xlb_base_agent // T* or T&
         //xlb_debug("\n");
 
         if constexpr ( std::is_reference_v<U> ) {  // U==T&
+            //xlb_dbg();
             auto wp = xlb_towrap<T>( L, ami.arg_index );
             // xlb_debug("(%p,%d)\n", wp, xlb_issametypeindex<T>(wp));
             if ( wp && xlb_issametypeindex<T>( wp ) &&
@@ -1601,6 +1603,7 @@ struct xlb_lpointer<Vt, T*, U, Dtor> : public xlb_base_agent // T* or T&
 
         if ( ! got ) {
             // xlb_debug("(0x%p)\n", this);
+            //xlb_dbg();
             if ( auto wp {
                      xlb_tobasewphaveprefix( L, ami.arg_index, XLB_META_PREFIX_POINTER ) } ) {
                 if ( xlb_issametypeindex<T>( wp ) ) {
@@ -1609,58 +1612,61 @@ struct xlb_lpointer<Vt, T*, U, Dtor> : public xlb_base_agent // T* or T&
                         got = true;
                     }
                 }
-            } else {
-                if constexpr ( std::is_same_v<T, char> ) {
-                    if ( lua_type( L, ami.arg_index ) == LUA_TSTRING ) {
-                        pointer = const_cast<char*>( lua_tostring( L, ami.arg_index ) );
-                        got = true;
-                    }
+            } 
+        }
+        if ( ! got ) {
+            //xlb_dbg();
+            if constexpr ( std::is_same_v<T, char> ) {
+                if ( lua_type( L, ami.arg_index ) == LUA_TSTRING ) {
+                    pointer = const_cast<char*>( lua_tostring( L, ami.arg_index ) );
+                    got = true;
                 }
-                if constexpr ( std::is_same_v<T, wchar_t> ) {
-                    if ( lua_type( L, ami.arg_index ) == LUA_TSTRING ) {
-                        pointer = reinterpret_cast<wchar_t*>(
+            }
+            if constexpr ( std::is_same_v<T, wchar_t> ) {
+                if ( lua_type( L, ami.arg_index ) == LUA_TSTRING ) {
+                    pointer = reinterpret_cast<wchar_t*>(
                             const_cast<char*>( lua_tostring( L, ami.arg_index ) ) );
-                        got = true;
-                    }
+                    got = true;
                 }
-                if constexpr ( std::is_function_v<T> ) {
-                    using cbf_t = xlb_cbf<T*>;  // FIXME: no PO
-                    auto wp = xlb_tobasewrap( L, ami.arg_index );
-                    if ( wp && xlb_issametypeindex<cbf_t>( wp ) ) {
-                        // xlb_debug("(%s,0x%p)\n", typeid(T).name(), wp);
-                        auto p = reinterpret_cast<cbf_t*>( wp->getpointer() );
-                        // XXX:temporary update static member
-                        // solve multi cbf using static member problem
-                        p->updatestatic( L );
-                        pointer = &cbf_t::cbf_agent;
-                        got = true;
-                    }
-                }
-                if ( ! got ) {  // maybe memory block, such as return from malloc function
-                    auto wp { xlb_tobasewrap( L, ami.arg_index ) };
-                    if ( wp ) {
-                        if ( ! xlb_wpisconst( wp ) ) {
-                            pointer = xlb_getwppointer<T*>( wp );  // XXX:size must meet
-                            got = true;
-                            // xlb_debug( "%p\n", pointer );
-                        } else {
-                            // xlb_debug( "%p\n", pointer );
-                        }
-                    } else {
-                        // not wp, but userdata such as lightuserdata
-                        if ( lua_isuserdata( L, ami.arg_index ) ) {
-                            pointer = xlb_aspointer<pointer_t>( L, ami.arg_index );
-                            got = true;
-                            // xlb_debug( "%p\n", pointer );
-                        }
-                    }
+            }
+            if constexpr ( std::is_function_v<T> ) {
+                using cbf_t = xlb_cbf<T*>;  // TODO: no PO
+                auto wp = xlb_tobasewrap( L, ami.arg_index );
+                if ( wp && xlb_issametypeindex<cbf_t>( wp ) ) {
+                    // xlb_debug("(%s,0x%p)\n", typeid(T).name(), wp);
+                    auto p = reinterpret_cast<cbf_t*>( wp->getpointer() );
+                    // XXX:temporary update static member
+                    // solve multi cbf using static member problem
+                    p->updatestatic( L );
+                    pointer = &cbf_t::cbf_agent;
+                    got = true;
                 }
             }
         }
 
+        if ( ! got ) {  // maybe memory block, such as return from malloc function
+            auto wp { xlb_tobasewrap( L, ami.arg_index ) };
+            if ( wp ) {
+                if ( ! xlb_wpisconst( wp ) ) {
+                    pointer = xlb_getwppointer<T*>( wp );  // XXX:size must meet
+                    got = true;
+                    // xlb_debug( "%p\n", pointer );
+                } else {
+                    // xlb_debug( "%p\n", pointer );
+                }
+            } else {
+                // not wp, but userdata such as lightuserdata
+                if ( lua_isuserdata( L, ami.arg_index ) ) {
+                    pointer = xlb_aspointer<pointer_t>( L, ami.arg_index );
+                    got = true;
+                    // xlb_debug( "%p\n", pointer );
+                }
+            }
+        }
+
+        //xlb_debug("(%d,0x%p)\n", got, pointer);
         if ( got || lua_isnil( L, ami.arg_index ) ) {
-            // accept nil as nullptr
-            ++ami.arg_index;
+            ++ami.arg_index; //RULE: accept nil as nullptr
         } else {
             if constexpr ( debug_mode ) {
                 using TT = xlb_completetype_t<T>;
@@ -2027,7 +2033,9 @@ struct xlb_lintegral : public xlb_base_agent {
                 value = lua_tointeger( L, ami.arg_index );
                 ++ami.arg_index;
             } else {
-                xlb_amfail( ami, XLB_E_AMI_BAD, "xlb: integer expected" );
+                stringstream ss;
+                ss << "xlb: #" << ami.arg_index << "integer expected."; 
+                xlb_amfail( ami, XLB_E_AMI_BAD, ss.str());
             }
         }
     }
@@ -2110,7 +2118,7 @@ struct xlb_larray : public xlb_base_agent {
             case LUA_TUSERDATA: {  // accept array
                 using eT = T;
                 //wp = xlb_testwrap<eT>( L, ami.arg_index, XLB_META_PREFIX_ARRAY );
-                xlb_basewrap* wp { nullptr };
+                xlb_base_wrap* wp { nullptr };
                 std::string meta_name { xlu_getmetaname( L, ami.arg_index ) };
                 // xlb_debug( "(%s,%p)\n", meta_name.c_str(), wp );
                 if ( xlu_checkmetaprefix( meta_name, XLB_META_PREFIX_ARRAY ) ) {
@@ -2214,7 +2222,7 @@ struct xlb_lfunc : public xlb_base_agent {
     operator xlb_luafunc() const { return { refid }; }
 
     void getarg( lua_State* L, xlb_ami& ami ) override {
-        // xlb_debug("(%d,%d)\n", lua_type(L, ami.arg_index), LUA_TFUNCTION);
+        //xlb_debug("(%d,%d)\n", lua_type(L, ami.arg_index), LUA_TFUNCTION);
         if ( lua_type( L, ami.arg_index ) == LUA_TFUNCTION ) {
             lua_pushnil( L );                  // #-1
             lua_copy( L, ami.arg_index, -1 );  // copy and replace #-1
@@ -2396,7 +2404,7 @@ template <typename TUP, typename Dft>
 struct xlb_getargs<TUP, xlb_idx<>, Dft> {
     template <typename AIs>
     XLB_SIV go( lua_State* L, TUP& tup, AIs& ais, xlb_ami& ami ) {
-        // xlb_debug("(%d, %d)\n", ami.arg_count, ami.arg_index);
+        //xlb_debug("(%d,%u,%d)\n", ami.arg_count, ami.arg_index, ami.match_result);
         if ( ami.arg_count >= ami.arg_index ) {
             xlb_amfail( ami, XLB_E_AMI_TOMUCH, "xlb: too much arguments" );
         }
@@ -2407,18 +2415,19 @@ template <typename TUP, int Param_i, int... idxs, typename Dft>
 struct xlb_getargs<TUP, xlb_idx<Param_i, idxs...>, Dft> {
     template <typename AIs>
     XLB_SIV go( lua_State* L, TUP& tup, AIs& ais, xlb_ami& ami ) {
-        // xlb_debug("(%d,%u)\n", ami.arg_count, ami.arg_index);
         if ( ami.arg_count >= ami.arg_index ) {
             auto& ai = ais[ Param_i ];
             ai.from = ami.arg_index;
             ai.type = lua_type( L, ami.arg_index );
             ai.index = Param_i + 1;
-            // xlb_debug("(%s)\n", typeid(decltype(std::get<Param_i>( tup ))).name());
-            std::get<Param_i>( tup ).getarg( L, ami );
+            auto& agent { std::get<Param_i>( tup ) };
+            //xlb_debug("(%s)\n", typeid(decltype(agent)).name());
+            agent.getarg( L, ami );
             ai.to = ami.arg_index;  // [from,to)
         } else {
             ami.match_result = XLB_E_AMI_FEW;
         }
+        //xlb_debug("(%d,%u,%x)\n", ami.arg_count, ami.arg_index, ami.match_result);
 
         if ( xlb_ambad( ami ) ) {
             if ( XLB_E_AMI_FEW == ami.match_result ) {
@@ -2429,10 +2438,14 @@ struct xlb_getargs<TUP, xlb_idx<Param_i, idxs...>, Dft> {
                 if ( stack_remain - args_remain + ami.default_count >= 0 ) {
                     ami.match_result = XLB_E_AMI_DEFAULT;
                 } else {
-                    xlb_amfail( ami, ami.match_result, "xlb: too few arguments" );
+                    stringstream ss;
+                    ss << "xlb: too few arguments (" << ami.arg_index << "," << ami.param_count << ")"; 
+                    xlb_amfail( ami, ami.match_result, ss.str());
+                    //xlb_amfail( ami, ami.match_result, "xlb: too few arguments" );
                 }
             }
         } else {
+            //xlb_debug("(%d,%u,%d)\n", ami.arg_count, ami.arg_index, ami.match_result);
             xlb_getargs<TUP, xlb_idx<idxs...>, Dft>::go( L, tup, ais, ami );
         }
     }
@@ -2545,9 +2558,9 @@ class xlb_ctor_inplace_r : public xlb_ctor_r<T> {};
 
 /** XXX: argument #1 is table, object that create in Lua just through new
  * operator. this function is the agent of class contructor function and binded
- * to Lua as metatable's default call method named __call. those xlb_ctor_r
- * object must gc in Lua witch delete operator. ignore table that is argument #1
- * of __call method
+ * to Lua as metatable's default call method named __call, (__call(t,...)). 
+ * those xlb_ctor_r object must gc in Lua witch delete operator. ignore table 
+ * that is argument #1 of __call method.
  * TODO: make it PO, meet another new operator action
  */
 template <typename T, typename... A>
@@ -2896,7 +2909,7 @@ template <typename X, typename CONST_T>
 struct xlb_selfobj {
     template <typename TUP, typename AIs>
     XLB_SIV go(lua_State* L, TUP& tup, xlb_ami& ami, AIs& ais) {
-        xlb_selftype<const X>().getarg(L, ami);
+        xlb_selfagent<const X>().getarg(L, ami);
     }
 };
 
@@ -2904,7 +2917,7 @@ template <typename X>
 struct xlb_selfobj<X, false_type> {
     template <typename TUP, typename AIs>
     XLB_SIV go(lua_State* L, TUP& tup, xlb_ami& ami, AIs& ais) {
-        xlb_selftype<X>().getarg(L, ami);
+        xlb_selfagent<X>().getarg(L, ami);
     }
 };
 
@@ -3044,7 +3057,7 @@ static int xlb_ovlfsagent( lua_State* L ) {
 //------------------------------------------------------------------------------------------------
 template <typename FT, FT f, 
          typename Dft = xlb_dfer, 
-         typename RIER = xlb_rier,
+         typename rpi_po = xlb_rier,
          typename R2L = xlb_rv2l, 
          typename PTER = xlb_pushfrv, 
          typename Vt = xlb_vter>
@@ -3086,7 +3099,7 @@ int xlb_cfunction(lua_State* L) {
         xlb_invoke::template xlb_tir<rv_t, std::is_void_v<rv_t>, rv_at, obj_t,
                                      std::is_void_v<obj_t>, FT, idx_t, param_t,
                                      xlb_rv2l>::go( L, ami, f, tup );
-        PTER::template xlb_tir<RIER, tuple_t>::go( L, tup, ais, ami.rc );
+        PTER::template xlb_tir<rpi_po, tuple_t>::go( L, tup, ais, ami.rc );
     } else {
         if ( ptr_ami.get() == nullptr ) {  // f is inner function
             ami.rc = ami.arg_count;        // recover scene limited
@@ -3279,7 +3292,7 @@ template <auto f, class... PO>
 int xlb_f2cf_pure( lua_State* L ) {
     using Vt = xpo_get_vter<PO...>;
     using Dft = xpo_get_default<PO...>;
-    using RIER = xpo_get_rier<PO...>;
+    using rpi_po = xpo_get_rier<PO...>;
 
     using FT = decltype( f );
     using forge_t = xlb_typeforge<Vt, FT>;
@@ -3312,7 +3325,8 @@ int xlb_f2cf_pure( lua_State* L ) {
     xlb_invoke::template xlb_tir<rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>,
                                  FT, idx_t, param_t, xlb_rv2l>::go( L, ami, f, tup );
 
-    xlb_pushfrv::template xlb_tir<RIER, tuple_t>::go( L, tup, ais, ami.rc );
+    xlb_pushfrv::template xlb_tir<rpi_po, tuple_t>::go( L, tup, ais, ami.rc );
+    //xlb_debug("%d\n", ami.rc);
     return ami.rc;
 
 }  // xlb_f2cf_pure
@@ -3325,7 +3339,7 @@ template <auto f, class... PO>
 int xlb_f2cf_ovlcand( lua_State* L ) {
     using Vt = xpo_get_vter<PO...>;
     using Dft = xpo_get_default<PO...>;
-    using RIER = xpo_get_rier<PO...>;
+    using rpi_po = xpo_get_rier<PO...>;
 
     using FT = decltype( f );
     using forge_t = xlb_typeforge<Vt, FT>;
@@ -3364,7 +3378,7 @@ int xlb_f2cf_ovlcand( lua_State* L ) {
         xlb_invoke::template xlb_tir<rv_t, std::is_void_v<rv_t>, rv_at, obj_t,
                                      std::is_void_v<obj_t>, FT, idx_t, param_t,
                                      xlb_rv2l>::go( L, ami, f, tup );
-        xlb_pushfrv::template xlb_tir<RIER, tuple_t>::go( L, tup, ais, ami.rc );
+        xlb_pushfrv::template xlb_tir<rpi_po, tuple_t>::go( L, tup, ais, ami.rc );
     } else {
         if ( nullptr == ptr_ami.get() ) {  // f is inner function ( get xlb_ami upvalue )
             ami.rc = 0;  // next function's arguments is copyed by xlb_ovlfsagent
@@ -3383,8 +3397,8 @@ int xlb_f2cf_ovlcand( lua_State* L ) {
 template <class FT, /*FT f,*/ class... PO>
 int xlb_f2cf_upvalue( lua_State* L ) {
     using Vt = xpo_get_vter<PO...>;
-    using Dft = xpo_get_default<PO...>;
-    using RIER = xpo_get_rier<PO...>;
+    using def_po = xpo_get_default<PO...>;
+    using rpi_po = xpo_get_rier<PO...>;
 
     using forge_t = xlb_typeforge<Vt, FT>;
     using tuple_t = typename forge_t::tuple_t;
@@ -3403,10 +3417,11 @@ int xlb_f2cf_upvalue( lua_State* L ) {
 
     xlb_selfobj<obj_t, const_t>::go( L, tup, ami, ais );
 
-    if ( ! xlb_ambad( ami ) ) {
-        xlb_getargs<tuple_t, idx_t, Dft>::go( L, tup, ais, ami );
+    if ( xlb_amgood( ami ) ) {
+        xlb_getargs<tuple_t, idx_t, def_po>::go( L, tup, ais, ami );
     }
     if ( xlb_ambad( ami ) ) {
+        xlb_debug("%s\n", ami.extmsg.c_str());
         return luaL_argerror( L, ami.arg_index, ami.extmsg.c_str() );
     }
 
@@ -3418,7 +3433,8 @@ int xlb_f2cf_upvalue( lua_State* L ) {
                                  std::is_void_v<obj_t>, FT, idx_t, param_t,
                                  xlb_rv2l>::go( L, ami, f, tup );
 
-    xlb_pushfrv::template xlb_tir<RIER, tuple_t>::go( L, tup, ais, ami.rc );
+    xlb_pushfrv::template xlb_tir<rpi_po, tuple_t>::go( L, tup, ais, ami.rc );
+    //xlb_debug("ami.rc=%d\n", ami.rc);
     return ami.rc;
 
 }  // xlb_f2cf_upvalue
@@ -3445,7 +3461,7 @@ struct xlb_regchain : public std::vector<xlb_regitem*> {
 //------------------------------------------------------------------------------------------------
 struct xlb_ns {
     lua_State* lua { nullptr };
-    const char* luaTableName { ( const char* ) nullptr };
+    const char* table_name { ( const char* ) nullptr };
     int luaIndex = 0;
     int parentTableIndex = 0;
 };  // xlb_ns
@@ -3521,6 +3537,7 @@ auto xlb_f( const char* fn, FT f,
 
 static auto xlb_f( const char* fn, lua_CFunction f ) { return xlb_cf( fn, f ); }
 
+#define xlb_func(f) xlb_f(#f, f)
 //------------------------------------------------------------------------------------------------
 
 template <typename Lambda>
@@ -3789,14 +3806,14 @@ struct xlb_bitfieldprop : public xlb_base_property {
 struct xlb_namespace : public xlb_ns, public xlb_regitem {
     xlb_regchain chain;
     xlb_namespace( const char* space_name = nullptr ) : xlb_regitem( space_name ) {
-        xlb_ns::luaTableName = space_name;
-        assert( nullptr != luaTableName );  ///< name of namespace expected
+        xlb_ns::table_name = space_name;
+        assert( nullptr != table_name );  ///< name of namespace expected
     }
 
     virtual void registry( xlb_ns* parentNS ) override {
         auto L = parentNS->lua;
         xlb_ns::lua = L;
-        lua_pushstring( L, luaTableName );
+        lua_pushstring( L, table_name );
         lua_newtable( L );
         luaIndex = lua_gettop( L );
 
@@ -3883,15 +3900,15 @@ struct xlb_cref : public xlb_regitem {
 
 //------------------------------------------------------------------------------------------------
 struct xlb_module : public xlb_ns, public xlb_regitem {
-    xlb_module( lua_State* L, const char* tableName = nullptr, int pti = 0 ) {
-        xlb_ns::luaTableName = tableName;
+    xlb_module( lua_State* L, const char* table_name = nullptr, int pti = 0 ) {
+        xlb_ns::table_name = table_name;
         xlb_ns::lua = L;
         xlb_ns::parentTableIndex = pti;
     }
 
     xlb_module& operator()( const xlb_regchain& chain ) {
         auto& L = xlb_ns::lua;
-        auto& moduleName = xlb_ns::luaTableName;
+        auto& moduleName = xlb_ns::table_name;
 
         auto havemodule = false;
         if ( moduleName ) {
@@ -3946,8 +3963,8 @@ struct xlb_base_class : public xlb_regitem {
     inline static std::string metaNameBuf {};
     inline static std::string typeNameBuf {};
     inline static xlb_metas_t superNames {};
-    inline static xlb_regs_t metaFuncs { };
-    inline static xlb_regs_t typeTable { };
+    inline static xlb_regs_t metaFuncs {};
+    inline static xlb_regs_t typeTable {};
     inline static xlb_classfuncs_t methodFuncs {};
     inline static xlb_member_t memberMap {};
     inline static xlb_static_member_t staticmemberMap {};
@@ -3957,7 +3974,7 @@ struct xlb_base_class : public xlb_regitem {
     static int xlb_f2cf_static( lua_State* L ) {
         using Vt = xpo_get_vter<PO...>;
         using Dft = xpo_get_default<PO...>;
-        using RIER = xpo_get_rier<PO...>;
+        using rpi_po = xpo_get_rier<PO...>;
 
         using forge_t = xlb_typeforge<Vt, FT>;
         using tuple_t = typename forge_t::tuple_t;
@@ -3985,14 +4002,14 @@ struct xlb_base_class : public xlb_regitem {
         }
 
         xlb_fmate<FT> fpa;
-        auto f = fpa.topointer( L, 1 );  ///< XXX:first upvalue
+        auto f = fpa.topointer( L, XLB_UPVALUE_1 );
 
         ami.rc = 0;
         xlb_invoke::template xlb_tir<rv_t, std::is_void_v<rv_t>, rv_at, obj_t,
                                      std::is_void_v<obj_t>, FT, idx_t, param_t,
                                      xlb_rv2l>::go( L, ami, f, tup );
 
-        xlb_pushfrv::template xlb_tir<RIER, tuple_t>::go( L, tup, ais, ami.rc );
+        xlb_pushfrv::template xlb_tir<rpi_po, tuple_t>::go( L, tup, ais, ami.rc );
         return ami.rc;
 
     }  // xlb_f2cf_static
@@ -4098,8 +4115,10 @@ struct xlb_base_class : public xlb_regitem {
 
     template <typename... A>
     rr_t constructor() {
+        //typeTable.push_back( { "__call", xlb_f2cf_pure<&xlb_ctor<X, A...>> } );
         typeTable.push_back( { "__call", xlb_f2cf_pure<&xlb_ctor<X, A...>> } );
         // placement new
+        //typeTable.push_back( { "newinplace", xlb_f2cf_pure<&xlb_ctor_inplace<X, A...>> } );
         typeTable.push_back( { "newinplace", xlb_f2cf_pure<&xlb_ctor_inplace<X, A...>> } );
         // pointer, such as T* in C++
         typeTable.push_back( { "pointertotype", xlb_f2cf_pure<&return_ptt> } );
@@ -4108,6 +4127,7 @@ struct xlb_base_class : public xlb_regitem {
 
     template <typename... A>
     rr_t constructor( xpo_no_newinplace&& ) {
+        //constexpr lua_CFunction cf = xlb_f2cf_pure<&xlb_ctor<X, A...>>;
         constexpr lua_CFunction cf = xlb_f2cf_pure<&xlb_ctor<X, A...>>;
         typeTable.push_back( { "__call", cf } );
         return std::move( *this );
@@ -4201,7 +4221,7 @@ struct xlb_class : public xlb_base_class<T> {
 //------------------------------------------------------------------------------------------------
 static int xlb_type( lua_State* L ) {
     auto rc { 1 };
-    if ( auto wp = xlb_touserdata<xlb_basewrap>( L, 1 ) ) {
+    if ( auto wp = xlb_touserdata<xlb_base_wrap>( L, 1 ) ) {
         auto fmt = "(0x%p : unknown)";
         switch ( wp->tQlf ) {
             case xlf_qlf::ref:
