@@ -22,12 +22,15 @@ function write(left,right)
 end
 
 --------------------------------------------------------------------------------------------------
+function printtable(t)
+    for k,v in pairs(t) do
+        print(string.format('%32s : %s', k, v))
+    end
+end
 function printmetatable(ud)
     local mt = getmetatable(ud)
-    print('meta={')
-    for k,v in pairs(mt) do
-        print(string.format('%32s : %s', k, v));
-    end
+    print('metatable={')
+    printtalbe(mt)
     print('}\n')
 end
 
@@ -46,54 +49,40 @@ end
 --print('W.GetCurrentDirectory=' .. string.sub(s,1,d));
 
 --------------------------------------------------------------------------------------------------
+function TerminateProcess(pid)
+    local hProcess = luawin.OpenProcess(luawin.PROCESS_TERMINATE, false, pid);
+    print(hProcess);
+    print(luawin.TerminateProcess(hProcess, 0));
+end
+
+--------------------------------------------------------------------------------------------------
 function EnumWindows()
     local len = 1024;
     local buff = string.rep('\0', len);
-    local n = 0;
-    local ctid = luawin.GetCurrentThreadId();
-    local callback = luawin.EnumWindowsProc(function(hwnd, lParam) 
+    local count = 0;
+
+    local proc = function(hwnd, lParam) 
         local len = luawin.GetWindowText(hwnd, buff, len);
-        local winText = string.sub(buff, 1, len);
-        if (winText == 'Default IME') then
-        --if (winText == '¼ÆËãÆ÷') then
-            local ppid = luawin.malloc(4);
+        local winText = string.sub(buff, 1, len)
+        --if (winText == 'Default IME') then
+        if (winText == '¼ÆËãÆ÷') then
+            local ppid = luawin.malloc(4)
             local tid = luawin.GetWindowThreadProcessId(hwnd, ppid);
             print('--->' .. winText .. ',' .. luawin.xlb_type(ppid) .. ',' .. tostring(lParam));
-            --local s = luawin.pvtostring(ppid, 4);
-            --print(luawin.xlb_type(ppid));
-            --print(type(s), string.len(s));
-            print(ppid:__getpointer());
             local pid = luawin.pvtointeger(ppid, 4);
             print("pid=" .. tostring(pid));
-            --local hProcess = luawin.OpenProcess(0x0001, false, ppid);
-            --print(hProcess);
-            print("tid=" .. tostring(tid));
-            if (tid ~= ctid) then
-                local hThread = luawin.OpenThread(0x0001, false, tid);
-                --print(luawin.TerminateThread(hThread, 0));
-            end
-            --print(luawin.TerminateProcess(hProcess, 0));
+            TerminateProcess(pid)
             luawin.free(ppid);
-            n = n+1;
-            print('--->n=' .. n);
+            count = count+1;
+            print('--->count=' .. count);
             print();
         end
-        --return false;
-        return true; 
-    end);
+        --return false; -- stop
+        return true; -- continue
+    end
+    local callback = luawin.EnumWindowsProc(proc);
     luawin.EnumWindows(callback, 999);
     
-    --local tid = 11892;
-    --local hThread = luawin.OpenThread(0x0001, false, tid);
-    --print(luawin.TerminateThread(hThread, 0));
-
-    --print(luawin.TerminateThread(1996, 0));
-
-    --local hProcess = luawin.OpenProcess(0x0001, false, 10028);
-    --print(hProcess);
-    --print('--->GetLastError=' .. tostring(luawin.GetLastError()));
-    --print(luawin.xlb_type(hProcess));
-    --print(luawin.TerminateProcess(hProcess, 0));
 end
 
 --------------------------------------------------------------------------------------------------
@@ -104,9 +93,10 @@ end
 
 --------------------------------------------------------------------------------------------------
 function Dialog()
-    print('luawin.MessageBox='..tostring(luawin.MessageBox));
-    local r = luawin.MessageBox(nil, 'ok?', 'luawin', 0x00000001 | 0x00000020);
-    print(r);
+    local r = luawin.MessageBox(nil, 'ok?', 'luawin', luawin.MB_OKCANCEL | luawin.MB_ICONQUESTION);
+    local choice = (r == luawin.IDOK) and 'OK' or 'NO'
+    print(choice)
+    --print(r);
 end
 
 --------------------------------------------------------------------------------------------------
@@ -206,11 +196,11 @@ end
 --EnumWindows();
 --RAS();
 --SNMP();
---Dialog();
+Dialog();
 --Malloc();
 --printBinded(luawin);
 --printGUID(luawin);
-COM();
+--COM();
 
 
 print '---Done.'

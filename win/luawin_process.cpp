@@ -48,6 +48,22 @@ int load_process(lua_State* L)
 #endif
             xlb_f("NeedCurrentDirectoryForExePath", NeedCurrentDirectoryForExePath),
             xlb_f("OpenProcess", OpenProcess),
+
+            xlb_const("PROCESS_ALL_ACCESS", PROCESS_ALL_ACCESS),
+            xlb_const("PROCESS_CREATE_PROCESS", PROCESS_CREATE_PROCESS),
+            xlb_const("PROCESS_CREATE_THREAD", PROCESS_CREATE_THREAD),
+            xlb_const("PROCESS_DUP_HANDLE", PROCESS_DUP_HANDLE),
+            xlb_const("PROCESS_QUERY_INFORMATION", PROCESS_QUERY_INFORMATION),
+            xlb_const("PROCESS_QUERY_LIMITED_INFORMATION", PROCESS_QUERY_LIMITED_INFORMATION),
+            xlb_const("PROCESS_SET_INFORMATION", PROCESS_SET_INFORMATION),
+            xlb_const("PROCESS_SET_QUOTA", PROCESS_SET_QUOTA),
+            xlb_const("PROCESS_SUSPEND_RESUME", PROCESS_SUSPEND_RESUME),
+            xlb_const("PROCESS_TERMINATE", PROCESS_TERMINATE),
+            xlb_const("PROCESS_VM_OPERATION", PROCESS_VM_OPERATION),
+            xlb_const("PROCESS_VM_READ", PROCESS_VM_READ),
+            xlb_const("PROCESS_VM_WRITE", PROCESS_VM_WRITE),
+            xlb_const("SYNCHRONIZE", SYNCHRONIZE),
+
             xlb_f("QueryFullProcessImageName", QueryFullProcessImageName),
             xlb_f("QueryProcessAffinityUpdateMode", QueryProcessAffinityUpdateMode),
             xlb_f("QueryProcessCycleTime", QueryProcessCycleTime),

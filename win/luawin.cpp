@@ -6,9 +6,6 @@
 //build app and provide WINVER as argument, such as
 //build WINVER=0x0601
 
-
-
-
 //------------------------------------------------------------------------------------------------
 // XXX: /DEF:win.def
 // module main

@@ -160,6 +160,11 @@ $(TARGET): $(OBJDIR)\$(PROJECT).obj $(OBJS)
 	@time /T
 
 clean:
-	del $(OBJDIR)\$(PROJECT).lib
-	del $(OBJDIR)\$(PROJECT).obj
-	del $(OBJDIR)\$(PROJECT).dll
+	@echo [---clean---]
+	del $(OBJDIR)\*.lib 2> nul
+	del $(OBJDIR)\*.obj 2> nul
+	del $(OBJDIR)\*.dll 2> nul
+
+rebuild: clean $(TARGET)
+	@echo [---rebuild---]
+
