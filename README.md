@@ -39,15 +39,15 @@ xlb is another library for binding C++ to Lua. It depends on C++17, and it's jus
 ```
 ```lua
     function EnumWindows()
-        luawin.load_wmsg();
-        local len = 1024;
-        local buff = string.rep('\0', len);
+        luawin.load_wmsg()
+        local len = 1024
+        local buff = string.rep('\0', len)
         local EnumWindowsProc = luawin.EnumWindowsProc(function(hwnd, lParam) 
-            local len = luawin.GetWindowText(hwnd, buff, len);
-            print('---' .. string.sub(buff, 1, len) .. ',' .. lParam);
-            return true; 
+            local len = luawin.GetWindowText(hwnd, buff, len)
+            print('---' .. string.sub(buff, 1, len) .. ',' .. lParam)
+            return true
         end);
-        luawin.EnumWindows(EnumWindowsProc, 999);
+        luawin.EnumWindows(EnumWindowsProc, 999)
     end
 ```
   maybe Output is :
@@ -75,22 +75,22 @@ xlb is another library for binding C++ to Lua. It depends on C++17, and it's jus
 + create object with new in place ( malloc and free )
 ```lua
     require 'luawin'
-    luawin.load_base();
+    luawin.load_base()
     function BASE()
-        luawin.load_dialog();
-        print('---sizeof PRINTPAGERANGE=' .. luawin.PRINTPAGERANGE.typesize); 
-        local a = luawin.malloc(luawin.PRINTPAGERANGE.typesize);
-        print('---a=' .. luawin.type(a));
-        local b = luawin.PRINTPAGERANGE:newin(a);
-        b.nFromPage = 1;
-        b.nToPage = 2;
-        print('---b.nFromPage=' .. b.nFromPage);
-        print('---b.nToPage=' .. b.nToPage);
-        print('---b=' .. luawin.type(b));
-        b = nil;
-        collectgarbage();
-        print('--');
-        luawin.free(a);
+        luawin.load_dialog()
+        print('---sizeof PRINTPAGERANGE=' .. luawin.PRINTPAGERANGE.typesize)
+        local a = luawin.malloc(luawin.PRINTPAGERANGE.typesize)
+        print('---a=' .. luawin.type(a))
+        local b = luawin.PRINTPAGERANGE:newin(a)
+        b.nFromPage = 1
+        b.nToPage = 2
+        print('---b.nFromPage=' .. b.nFromPage)
+        print('---b.nToPage=' .. b.nToPage)
+        print('---b=' .. luawin.type(b))
+        b = nil
+        collectgarbage()
+        print('--')
+        luawin.free(a)
     end
 ```
   maybe Output is:
@@ -104,6 +104,11 @@ xlb is another library for binding C++ to Lua. It depends on C++17, and it's jus
                 
 ## Sample
 + bind Windows API to Lua ( BASE, MESSAGE, GUI, Dialog and SNMP )
+
+## History
+- 20230521 bind C style library with xlb_class, method, constructor, destructor
+- 20230521 bind boolean with AT xlb_lboolean
+- 20230521 custom data type xlb_lstr AT for string with length just like lua's string type
 
 ## License
 + Licensed under the [MIT License](https://www.lua.org/license.html).
