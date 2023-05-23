@@ -2224,7 +2224,7 @@ template <typename T, auto freef> int xlb_wpdtor(lua_State *L) {
     assert(wp);
     wp->freeit(freef);
     wp->~xlb_wrap<T>();
-    xlb_debug("(%s)\n", typeid(T *).name());
+    // xlb_debug("(%s)\n", typeid(T *).name());
   }
   return 0;
 }
@@ -2880,19 +2880,20 @@ template <typename R, typename R_AT, typename FT, typename... A, int... idxs, ty
 struct xlb_invoke::xlb_tir<R, false, R_AT, void, true, FT, xlb_idx<idxs...>, xlt_typelist<A...>,
                            R2L> {
   template <typename... Arg> XLB_SIV go(lua_State *L, xlb_ami &ami, FT f, std::tuple<Arg...> &tup) {
-    auto &&tmp_rv = std::move(f((A)std::get<idxs>(tup)...));
+    auto &&tmp_return = std::move(f((A)std::get<idxs>(tup)...));
 
-    ///< when agent for constructor that create callback agent object
+    ///< for xlb_cbf which take lua callback function as class
     if constexpr (is_ctor_r<R>::value) {
       // XXX: is_base_of_v need complete type
-      if constexpr (is_complete_v<xlb_t<R>>) {
-        if constexpr (std::is_base_of_v<xlb_base_cbcf, xlb_t<R>>) {
-          tmp_rv.getobj().setLua(L);
+      using T = xlb_t<R>;
+      if constexpr (is_complete_v<T>) { // do not merge with next line
+        if constexpr (std::is_base_of_v<xlb_base_cbcf, T>) {
+          tmp_return.getobj().setLua(L);
         }
       }
     }
 
-    R_AT r(std::move(tmp_rv));
+    R_AT r(std::move(tmp_return));
     R2L::template xlb_tir<R, R_AT>::go(L, r, ami.rc);
   }
 };
@@ -2990,7 +2991,7 @@ int xlb_cfunction(lua_State *L) {
   }
   auto &ami = (*p_ami);
 
-  ami.arg_index = 1; // update
+  ami.arg_index = 1; // reset it
   ami.param_count = param_t::size;
 
   xlb_selfobj<obj_t, const_t>::go(L, tup, ami, ais);
@@ -3004,7 +3005,7 @@ int xlb_cfunction(lua_State *L) {
                                  FT, idx_t, param_t, xlb_rv2l>::go(L, ami, f, tup);
     PTER::template xlb_tir<rpi_po, tuple_t>::go(L, tup, ais, ami.rc);
   } else {
-    if (ptr_ami.get() == nullptr) { // f is inner function
+    if (ptr_ami.get() == nullptr) { // XXX: f is inner function
       ami.rc = ami.arg_count;       // recover scene limited
     } else {
       ami.rc = luaL_argerror(L, ami.arg_index, ami.extmsg.c_str());
@@ -3120,10 +3121,6 @@ struct xlb_cbf<R(__stdcall *)(A...), PO...> : public xlb_base_cbcf {
     if constexpr (!std::is_void_v<R>) {
       xlb_at<Vt, R> r;
       r.getarg(L, ami);
-      // using x = BOOL (CALLBACK* )(HWND, LPARAM);
-      // xlb_debug("(%d,%s)\n", (R&)r, typeid(R).name());
-      // xlb_debug("(%d,%s)\n", (R&)r, typeid(HWND).name());
-      // xlb_debug("(%s)\n", typeid(x).name());
       return (R &)r;
     }
   }
@@ -3344,7 +3341,8 @@ struct xlb_ns;
 struct xlb_regitem {
   std::string name;
   xlb_regitem(const char *n = "") : name(n) {}
-  virtual void registry(xlb_ns *ns) {}
+  // virtual void registry(xlb_ns *ns) { }
+  virtual void registry(xlb_ns *ns) = 0;
 }; // xlb_regitem
 
 struct xlb_regchain : public std::vector<xlb_regitem *> {
@@ -3809,8 +3807,9 @@ struct xlb_module : public xlb_ns, public xlb_regitem {
     }
 
     luaIndex = lua_gettop(L);
-    for (auto &reg : chain) {
-      reg->registry(this);
+    for (auto &item : chain) {
+      // xlb_debug("%p\n", &item);
+      item->registry(this);
     }
 
     if (!havemodule && (nullptr != moduleName)) {
@@ -3989,7 +3988,7 @@ template <typename X> struct xlb_base_class : public xlb_regitem {
     return std::move(*this);
   }
 
-  template <typename... A> auto constructor() {
+  template <typename... A> rr_t constructor() {
     typeTable.push_back({"__call", xlb_f2cf_pure<&xlb_ctor<X, A...>>});
     typeTable.push_back({"newinplace", xlb_f2cf_pure<&xlb_ctor_inplace<X, A...>>});
     /** XXX: pointer, such as T* in C++ **/
@@ -3997,7 +3996,7 @@ template <typename X> struct xlb_base_class : public xlb_regitem {
     return std::move(*this);
   }
 
-  template <typename... A> auto constructor(xpo_no_newinplace &&) {
+  template <typename... A> rr_t constructor(xpo_no_newinplace &&) {
     // constexpr lua_CFunction cf = xlb_f2cf_pure<&xlb_ctor<X, A...>>;
     constexpr lua_CFunction cf = xlb_f2cf_pure<&xlb_ctor<X, A...>>;
     typeTable.push_back({"__call", cf});
@@ -4005,46 +4004,47 @@ template <typename X> struct xlb_base_class : public xlb_regitem {
   }
 
   /** XXX: for C style ==> T* f(), f must in template argument **/
-  template <X *(*f)(void)> auto constructor() {
+  template <X *(*f)(void)> rr_t constructor() {
     constexpr auto ccf = xlb_ctor_c_style<X, f>;
     typeTable.push_back({"__call", xlb_f2cf_pure<ccf>});
     return std::move(*this);
   }
 
-  template <void (*freef)(X *)> auto destructor() {
+  template <void (*freef)(X *)> rr_t destructor() {
     metaFuncs.push_back({"__gc", xlb_wpdtor<X, freef>});
     return std::move(*this);
   }
 
-  auto destructor() {
+  rr_t destructor() {
     metaFuncs.push_back({"__gc", xlb_wpdtor<X>});
     return std::move(*this);
   }
 
-  auto method(const char *func_name, lua_CFunction cf) {
+  rr_t method(const char *func_name, lua_CFunction cf) {
     memberMap[func_name] = xlb_property::create(cf);
     return std::move(*this);
   }
 
-  template <typename FT, class... PO> auto method(const char *func_name, FT f, PO...) {
+  template <typename FT, class... PO> rr_t method(const char *func_name, FT f, PO...) {
     memberMap[func_name] = xlb_property::create(xlb_f2cf_static<FT, PO...>, f);
     return std::move(*this);
   }
 
-  template <auto f, class... PO> auto method(const char *func_name, PO...) {
+  template <auto f, class... PO> rr_t method(const char *func_name, PO...) {
     using FT = decltype(f);
     memberMap[func_name] = xlb_property::create(xlb_f2cf_static<FT, PO...>, f);
+    // xlb_debug("(%s)\n", func_name);
     return std::move(*this);
   }
 
-  template <class Prop_t, class... PO> auto property(const char prop_name[], Prop_t prop, PO...) {
+  template <class Prop_t, class... PO> rr_t property(const char prop_name[], Prop_t prop, PO...) {
     using check_po_readonly = xpo_get_readonly<PO...>;
     memberMap[prop_name] = xlb_property::create<Prop_t, PO...>(prop, check_po_readonly());
     return std::move(*this);
   }
 
   template <typename Reader_t, typename Writer_t>
-  auto property(const char prop_name[], Reader_t reader, Writer_t writer,
+  rr_t property(const char prop_name[], Reader_t reader, Writer_t writer,
                 std::enable_if_t<std::is_class_v<std::remove_pointer_t<Reader_t>>> * = 0) {
     memberMap[prop_name] = xlb_bitfieldprop::create(reader, writer);
     return std::move(*this);
@@ -4057,6 +4057,7 @@ template <typename X> struct xlb_base_class : public xlb_regitem {
     typeTable.push_back({"__tostring", &typetostring_handler});
     typeTable.push_back({nullptr, nullptr});
 
+    // xlb_debug("(%s)\n", typeName);
     xlu_newtypelib(L, typeName, typeTable, staticmemberMap, xlb_sizeof<X>(), parentTableIndex);
     xlu_newobjmeta(L, metaName, metaFuncs, methodFuncs, superNames);
 
@@ -4084,13 +4085,19 @@ template <typename T> struct xlb_class : public xlb_base_class<T> {
   using bc_t = xlb_base_class<T>;
   using ri_t = xlb_regitem;
 
-  xlb_class(const char *class_name) { bc_t::setup_names(class_name); }
+  xlb_class(const char *class_name) {
+    bc_t::setup_names(class_name);
+    // xlb_debug("(%s)\n", bc_t::typeName);
+  }
 
   virtual ~xlb_class() {}
 
   xlb_class(xlb_class &&o) = delete;
 
-  virtual void registry(xlb_ns *ns) override { bc_t::registry(ns->lua, ns->luaIndex); }
+  virtual void registry(xlb_ns *ns) override {
+    // xlb_debug("%p\n", ns);
+    bc_t::registry(ns->lua, ns->luaIndex);
+  }
 
 }; // xlb_class
 
@@ -4224,4 +4231,5 @@ template <> struct xlb_vter::xlb_tir<xlt_rvtrait<xlb_lstr>> {
   using type = xlb_lstr_agent_t;
 };
 
+//------------------------------------------------------------------------------------------------
 #endif //__XLB_H__
