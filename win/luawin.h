@@ -2,7 +2,7 @@
 #pragma once
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -14,8 +14,7 @@ extern "C" {
 #endif
 #define luaf_declare(fn) int fn(lua_State *);
 
-
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #define BIND_WIN_CHECKED 0x1
 
 // #define BIND_BASE BIND_WIN_CHECKED
@@ -30,12 +29,12 @@ extern "C" {
 //#define BIND_SHL
 //#define BIND_COM
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #ifndef MODULE_NAME
 #define MODULE_NAME "luawin"
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #include <SDKDDKVer.h>
 #include <windows.h>
 #include <windowsx.h>
@@ -44,17 +43,17 @@ extern "C" {
 using QWORD = unsigned __int64;
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // https://docs.microsoft.com/en-us/windows/win32/api/
 // https://docs.microsoft.com/en-us/windows/desktop/api/index
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Compile options
 // WINVER
 // BIND_ALL
 // BIND_WIN_8_1_MINCORE_LIB
 // _WIN32_IE
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // sdkddkver.h
 // Minimum system required                     Macros to define
 // Windows 10                                  WINVER>=0x0A00
@@ -97,7 +96,7 @@ using QWORD = unsigned __int64;
 // Internet Explorer 5.01	                   _WIN32_IE_IE501   (0x0501)
 // Internet Explorer 5.0, 5.0a, 5.0b	       _WIN32_IE_IE50    (0x0500)
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // _MSC_VER
 // MS VC++ 12.0 _MSC_VER = 1800 (Visual C++ 2013)
 // MS VC++ 11.0 _MSC_VER = 1700 (Visual C++ 2012)
@@ -109,7 +108,7 @@ using QWORD = unsigned __int64;
 // MS VC++ 6.0 _MSC_VER = 1200
 // MS VC++ 5.0 _MSC_VER = 1100
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Minimum system required Macros to define
 // Windows Server 2008 NTDDI_VERSION >= NTDDI_LONGHORN
 // Windows Vista NTDDI_VERSION >= NTDDI_VISTA
@@ -124,7 +123,7 @@ using QWORD = unsigned __int64;
 // Windows 2000 SP1 NTDDI_VERSION >= NTDDI_WIN2KSP1
 // Windows 2000 NTDDI_VERSION >= NTDDI_WIN2K
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #include <aclapi.h>
 #include <cpl.h>
 #include <shellapi.h>
@@ -185,7 +184,7 @@ using QWORD = unsigned __int64;
 
 #pragma comment(lib, "Netapi32.lib")
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Windows Shell
 // https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb773177(v=vs.85)
 // https://docs.microsoft.com/en-us/windows/win32/api/_shell/
@@ -275,45 +274,25 @@ using MRUCMPPROC = int(CALLBACK *)(LPCTSTR pString1, LPCTSTR pString2);
 #endif
 
 #include <tchar.h>
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #include <xlb.h>
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // for LoadLibrary GetProcAddress to get function pointer
- struct Win32_libf {
+struct Win32_libf {
   struct Libf : public xlb_fmat_evthandler {
     TCHAR *libn;
     const char *funcn;
     virtual ~Libf() {}
   };
 
-  static xlb_fmat_evthandler *CreateFmatHandler(TCHAR* ln, const char* fn) {
-    auto h = new Libf();
-    h->libn = ln;
-    h->funcn = fn;
-    // h->on_registry = Win32_libf::register;
-    h->on_getf = Win32_libf::getf;
-    return h;
-  }
+  static xlb_fmat_evthandler *CreateFmatHandler(TCHAR *ln, const char *fn);
 
   // static int registry(lua_State *L, xlb_fmat_evthandler *) { return 0; }
-  static void* getf(lua_State *L, xlb_fmat_evthandler *evth) { 
-    assert(evth);
-    auto libf = dynamic_cast<Libf*>(evth);
-    assert(libf);
-    assert(libf->libn);
-    assert(libf->funcn);
-    void* f = nullptr;
-    auto hlib = ::LoadLibrary(libf->libn);
-    assert(hlib!=NULL); //"fail to LoadLibrary"
-    f = ::GetProcAddress(hlib, libf->funcn);
-    assert(f!=NULL); // "fail to GetProcAddress"
-
-    return f;
-  }
+  static void *getf(lua_State *L, xlb_fmat_evthandler *evth);
 }; // Win32_libf
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // XXX: special delete for interface, call release instead
 template <typename T> struct xlb_win_interface_delete {
   void operator()(T *intf) {
@@ -329,7 +308,7 @@ template <typename T> struct xlb_delete::xlb_tir<T, enable_if_interface<T>> {
   using type = xlb_win_interface_delete<T>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Component Object Model (COM)
 // https://docs.microsoft.com/en-us/previous-versions/windows/embedded/ms885856(v=msdn.10)
 #if ((defined(BIND_COM) || defined(BIND_ALL)))
@@ -375,14 +354,14 @@ int xlb_pushinterface(lua_State *L, P pointer, void *place = nullptr) {
 
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Windows Base
 // https://docs.microsoft.com/en-us/windows/win32/api/winbase/
 #if ((defined(BIND_BASE) || defined(BIND_ALL)))
 #include <guiddef.h>
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Simple Network Management Protocol
 // SNMP is available for use in the operating systems specified in the
 // Requirements section. It may be altered or unavailable in subsequent
@@ -399,7 +378,7 @@ int xlb_pushinterface(lua_State *L, P pointer, void *place = nullptr) {
 luaf_declare(load_snmp);
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Windows GDI
 // https://docs.microsoft.com/en-us/windows/desktop/api/_gdi/
 #if ((defined(BIND_GDI) || defined(BIND_ALL)))
@@ -418,7 +397,7 @@ luaf_declare(load_snmp);
 luaf_declare(load_gdi);
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Windows Controls
 // https://docs.microsoft.com/zh-cn/windows/win32/controls/window-controls
 // https://docs.microsoft.com/zh-cn/windows/win32/controls/individual-control-info
@@ -458,7 +437,7 @@ using DSA_Sort_t =
 
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Network Management
 // https://docs.microsoft.com/en-us/windows/win32/api/_netmgmt/
 #if ((defined(BIND_NWM) || defined(BIND_ALL)))
@@ -467,14 +446,14 @@ using DSA_Sort_t =
 luaf_declare(load_nwm);
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Windows and Messages
 // https://docs.microsoft.com/en-us/windows/desktop/api/_winmsg/
 #if ((defined(BIND_MSG) || defined(BIND_ALL)))
 luaf_declare(load_msg);
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Dialog Boxes
 // https://docs.microsoft.com/en-us/windows/desktop/api/_dlgbox/
 #if ((defined(BIND_DLG) || defined(BIND_ALL)))
@@ -485,7 +464,7 @@ luaf_declare(load_dlg);
 #endif
 
 using GETPROCESSHANDLEFROMHWND = HANDLE WINAPI (*)(HWND hwnd);
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // System Services - Processes
 // https://docs.microsoft.com/zh-cn/windows/win32/procthread/process-and-thread-functions
 #if ((defined(BIND_PROC) || defined(BIND_ALL)))
@@ -508,18 +487,17 @@ using GETPROCESSHANDLEFROMHWND = HANDLE WINAPI (*)(HWND hwnd);
 #include <wtsapi32.h>
 #pragma comment(lib, "wtsapi32.lib")
 
-
 luaf_declare(load_proc);
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Keyboard and Mouse Input
 // https://docs.microsoft.com/en-us/windows/win32/api/_inputdev/
 #if ((defined(BIND_KM) || defined(BIND_ALL)))
 luaf_declare(load_km);
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //#include <lsapi.h>
 
 #include <wintrust.h>
@@ -527,7 +505,7 @@ luaf_declare(load_km);
 
 #pragma comment(lib, "version.lib")
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 using ADDPROPSHEETPAGEPROC = BOOL CALLBACK (*)(HPROPSHEETPAGE hpage, LPARAM lParam);
 using BROWSECALLBACKPROC = int CALLBACK (*)(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData);
 using FMEXTENSIONPROC = LONG CALLBACK (*)(HWND hwnd, WORD wMsg, LONG lParam);
@@ -537,4 +515,4 @@ using PROPSHEETPAGEPROC = UINT CALLBACK (*)(HWND hwnd, UINT uMsg, LPPROPSHEETPAG
 luaf_declare(load_base);
 luaf_declare(bind_win_api_desktop_tech);
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

@@ -1,12 +1,38 @@
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // bind Windows API to Lua using XLB
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #include "luawin.h"
 
 // build app and provide WINVER as argument, such as
 // build WINVER=0x0601
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+xlb_fmat_evthandler *Win32_libf::CreateFmatHandler(TCHAR *ln, const char *fn) {
+  auto h = new Libf();
+  h->libn = ln;
+  h->funcn = fn;
+  // h->on_registry = Win32_libf::register;
+  h->on_getf = Win32_libf::getf;
+  return h;
+}
+
+// static int registry(lua_State *L, xlb_fmat_evthandler *) { return 0; }
+void *Win32_libf::getf(lua_State *L, xlb_fmat_evthandler *evth) {
+  assert(evth);
+  auto libf = dynamic_cast<Libf *>(evth);
+  assert(libf);
+  assert(libf->libn);
+  assert(libf->funcn);
+  void *f = nullptr;
+  auto hlib = ::LoadLibrary(libf->libn);
+  assert(hlib != NULL); //"fail to LoadLibrary"
+  f = ::GetProcAddress(hlib, libf->funcn);
+  assert(f != NULL); // "fail to GetProcAddress"
+
+  return f;
+}
+
+//--------------------------------------------------------------------------------------------------
 // XXX: /DEF:win.def
 // module main
 int luaopen_luawin(lua_State *L) {
@@ -15,7 +41,7 @@ int luaopen_luawin(lua_State *L) {
   return 0;
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 int bind_win_api_desktop_tech(lua_State *L) {
   // xlb_debug("PROCESS_TERMINATE=0x%x\n", PROCESS_TERMINATE);
   xlb_module(L, MODULE_NAME)({
@@ -61,4 +87,4 @@ int bind_win_api_desktop_tech(lua_State *L) {
   return 0;
 } // bind_win_api_desktop_tech
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
