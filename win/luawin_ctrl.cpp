@@ -1,55 +1,100 @@
 #include "luawin.h"
 
 //------------------------------------------------------------------------------------------------
-int load_ctrl(lua_State* L)
-{
-#if defined(CHECK_BIND_CTRL)
-    xlb_module(L, MODULE_NAME) ({
+int load_ctrl(lua_State *L) {
+#if defined(BIND_CTRL)
+  xlb_module(L, MODULE_NAME)({
 
-#if defined(WINVER) && (WINVER>=0x0600) // Vista
-        xlb_f("CheckDlgButton", CheckDlgButton),
+#if defined(WINVER) && (WINVER >= 0x0600) // Vista
+    xlb_f("CheckDlgButton", CheckDlgButton),
         xlb_f("CheckRadioButton", CheckRadioButton),
         xlb_f("IsDlgButtonChecked", IsDlgButtonChecked),
-        xlb_f("Button_Enable", [](HWND hwnd, BOOL fEnable) { Button_Enable(hwnd, fEnable); }),
-        xlb_f("Button_GetCheck", [](HWND hwnd)->UINT { return Button_GetCheck(hwnd); }),
-        xlb_f("Button_GetIdealSize", [](HWND hwnd, SIZE* psize) { Button_GetIdealSize(hwnd, psize); }),
-        xlb_f("Button_GetImageList", [](HWND hwnd, PBUTTON_IMAGELIST pil) { Button_GetImageList(hwnd, pil); }),
-        xlb_f("Button_GetNote", [](HWND hwnd, LPCWSTR psz, int pcc) { Button_GetNote(hwnd, psz, pcc); }),
-        xlb_f("Button_GetNoteLength", [](HWND hwnd)->UINT { return Button_GetNoteLength(hwnd); }),
-        xlb_f("Button_GetSplitInfo", [](HWND hwnd, BUTTON_SPLITINFO* p) { Button_GetSplitInfo(hwnd, p); }),
-        xlb_f("Button_GetState", [](HWND hwnd)->UINT { return Button_GetState(hwnd); }),
-        xlb_f("Button_GetText", [](HWND hwnd, LPTSTR lpch, int cchMax) { Button_GetText(hwnd, lpch, cchMax); }),
-        xlb_f("Button_GetTextMargin", [](HWND hwnd, RECT* pmargin) { Button_GetTextMargin(hwnd, pmargin); }),
-        xlb_f("Button_SetCheck", [](HWND hwnd, int check) { Button_SetCheck(hwnd, check); }),
-        xlb_f("Button_SetDropDownState", [](HWND hwnd, BOOL fDropDown) { Button_SetDropDownState(hwnd, fDropDown); }),
-        xlb_f("Button_SetElevationRequiredState", [](HWND hwnd, BOOL fRequired) { Button_SetElevationRequiredState(hwnd, fRequired); }),
-        xlb_f("Button_SetImageList", [](HWND hwnd, PBUTTON_IMAGELIST pil) { Button_SetImageList(hwnd, pil); }),
-        xlb_f("Button_SetNote", [](HWND hwnd, LPCWSTR psz) { Button_SetNote(hwnd, psz); }),
-        xlb_f("Button_SetSplitInfo", [](HWND hwnd, BUTTON_SPLITINFO* p) { Button_SetSplitInfo(hwnd, p); }),
-        xlb_f("Button_SetState", [](HWND hwnd, BOOL state) { Button_SetState(hwnd, state); }),
-        xlb_f("Button_SetStyle", [](HWND hwnd, DWORD style, BOOL fRedraw) { Button_SetStyle(hwnd, style, fRedraw); }),
-        xlb_f("Button_SetText", [](HWND hwnd, LPTSTR lpsz) { Button_SetText(hwnd, lpsz); }),
-        xlb_f("Button_SetTextMargin", [](HWND hwnd, RECT* pmargin) { Button_SetTextMargin(hwnd, pmargin); }),
+        xlb_f("Button_Enable",
+              [](HWND hwnd, BOOL fEnable) { Button_Enable(hwnd, fEnable); }),
+        xlb_f("Button_GetCheck",
+              [](HWND hwnd) -> UINT { return Button_GetCheck(hwnd); }),
+        xlb_f("Button_GetIdealSize",
+              [](HWND hwnd, SIZE *psize) { Button_GetIdealSize(hwnd, psize); }),
+        xlb_f("Button_GetImageList",
+              [](HWND hwnd, PBUTTON_IMAGELIST pil) {
+                Button_GetImageList(hwnd, pil);
+              }),
+        xlb_f("Button_GetNote",
+              [](HWND hwnd, LPCWSTR psz, int pcc) {
+                Button_GetNote(hwnd, psz, pcc);
+              }),
+        xlb_f("Button_GetNoteLength",
+              [](HWND hwnd) -> UINT { return Button_GetNoteLength(hwnd); }),
+        xlb_f("Button_GetSplitInfo",
+              [](HWND hwnd, BUTTON_SPLITINFO *p) {
+                Button_GetSplitInfo(hwnd, p);
+              }),
+        xlb_f("Button_GetState",
+              [](HWND hwnd) -> UINT { return Button_GetState(hwnd); }),
+        xlb_f("Button_GetText",
+              [](HWND hwnd, LPTSTR lpch, int cchMax) {
+                Button_GetText(hwnd, lpch, cchMax);
+              }),
+        xlb_f("Button_GetTextMargin",
+              [](HWND hwnd, RECT *pmargin) {
+                Button_GetTextMargin(hwnd, pmargin);
+              }),
+        xlb_f("Button_SetCheck",
+              [](HWND hwnd, int check) { Button_SetCheck(hwnd, check); }),
+        xlb_f("Button_SetDropDownState",
+              [](HWND hwnd, BOOL fDropDown) {
+                Button_SetDropDownState(hwnd, fDropDown);
+              }),
+        xlb_f("Button_SetElevationRequiredState",
+              [](HWND hwnd, BOOL fRequired) {
+                Button_SetElevationRequiredState(hwnd, fRequired);
+              }),
+        xlb_f("Button_SetImageList",
+              [](HWND hwnd, PBUTTON_IMAGELIST pil) {
+                Button_SetImageList(hwnd, pil);
+              }),
+        xlb_f("Button_SetNote",
+              [](HWND hwnd, LPCWSTR psz) { Button_SetNote(hwnd, psz); }),
+        xlb_f("Button_SetSplitInfo",
+              [](HWND hwnd, BUTTON_SPLITINFO *p) {
+                Button_SetSplitInfo(hwnd, p);
+              }),
+        xlb_f("Button_SetState",
+              [](HWND hwnd, BOOL state) { Button_SetState(hwnd, state); }),
+        xlb_f("Button_SetStyle",
+              [](HWND hwnd, DWORD style, BOOL fRedraw) {
+                Button_SetStyle(hwnd, style, fRedraw);
+              }),
+        xlb_f("Button_SetText",
+              [](HWND hwnd, LPTSTR lpsz) { Button_SetText(hwnd, lpsz); }),
+        xlb_f("Button_SetTextMargin",
+              [](HWND hwnd, RECT *pmargin) {
+                Button_SetTextMargin(hwnd, pmargin);
+              }),
         // Structures
-        xlb_class<BUTTON_IMAGELIST>("BUTTON_IMAGELIST") .constructor<>() .destructor()
+        xlb_class<BUTTON_IMAGELIST>("BUTTON_IMAGELIST")
+            .constructor<>()
+            .destructor()
             .property("himl", &BUTTON_IMAGELIST::himl)
             .property("margin", &BUTTON_IMAGELIST::margin)
-            .property("uAlign", &BUTTON_IMAGELIST::uAlign)
-            ,
-        xlb_class<BUTTON_SPLITINFO>("BUTTON_SPLITINFO") .constructor<>() .destructor()
+            .property("uAlign", &BUTTON_IMAGELIST::uAlign),
+        xlb_class<BUTTON_SPLITINFO>("BUTTON_SPLITINFO")
+            .constructor<>()
+            .destructor()
             .property("mask", &BUTTON_SPLITINFO::mask)
             .property("himlGlyph", &BUTTON_SPLITINFO::himlGlyph)
             .property("uSplitStyle", &BUTTON_SPLITINFO::uSplitStyle)
-            .property("size", &BUTTON_SPLITINFO::size)
-            ,
-        xlb_class<NMBCDROPDOWN>("NMBCDROPDOWN") .constructor<>() .destructor()
+            .property("size", &BUTTON_SPLITINFO::size),
+        xlb_class<NMBCDROPDOWN>("NMBCDROPDOWN")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMBCDROPDOWN::hdr)
-            .property("rcButton", &NMBCDROPDOWN::rcButton)
-            ,
-        xlb_class<NMBCHOTITEM>("NMBCHOTITEM") .constructor<>() .destructor()
+            .property("rcButton", &NMBCDROPDOWN::rcButton),
+        xlb_class<NMBCHOTITEM>("NMBCHOTITEM")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMBCHOTITEM::hdr)
-            .property("dwFlags", &NMBCHOTITEM::dwFlags)
-            ,
+            .property("dwFlags", &NMBCHOTITEM::dwFlags),
 
         // Messages
         xlb_const("BCM_GETIDEALSIZE", BCM_GETIDEALSIZE),
@@ -64,8 +109,7 @@ int load_ctrl(lua_State* L)
         xlb_const("BCM_SETSHIELD", BCM_SETSHIELD),
         xlb_const("BCM_SETSPLITINFO", BCM_SETSPLITINFO),
         xlb_const("BCM_SETTEXTMARGIN", BCM_SETTEXTMARGIN),
-        xlb_const("BM_CLICK", BM_CLICK),
-        xlb_const("BM_GETCHECK", BM_GETCHECK),
+        xlb_const("BM_CLICK", BM_CLICK), xlb_const("BM_GETCHECK", BM_GETCHECK),
         xlb_const("BM_GETIMAGE", BM_GETIMAGE),
         xlb_const("BM_GETSTATE", BM_GETSTATE),
         xlb_const("BM_SETCHECK", BM_SETCHECK),
@@ -73,18 +117,16 @@ int load_ctrl(lua_State* L)
         xlb_const("BM_SETIMAGE", BM_SETIMAGE),
         xlb_const("BM_SETSTATE", BM_SETSTATE),
         xlb_const("BM_SETSTYLE", BM_SETSTYLE),
-        
+
         // Notifications
         xlb_const("BCN_DROPDOWN", BCN_DROPDOWN),
         xlb_const("BCN_HOTITEMCHANGE", BCN_HOTITEMCHANGE),
         xlb_const("BN_CLICKED", (uint32_t)BN_CLICKED), // value==0, ambiguouse
-        xlb_const("BN_DBLCLK", BN_DBLCLK),
-        xlb_const("BN_DISABLE", BN_DISABLE),
+        xlb_const("BN_DBLCLK", BN_DBLCLK), xlb_const("BN_DISABLE", BN_DISABLE),
         xlb_const("BN_DOUBLECLICKED", BN_DOUBLECLICKED),
         xlb_const("BN_HILITE", BN_HILITE),
         xlb_const("BN_KILLFOCUS", BN_KILLFOCUS),
-        xlb_const("BN_PAINT", BN_PAINT),
-        xlb_const("BN_PUSHED", BN_PUSHED),
+        xlb_const("BN_PAINT", BN_PAINT), xlb_const("BN_PUSHED", BN_PUSHED),
         xlb_const("BN_SETFOCUS", BN_SETFOCUS),
         xlb_const("BN_UNHILITE", BN_UNHILITE),
         xlb_const("BN_UNPUSHED", BN_UNPUSHED),
@@ -96,18 +138,15 @@ int load_ctrl(lua_State* L)
         xlb_const("BS_AUTO3STATE", BS_AUTO3STATE),
         xlb_const("BS_AUTOCHECKBOX", BS_AUTOCHECKBOX),
         xlb_const("BS_AUTORADIOBUTTON", BS_AUTORADIOBUTTON),
-        xlb_const("BS_BITMAP", BS_BITMAP),
-        xlb_const("BS_BOTTOM", BS_BOTTOM),
+        xlb_const("BS_BITMAP", BS_BITMAP), xlb_const("BS_BOTTOM", BS_BOTTOM),
         xlb_const("BS_CENTER", BS_CENTER),
         xlb_const("BS_CHECKBOX", BS_CHECKBOX),
         xlb_const("BS_COMMANDLINK", BS_COMMANDLINK),
         xlb_const("BS_DEFCOMMANDLINK", BS_DEFCOMMANDLINK),
         xlb_const("BS_DEFPUSHBUTTON", BS_DEFPUSHBUTTON),
         xlb_const("BS_DEFSPLITBUTTON", BS_DEFSPLITBUTTON),
-        xlb_const("BS_GROUPBOX", BS_GROUPBOX),
-        xlb_const("BS_ICON", BS_ICON),
-        xlb_const("BS_FLAT", BS_FLAT),
-        xlb_const("BS_LEFT", BS_LEFT),
+        xlb_const("BS_GROUPBOX", BS_GROUPBOX), xlb_const("BS_ICON", BS_ICON),
+        xlb_const("BS_FLAT", BS_FLAT), xlb_const("BS_LEFT", BS_LEFT),
         xlb_const("BS_LEFTTEXT", BS_LEFTTEXT),
         xlb_const("BS_MULTILINE", BS_MULTILINE),
         xlb_const("BS_NOTIFY", BS_NOTIFY),
@@ -118,8 +157,7 @@ int load_ctrl(lua_State* L)
         xlb_const("BS_RIGHT", BS_RIGHT),
         xlb_const("BS_RIGHTBUTTON", BS_RIGHTBUTTON),
         xlb_const("BS_SPLITBUTTON", BS_SPLITBUTTON),
-        xlb_const("BS_TEXT", (uint32_t)BS_TEXT),
-        xlb_const("BS_TOP", BS_TOP),
+        xlb_const("BS_TEXT", (uint32_t)BS_TEXT), xlb_const("BS_TOP", BS_TOP),
         xlb_const("BS_TYPEMASK", BS_TYPEMASK),
         xlb_const("BS_USERBUTTON", BS_USERBUTTON),
         xlb_const("BS_VCENTER", BS_VCENTER),
@@ -143,7 +181,8 @@ int load_ctrl(lua_State* L)
         xlb_const("COLOR_CAPTIONTEXT", COLOR_CAPTIONTEXT),
         xlb_const("COLOR_DESKTOP", COLOR_DESKTOP),
         xlb_const("COLOR_GRADIENTACTIVECAPTION", COLOR_GRADIENTACTIVECAPTION),
-        xlb_const("COLOR_GRADIENTINACTIVECAPTION", COLOR_GRADIENTINACTIVECAPTION),
+        xlb_const("COLOR_GRADIENTINACTIVECAPTION",
+                  COLOR_GRADIENTINACTIVECAPTION),
         xlb_const("COLOR_GRAYTEXT", COLOR_GRAYTEXT),
         xlb_const("COLOR_HIGHLIGHT", COLOR_HIGHLIGHT),
         xlb_const("COLOR_HIGHLIGHTTEXT", COLOR_HIGHLIGHTTEXT),
@@ -163,46 +202,110 @@ int load_ctrl(lua_State* L)
         xlb_const("COLOR_WINDOWTEXT", COLOR_WINDOWTEXT),
 
         // ComboBox
-        xlb_f("DlgDirListComboBox", DlgDirListComboBox), 
-        xlb_f("DlgDirSelectComboBoxEx", DlgDirSelectComboBoxEx), 
-        xlb_f("GetComboBoxInfo", GetComboBoxInfo), 
-        xlb_f("ComboBox_AddItemData", [](HWND hwnd, LPARAM data) { ComboBox_AddItemData(hwnd, data); }),
-        xlb_f("ComboBox_AddString", [](HWND hwnd, LPCTSTR lpsz) { ComboBox_AddString(hwnd, lpsz); }),
-        xlb_f("ComboBox_DeleteString", [](HWND hwnd, int index) { ComboBox_DeleteString(hwnd, index); }),
-        xlb_f("ComboBox_Dir", [](HWND hwnd, UINT attrs, LPCTSTR lpszFileSpec) { ComboBox_Dir(hwnd, attrs, lpszFileSpec); }),
-        xlb_f("ComboBox_Enable", [](HWND hwnd, BOOL fEnable) { ComboBox_Enable(hwnd, fEnable); }),
-        xlb_f("ComboBox_FindItemData", [](HWND hwnd, int indexStart, LPARAM data)->int{ return ComboBox_FindItemData(hwnd, indexStart, data); }),
-        xlb_f("ComboBox_FindString", [](HWND hwnd, int indexStart, LPCSTR lpszFind)->int{ return ComboBox_FindString(hwnd, indexStart, lpszFind); }),
-        xlb_f("ComboBox_FindStringExact", [](HWND hwnd, int indexStart, LPCSTR lpszFind)->int{ return ComboBox_FindStringExact(hwnd, indexStart, lpszFind); }),
-        xlb_f("ComboBox_GetCount", [](HWND hwnd)->int{ return ComboBox_GetCount(hwnd); }),
-        xlb_f("ComboBox_GetCurSel", [](HWND hwnd)->int{ return ComboBox_GetCurSel(hwnd); }),
-        xlb_f("ComboBox_GetDroppedControlRect", [](HWND hwnd, RECT* lprc) { ComboBox_GetDroppedControlRect(hwnd, lprc); }),
-        xlb_f("ComboBox_GetDroppedState", [](HWND hwnd)->BOOL { return ComboBox_GetDroppedState(hwnd); }),
-        xlb_f("ComboBox_GetExtendedUI", [](HWND hwnd)->UINT { return ComboBox_GetExtendedUI(hwnd); }),
-        xlb_f("ComboBox_GetItemData", [](HWND hwnd, int index)->LRESULT { return ComboBox_GetItemData(hwnd, index); }),
-        xlb_f("ComboBox_GetItemHeight", [](HWND hwnd)->UINT { return ComboBox_GetItemHeight(hwnd); }),
-        xlb_f("ComboBox_GetLBText", [](HWND hwnd, int index, LPCTSTR lpszBuffer){ ComboBox_GetLBText(hwnd, index, lpszBuffer); }),
-        xlb_f("ComboBox_GetLBTextLen", [](HWND hwnd, int index)->int { return ComboBox_GetLBTextLen(hwnd, index); }),
-        xlb_f("ComboBox_GetText", [](HWND hwnd, LPTSTR lpch, int cchMax) { ComboBox_GetText(hwnd, lpch, cchMax); }),
-        xlb_f("ComboBox_GetTextLength", [](HWND hwnd)->int { return ComboBox_GetTextLength(hwnd); }),
-        xlb_f("ComboBox_InsertItemData", [](HWND hwnd, int index, LPARAM data) { ComboBox_InsertItemData(hwnd, index, data); }),
-        xlb_f("ComboBox_InsertString", [](HWND hwnd, int index, LPCSTR lpsz) { ComboBox_InsertString(hwnd, index, lpsz); }),
-        xlb_f("ComboBox_LimitText", [](HWND hwnd, int cchLimit)->int { return ComboBox_LimitText(hwnd, cchLimit); }),
-        xlb_f("ComboBox_ResetContent", [](HWND hwnd) { ComboBox_ResetContent(hwnd); }),
-        xlb_f("ComboBox_SelectItemData", [](HWND hwnd, int indexStart, LPARAM data) { ComboBox_SelectItemData(hwnd, indexStart, data); }),
-        xlb_f("ComboBox_SelectString", [](HWND hwnd, int indexStart, LPCTSTR lpszSelect) { ComboBox_SelectString(hwnd, indexStart, lpszSelect); }),
-        xlb_f("ComboBox_SetCurSel", [](HWND hwnd, int index) { ComboBox_SetCurSel(hwnd, index); }),
-        xlb_f("ComboBox_SetExtendedUI", [](HWND hwnd, UINT flags) { ComboBox_SetExtendedUI(hwnd, flags); }),
-        xlb_f("ComboBox_SetItemData", [](HWND hwnd, int index, LPARAM data) { ComboBox_SetItemData(hwnd, index, data); }),
-        xlb_f("ComboBox_SetItemHeight", [](HWND hwnd, int index, int cyItem) { ComboBox_SetItemHeight(hwnd, index, cyItem); }),
-        xlb_f("ComboBox_SetText", [](HWND hwnd, LPTSTR lpsz) { ComboBox_SetText(hwnd, lpsz); }),
-        xlb_f("ComboBox_ShowDropdown", [](HWND hwnd, BOOL fShow) { ComboBox_ShowDropdown(hwnd, fShow); }),
+        xlb_f("DlgDirListComboBox", DlgDirListComboBox),
+        xlb_f("DlgDirSelectComboBoxEx", DlgDirSelectComboBoxEx),
+        xlb_f("GetComboBoxInfo", GetComboBoxInfo),
+        xlb_f("ComboBox_AddItemData",
+              [](HWND hwnd, LPARAM data) { ComboBox_AddItemData(hwnd, data); }),
+        xlb_f("ComboBox_AddString",
+              [](HWND hwnd, LPCTSTR lpsz) { ComboBox_AddString(hwnd, lpsz); }),
+        xlb_f("ComboBox_DeleteString",
+              [](HWND hwnd, int index) { ComboBox_DeleteString(hwnd, index); }),
+        xlb_f("ComboBox_Dir",
+              [](HWND hwnd, UINT attrs, LPCTSTR lpszFileSpec) {
+                ComboBox_Dir(hwnd, attrs, lpszFileSpec);
+              }),
+        xlb_f("ComboBox_Enable",
+              [](HWND hwnd, BOOL fEnable) { ComboBox_Enable(hwnd, fEnable); }),
+        xlb_f("ComboBox_FindItemData",
+              [](HWND hwnd, int indexStart, LPARAM data) -> int {
+                return ComboBox_FindItemData(hwnd, indexStart, data);
+              }),
+        xlb_f("ComboBox_FindString",
+              [](HWND hwnd, int indexStart, LPCSTR lpszFind) -> int {
+                return ComboBox_FindString(hwnd, indexStart, lpszFind);
+              }),
+        xlb_f("ComboBox_FindStringExact",
+              [](HWND hwnd, int indexStart, LPCSTR lpszFind) -> int {
+                return ComboBox_FindStringExact(hwnd, indexStart, lpszFind);
+              }),
+        xlb_f("ComboBox_GetCount",
+              [](HWND hwnd) -> int { return ComboBox_GetCount(hwnd); }),
+        xlb_f("ComboBox_GetCurSel",
+              [](HWND hwnd) -> int { return ComboBox_GetCurSel(hwnd); }),
+        xlb_f("ComboBox_GetDroppedControlRect",
+              [](HWND hwnd, RECT *lprc) {
+                ComboBox_GetDroppedControlRect(hwnd, lprc);
+              }),
+        xlb_f("ComboBox_GetDroppedState",
+              [](HWND hwnd) -> BOOL { return ComboBox_GetDroppedState(hwnd); }),
+        xlb_f("ComboBox_GetExtendedUI",
+              [](HWND hwnd) -> UINT { return ComboBox_GetExtendedUI(hwnd); }),
+        xlb_f("ComboBox_GetItemData",
+              [](HWND hwnd, int index) -> LRESULT {
+                return ComboBox_GetItemData(hwnd, index);
+              }),
+        xlb_f("ComboBox_GetItemHeight",
+              [](HWND hwnd) -> UINT { return ComboBox_GetItemHeight(hwnd); }),
+        xlb_f("ComboBox_GetLBText",
+              [](HWND hwnd, int index, LPCTSTR lpszBuffer) {
+                ComboBox_GetLBText(hwnd, index, lpszBuffer);
+              }),
+        xlb_f("ComboBox_GetLBTextLen",
+              [](HWND hwnd, int index) -> int {
+                return ComboBox_GetLBTextLen(hwnd, index);
+              }),
+        xlb_f("ComboBox_GetText",
+              [](HWND hwnd, LPTSTR lpch, int cchMax) {
+                ComboBox_GetText(hwnd, lpch, cchMax);
+              }),
+        xlb_f("ComboBox_GetTextLength",
+              [](HWND hwnd) -> int { return ComboBox_GetTextLength(hwnd); }),
+        xlb_f("ComboBox_InsertItemData",
+              [](HWND hwnd, int index, LPARAM data) {
+                ComboBox_InsertItemData(hwnd, index, data);
+              }),
+        xlb_f("ComboBox_InsertString",
+              [](HWND hwnd, int index, LPCSTR lpsz) {
+                ComboBox_InsertString(hwnd, index, lpsz);
+              }),
+        xlb_f("ComboBox_LimitText",
+              [](HWND hwnd, int cchLimit) -> int {
+                return ComboBox_LimitText(hwnd, cchLimit);
+              }),
+        xlb_f("ComboBox_ResetContent",
+              [](HWND hwnd) { ComboBox_ResetContent(hwnd); }),
+        xlb_f("ComboBox_SelectItemData",
+              [](HWND hwnd, int indexStart, LPARAM data) {
+                ComboBox_SelectItemData(hwnd, indexStart, data);
+              }),
+        xlb_f("ComboBox_SelectString",
+              [](HWND hwnd, int indexStart, LPCTSTR lpszSelect) {
+                ComboBox_SelectString(hwnd, indexStart, lpszSelect);
+              }),
+        xlb_f("ComboBox_SetCurSel",
+              [](HWND hwnd, int index) { ComboBox_SetCurSel(hwnd, index); }),
+        xlb_f(
+            "ComboBox_SetExtendedUI",
+            [](HWND hwnd, UINT flags) { ComboBox_SetExtendedUI(hwnd, flags); }),
+        xlb_f("ComboBox_SetItemData",
+              [](HWND hwnd, int index, LPARAM data) {
+                ComboBox_SetItemData(hwnd, index, data);
+              }),
+        xlb_f("ComboBox_SetItemHeight",
+              [](HWND hwnd, int index, int cyItem) {
+                ComboBox_SetItemHeight(hwnd, index, cyItem);
+              }),
+        xlb_f("ComboBox_SetText",
+              [](HWND hwnd, LPTSTR lpsz) { ComboBox_SetText(hwnd, lpsz); }),
+        xlb_f(
+            "ComboBox_ShowDropdown",
+            [](HWND hwnd, BOOL fShow) { ComboBox_ShowDropdown(hwnd, fShow); }),
 
         // Messages
         xlb_const("CB_ADDSTRING", CB_ADDSTRING),
         xlb_const("CB_DELETESTRING", CB_DELETESTRING),
-        xlb_const("CB_DIR", CB_DIR),
-        xlb_const("CB_FINDSTRING", CB_FINDSTRING),
+        xlb_const("CB_DIR", CB_DIR), xlb_const("CB_FINDSTRING", CB_FINDSTRING),
         xlb_const("CB_FINDSTRINGEXACT", CB_FINDSTRINGEXACT),
         xlb_const("CB_GETCOMBOBOXINFO", CB_GETCOMBOBOXINFO),
         xlb_const("CB_GETCOUNT", CB_GETCOUNT),
@@ -238,7 +341,7 @@ int load_ctrl(lua_State* L)
         xlb_const("CB_SETMINVISIBLE", CB_SETMINVISIBLE),
         xlb_const("CB_SETTOPINDEX", CB_SETTOPINDEX),
         xlb_const("CB_SHOWDROPDOWN", CB_SHOWDROPDOWN),
-        
+
         // Notifications
         xlb_const("CBN_CLOSEUP", CBN_CLOSEUP),
         xlb_const("CBN_DBLCLK", CBN_DBLCLK),
@@ -256,16 +359,19 @@ int load_ctrl(lua_State* L)
         xlb_const("WM_MEASUREITEM", WM_MEASUREITEM),
 
         // Structures
-        xlb_class<COMBOBOXINFO>("COMBOBOXINFO") .constructor<>() .destructor()
+        xlb_class<COMBOBOXINFO>("COMBOBOXINFO")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &COMBOBOXINFO::cbSize)
             .property("rcItem", &COMBOBOXINFO::rcItem)
             .property("rcButton", &COMBOBOXINFO::rcButton)
             .property("stateButton", &COMBOBOXINFO::stateButton)
             .property("hwndCombo", &COMBOBOXINFO::hwndCombo)
             .property("hwndItem", &COMBOBOXINFO::hwndItem)
-            .property("hwndList", &COMBOBOXINFO::hwndList)
-            ,
-        xlb_class<COMPAREITEMSTRUCT>("COMPAREITEMSTRUCT") .constructor<>() .destructor()
+            .property("hwndList", &COMBOBOXINFO::hwndList),
+        xlb_class<COMPAREITEMSTRUCT>("COMPAREITEMSTRUCT")
+            .constructor<>()
+            .destructor()
             .property("CtlType", &COMPAREITEMSTRUCT::CtlType)
             .property("CtlID", &COMPAREITEMSTRUCT::CtlID)
             .property("hwndItem", &COMPAREITEMSTRUCT::hwndItem)
@@ -273,9 +379,10 @@ int load_ctrl(lua_State* L)
             .property("itemData1", &COMPAREITEMSTRUCT::itemData1)
             .property("itemID2", &COMPAREITEMSTRUCT::itemID2)
             .property("itemData2", &COMPAREITEMSTRUCT::itemData2)
-            .property("dwLocaleId", &COMPAREITEMSTRUCT::dwLocaleId)
-            ,
-        xlb_class<DRAWITEMSTRUCT>("DRAWITEMSTRUCT") .constructor<>() .destructor()
+            .property("dwLocaleId", &COMPAREITEMSTRUCT::dwLocaleId),
+        xlb_class<DRAWITEMSTRUCT>("DRAWITEMSTRUCT")
+            .constructor<>()
+            .destructor()
             .property("CtlType", &DRAWITEMSTRUCT::CtlType)
             .property("CtlID", &DRAWITEMSTRUCT::CtlID)
             .property("itemID", &DRAWITEMSTRUCT::itemID)
@@ -284,16 +391,16 @@ int load_ctrl(lua_State* L)
             .property("hwndItem", &DRAWITEMSTRUCT::hwndItem)
             .property("hDC", &DRAWITEMSTRUCT::hDC)
             .property("rcItem", &DRAWITEMSTRUCT::rcItem)
-            .property("itemData", &DRAWITEMSTRUCT::itemData)
-            ,
-        xlb_class<MEASUREITEMSTRUCT>("MEASUREITEMSTRUCT") .constructor<>() .destructor()
+            .property("itemData", &DRAWITEMSTRUCT::itemData),
+        xlb_class<MEASUREITEMSTRUCT>("MEASUREITEMSTRUCT")
+            .constructor<>()
+            .destructor()
             .property("CtlType", &MEASUREITEMSTRUCT::CtlType)
             .property("CtlID", &MEASUREITEMSTRUCT::CtlID)
             .property("itemID", &MEASUREITEMSTRUCT::itemID)
             .property("itemWidth", &MEASUREITEMSTRUCT::itemWidth)
             .property("itemHeight", &MEASUREITEMSTRUCT::itemHeight)
-            .property("itemData", &MEASUREITEMSTRUCT::itemData)
-            ,
+            .property("itemData", &MEASUREITEMSTRUCT::itemData),
         // Constants
         xlb_const("CBS_AUTOHSCROLL", CBS_AUTOHSCROLL),
         xlb_const("CBS_DISABLENOSCROLL", CBS_DISABLENOSCROLL),
@@ -305,8 +412,7 @@ int load_ctrl(lua_State* L)
         xlb_const("CBS_OEMCONVERT", CBS_OEMCONVERT),
         xlb_const("CBS_OWNERDRAWFIXED", CBS_OWNERDRAWFIXED),
         xlb_const("CBS_OWNERDRAWVARIABLE", CBS_OWNERDRAWVARIABLE),
-        xlb_const("CBS_SIMPLE", CBS_SIMPLE),
-        xlb_const("CBS_SORT", CBS_SORT),
+        xlb_const("CBS_SIMPLE", CBS_SIMPLE), xlb_const("CBS_SORT", CBS_SORT),
         xlb_const("CBS_UPPERCASE", CBS_UPPERCASE),
 
         // ComboBoxEx
@@ -320,8 +426,9 @@ int load_ctrl(lua_State* L)
         xlb_const("CBEM_GETUNICODEFORMAT", CBEM_GETUNICODEFORMAT),
         xlb_const("CBEM_HASEDITCHANGED", CBEM_HASEDITCHANGED),
         xlb_const("CBEM_INSERTITEM", CBEM_INSERTITEM),
-        //xlb_const("CBEM_KILLCOMBOFOCUS", CBEM_KILLCOMBOFOCUS), // This message is not implemented.
-        //xlb_const("CBEM_SETCOMBOFOCUS", CBEM_SETCOMBOFOCUS), // This message is not implemented.
+        // xlb_const("CBEM_KILLCOMBOFOCUS", CBEM_KILLCOMBOFOCUS), // This
+        // message is not implemented. xlb_const("CBEM_SETCOMBOFOCUS",
+        // CBEM_SETCOMBOFOCUS), // This message is not implemented.
         xlb_const("CBEM_SETEXTENDEDSTYLE", CBEM_SETEXTENDEDSTYLE),
         xlb_const("CBEM_SETIMAGELIST", CBEM_SETIMAGELIST),
         xlb_const("CBEM_SETITEM", CBEM_SETITEM),
@@ -338,7 +445,9 @@ int load_ctrl(lua_State* L)
         xlb_const("NM_SETCURSOR", NM_SETCURSOR),
 
         // Structures
-        xlb_class<COMBOBOXEXITEM>("COMBOBOXEXITEM") .constructor<>() .destructor()
+        xlb_class<COMBOBOXEXITEM>("COMBOBOXEXITEM")
+            .constructor<>()
+            .destructor()
             .property("mask", &COMBOBOXEXITEM::mask)
             .property("iItem", &COMBOBOXEXITEM::iItem)
             .property("pszText", &COMBOBOXEXITEM::pszText)
@@ -347,24 +456,26 @@ int load_ctrl(lua_State* L)
             .property("iSelectedImage", &COMBOBOXEXITEM::iSelectedImage)
             .property("iOverlay", &COMBOBOXEXITEM::iOverlay)
             .property("iIndent", &COMBOBOXEXITEM::iIndent)
-            .property("lParam", &COMBOBOXEXITEM::lParam)
-            ,
-        xlb_class<NMCBEDRAGBEGIN>("NMCBEDRAGBEGIN") .constructor<>() .destructor()
+            .property("lParam", &COMBOBOXEXITEM::lParam),
+        xlb_class<NMCBEDRAGBEGIN>("NMCBEDRAGBEGIN")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMCBEDRAGBEGIN::hdr)
             .property("iItemid", &NMCBEDRAGBEGIN::iItemid)
-            .property("szText", &NMCBEDRAGBEGIN::szText)
-            ,
-        xlb_class<NMCBEENDEDIT>("NMCBEENDEDIT") .constructor<>() .destructor()
+            .property("szText", &NMCBEDRAGBEGIN::szText),
+        xlb_class<NMCBEENDEDIT>("NMCBEENDEDIT")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMCBEENDEDIT::hdr)
             .property("fChanged", &NMCBEENDEDIT::fChanged)
             .property("iNewSelection", &NMCBEENDEDIT::iNewSelection)
             .property("szText", &NMCBEENDEDIT::szText)
-            .property("iWhy", &NMCBEENDEDIT::iWhy)
-            ,
-        xlb_class<NMCOMBOBOXEX>("NMCOMBOBOXEX") .constructor<>() .destructor()
+            .property("iWhy", &NMCBEENDEDIT::iWhy),
+        xlb_class<NMCOMBOBOXEX>("NMCOMBOBOXEX")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMCOMBOBOXEX::hdr)
-            .property("ceItem", &NMCOMBOBOXEX::ceItem)
-            ,
+            .property("ceItem", &NMCOMBOBOXEX::ceItem),
         // Styles
         xlb_const("CBES_EX_CASESENSITIVE", CBES_EX_CASESENSITIVE),
         xlb_const("CBES_EX_NOEDITIMAGE", CBES_EX_NOEDITIMAGE),
@@ -375,29 +486,62 @@ int load_ctrl(lua_State* L)
 
         // Date and Time Picker
         // Macro
-        xlb_f("DateTime_CloseMonthCal", [](HWND hwnd) { DateTime_CloseMonthCal(hwnd); }),
-        xlb_f("DateTime_GetDateTimePickerInfo", [](HWND hwnd, DATETIMEPICKERINFO* pdtpi) { DateTime_GetDateTimePickerInfo(hwnd, pdtpi); }),
-        xlb_f("DateTime_GetIdealSize", [](HWND hwnd, SIZE* psize) { DateTime_GetIdealSize(hwnd, psize); }),
-        xlb_f("DateTime_GetMonthCal", [](HWND hwnd)->HWND { return DateTime_GetMonthCal(hwnd); }),
-        xlb_f("DateTime_GetMonthCalColor", [](HWND hwnd, int iColor) { DateTime_GetMonthCalColor(hwnd, iColor); }),
+        xlb_f("DateTime_CloseMonthCal",
+              [](HWND hwnd) { DateTime_CloseMonthCal(hwnd); }),
+        xlb_f("DateTime_GetDateTimePickerInfo",
+              [](HWND hwnd, DATETIMEPICKERINFO *pdtpi) {
+                DateTime_GetDateTimePickerInfo(hwnd, pdtpi);
+              }),
+        xlb_f(
+            "DateTime_GetIdealSize",
+            [](HWND hwnd, SIZE *psize) { DateTime_GetIdealSize(hwnd, psize); }),
+        xlb_f("DateTime_GetMonthCal",
+              [](HWND hwnd) -> HWND { return DateTime_GetMonthCal(hwnd); }),
+        xlb_f("DateTime_GetMonthCalColor",
+              [](HWND hwnd, int iColor) {
+                DateTime_GetMonthCalColor(hwnd, iColor);
+              }),
         xlb_const("MCSC_BACKGROUND", (uint32_t)MCSC_BACKGROUND),
         xlb_const("MCSC_MONTHBK", MCSC_MONTHBK),
         xlb_const("MCSC_TEXT", MCSC_TEXT),
         xlb_const("MCSC_TITLEBK", MCSC_TITLEBK),
         xlb_const("MCSC_TITLETEXT", MCSC_TITLETEXT),
         xlb_const("MCSC_TRAILINGTEXT", MCSC_TRAILINGTEXT),
-        xlb_f("DateTime_GetMonthCalFont", [](HWND hwnd) { DateTime_GetMonthCalFont(hwnd); }),
-        xlb_f("DateTime_GetMonthCalStyle", [](HWND hwnd) { DateTime_GetMonthCalStyle(hwnd); }),
-        xlb_f("DateTime_GetRange", [](HWND hwnd, LPSYSTEMTIME rgst) { DateTime_GetRange(hwnd, rgst); }),
-        xlb_f("DateTime_GetSystemtime", [](HWND hwnd, LPSYSTEMTIME pst) { DateTime_GetSystemtime(hwnd, pst); }),
-        xlb_f("DateTime_SetFormat", [](HWND hwnd, LPCTSTR sz) { DateTime_SetFormat(hwnd, sz); }),
-        xlb_f("DateTime_SetMonthCalColor", [](HWND hwnd, int iColor, COLORREF clr) { DateTime_SetMonthCalColor(hwnd, iColor, clr); }),
-        xlb_f("DateTime_SetMonthCalFont", [](HWND hwnd, HFONT hfont, long fRedraw) { DateTime_SetMonthCalFont(hwnd, hfont, fRedraw); }),
-        xlb_f("DateTime_SetMonthCalStyle", [](HWND hwnd, DWORD dwStyle) { DateTime_SetMonthCalStyle(hwnd, dwStyle); }),
-        xlb_f("DateTime_SetRange", [](HWND hwnd, DWORD gd, LPSYSTEMTIME rgst) { DateTime_SetRange(hwnd, gd, rgst); }),
-        xlb_const("GDTR_MIN", GDTR_MIN),
-        xlb_const("GDTR_MAX", GDTR_MAX),
-        xlb_f("DateTime_SetSystemtime", [](HWND hwnd, DWORD gd, LPSYSTEMTIME pst) { DateTime_SetSystemtime(hwnd, gd, pst); }),
+        xlb_f("DateTime_GetMonthCalFont",
+              [](HWND hwnd) { DateTime_GetMonthCalFont(hwnd); }),
+        xlb_f("DateTime_GetMonthCalStyle",
+              [](HWND hwnd) { DateTime_GetMonthCalStyle(hwnd); }),
+        xlb_f("DateTime_GetRange",
+              [](HWND hwnd, LPSYSTEMTIME rgst) {
+                DateTime_GetRange(hwnd, rgst);
+              }),
+        xlb_f("DateTime_GetSystemtime",
+              [](HWND hwnd, LPSYSTEMTIME pst) {
+                DateTime_GetSystemtime(hwnd, pst);
+              }),
+        xlb_f("DateTime_SetFormat",
+              [](HWND hwnd, LPCTSTR sz) { DateTime_SetFormat(hwnd, sz); }),
+        xlb_f("DateTime_SetMonthCalColor",
+              [](HWND hwnd, int iColor, COLORREF clr) {
+                DateTime_SetMonthCalColor(hwnd, iColor, clr);
+              }),
+        xlb_f("DateTime_SetMonthCalFont",
+              [](HWND hwnd, HFONT hfont, long fRedraw) {
+                DateTime_SetMonthCalFont(hwnd, hfont, fRedraw);
+              }),
+        xlb_f("DateTime_SetMonthCalStyle",
+              [](HWND hwnd, DWORD dwStyle) {
+                DateTime_SetMonthCalStyle(hwnd, dwStyle);
+              }),
+        xlb_f("DateTime_SetRange",
+              [](HWND hwnd, DWORD gd, LPSYSTEMTIME rgst) {
+                DateTime_SetRange(hwnd, gd, rgst);
+              }),
+        xlb_const("GDTR_MIN", GDTR_MIN), xlb_const("GDTR_MAX", GDTR_MAX),
+        xlb_f("DateTime_SetSystemtime",
+              [](HWND hwnd, DWORD gd, LPSYSTEMTIME pst) {
+                DateTime_SetSystemtime(hwnd, gd, pst);
+              }),
         xlb_const("GDT_VALID", (uint32_t)GDT_VALID),
         xlb_const("GDT_NONE", GDT_NONE),
         // Messages
@@ -416,7 +560,7 @@ int load_ctrl(lua_State* L)
         xlb_const("DTM_SETMCSTYLE", DTM_SETMCSTYLE),
         xlb_const("DTM_SETRANGE", DTM_SETRANGE),
         xlb_const("DTM_SETSYSTEMTIME", DTM_SETSYSTEMTIME),
-        
+
         // Notifications
         xlb_const("DTN_CLOSEUP", DTN_CLOSEUP),
         xlb_const("DTN_DATETIMECHANGE", DTN_DATETIMECHANGE),
@@ -445,7 +589,9 @@ int load_ctrl(lua_State* L)
         xlb_const("DTS_TIMEFORMAT", DTS_TIMEFORMAT),
         xlb_const("DTS_UPDOWN", DTS_UPDOWN),
         // Structures
-        xlb_class<DATETIMEPICKERINFO>("DATETIMEPICKERINFO") .constructor<>() .destructor()
+        xlb_class<DATETIMEPICKERINFO>("DATETIMEPICKERINFO")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &DATETIMEPICKERINFO::cbSize)
             .property("rcCheck", &DATETIMEPICKERINFO::rcCheck)
             .property("stateCheck", &DATETIMEPICKERINFO::stateCheck)
@@ -453,99 +599,203 @@ int load_ctrl(lua_State* L)
             .property("stateButton", &DATETIMEPICKERINFO::stateButton)
             .property("hwndEdit", &DATETIMEPICKERINFO::hwndEdit)
             .property("hwndUD", &DATETIMEPICKERINFO::hwndUD)
-            .property("hwndDropDown", &DATETIMEPICKERINFO::hwndDropDown)
-            ,
-        xlb_class<NMDATETIMECHANGE>("NMDATETIMECHANGE") .constructor<>() .destructor()
+            .property("hwndDropDown", &DATETIMEPICKERINFO::hwndDropDown),
+        xlb_class<NMDATETIMECHANGE>("NMDATETIMECHANGE")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &NMDATETIMECHANGE::nmhdr)
             .property("dwFlags", &NMDATETIMECHANGE::dwFlags)
-            .property("st", &NMDATETIMECHANGE::st)
-            ,
-        xlb_class<NMDATETIMEFORMAT>("NMDATETIMEFORMAT") .constructor<>() .destructor()
+            .property("st", &NMDATETIMECHANGE::st),
+        xlb_class<NMDATETIMEFORMAT>("NMDATETIMEFORMAT")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &NMDATETIMEFORMAT::nmhdr)
             .property("pszFormat", &NMDATETIMEFORMAT::pszFormat)
             .property("st", &NMDATETIMEFORMAT::st)
             .property("pszDisplay", &NMDATETIMEFORMAT::pszDisplay)
-            .property("szDisplay", &NMDATETIMEFORMAT::szDisplay)
-            ,
-        xlb_class<NMDATETIMEFORMATQUERY>("NMDATETIMEFORMATQUERY") .constructor<>() .destructor()
+            .property("szDisplay", &NMDATETIMEFORMAT::szDisplay),
+        xlb_class<NMDATETIMEFORMATQUERY>("NMDATETIMEFORMATQUERY")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &NMDATETIMEFORMATQUERY::nmhdr)
             .property("pszFormat", &NMDATETIMEFORMATQUERY::pszFormat)
-            .property("szMax", &NMDATETIMEFORMATQUERY::szMax)
-            ,
-        xlb_class<NMDATETIMESTRING>("NMDATETIMESTRING") .constructor<>() .destructor()
+            .property("szMax", &NMDATETIMEFORMATQUERY::szMax),
+        xlb_class<NMDATETIMESTRING>("NMDATETIMESTRING")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &NMDATETIMESTRING::nmhdr)
             .property("pszUserString", &NMDATETIMESTRING::pszUserString)
             .property("st", &NMDATETIMESTRING::st)
-            .property("dwFlags", &NMDATETIMESTRING::dwFlags)
-            ,
-        xlb_class<NMDATETIMEWMKEYDOWN>("NMDATETIMEWMKEYDOWN") .constructor<>() .destructor()
+            .property("dwFlags", &NMDATETIMESTRING::dwFlags),
+        xlb_class<NMDATETIMEWMKEYDOWN>("NMDATETIMEWMKEYDOWN")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &NMDATETIMEWMKEYDOWN::nmhdr)
             .property("nVirtKey", &NMDATETIMEWMKEYDOWN::nVirtKey)
             .property("pszFormat", &NMDATETIMEWMKEYDOWN::pszFormat)
-            .property("st", &NMDATETIMEWMKEYDOWN::st)
-            ,
-        
+            .property("st", &NMDATETIMEWMKEYDOWN::st),
+
         // Edit Control
-        xlb_class<xlb_cbf<EDITWORDBREAKPROCA>>("EDITWORDBREAKPROCA").constructor<xlb_luafunc>(),
-        xlb_f("Edit_CanUndo", [](HWND hwnd)->UINT { return Edit_CanUndo(hwnd); }),
-        xlb_f("Edit_EmptyUndoBuffer", [](HWND hwnd) { Edit_EmptyUndoBuffer(hwnd); }),
-        xlb_f("Edit_Enable", [](HWND hwnd, BOOL fEnable) { Edit_Enable(hwnd, fEnable); }),
-        xlb_f("Edit_FmtLines", [](HWND hwnd, BOOL fAddEOL) { Edit_FmtLines(hwnd, fAddEOL); }),
-        xlb_f("Edit_GetCaretIndex", [](HWND hwnd) { Edit_GetCaretIndex(hwnd); }),
-        xlb_f("Edit_GetCueBannerText", [](HWND hwnd, LPCWSTR lpwText, LONG cchText) { Edit_GetCueBannerText(hwnd, lpwText, cchText); }),
-        xlb_f("Edit_GetEndOfLine", [](HWND hwnd)->EC_ENDOFLINE { return Edit_GetEndOfLine(hwnd); }),
-        xlb_const("EC_ENDOFLINE_DETECTFROMCONTENT", EC_ENDOFLINE_DETECTFROMCONTENT),
+        xlb_class<xlb_cbf<EDITWORDBREAKPROCA>>("EDITWORDBREAKPROCA")
+            .constructor<xlb_luafunc>(),
+        xlb_f("Edit_CanUndo",
+              [](HWND hwnd) -> UINT { return Edit_CanUndo(hwnd); }),
+        xlb_f("Edit_EmptyUndoBuffer",
+              [](HWND hwnd) { Edit_EmptyUndoBuffer(hwnd); }),
+        xlb_f("Edit_Enable",
+              [](HWND hwnd, BOOL fEnable) { Edit_Enable(hwnd, fEnable); }),
+        xlb_f("Edit_FmtLines",
+              [](HWND hwnd, BOOL fAddEOL) { Edit_FmtLines(hwnd, fAddEOL); }),
+        xlb_f("Edit_GetCaretIndex",
+              [](HWND hwnd) { Edit_GetCaretIndex(hwnd); }),
+        xlb_f("Edit_GetCueBannerText",
+              [](HWND hwnd, LPCWSTR lpwText, LONG cchText) {
+                Edit_GetCueBannerText(hwnd, lpwText, cchText);
+              }),
+        xlb_f(
+            "Edit_GetEndOfLine",
+            [](HWND hwnd) -> EC_ENDOFLINE { return Edit_GetEndOfLine(hwnd); }),
+        xlb_const("EC_ENDOFLINE_DETECTFROMCONTENT",
+                  EC_ENDOFLINE_DETECTFROMCONTENT),
         xlb_const("EC_ENDOFLINE_CRLF", EC_ENDOFLINE_CRLF),
         xlb_const("EC_ENDOFLINE_CR", EC_ENDOFLINE_CR),
         xlb_const("EC_ENDOFLINE_LF", EC_ENDOFLINE_LF),
-        xlb_f("Edit_GetExtendedStyle", [](HWND hwnd)->DWORD { return Edit_GetExtendedStyle(hwnd); }),
-        xlb_f("Edit_GetFirstVisibleLine", [](HWND hwnd)->int { return Edit_GetFirstVisibleLine(hwnd); }),
-        xlb_f("Edit_GetHandle", [](HWND hwnd)->HLOCAL { return Edit_GetHandle(hwnd); }),
-        xlb_f("Edit_GetHilite", [](HWND hwnd) { return Edit_GetHilite(hwnd); }), // This macro is not implemented.
-        xlb_f("Edit_GetLine", [](HWND hwnd, int line, LPTSTR lpch, int cchMax) { Edit_GetLine(hwnd, line, lpch, cchMax); }),
-        xlb_f("Edit_GetLineCount", [](HWND hwnd)->int { return Edit_GetLineCount(hwnd); }),
-        xlb_f("Edit_GetModify", [](HWND hwnd)->BOOL { return Edit_GetModify(hwnd); }),
-        xlb_f("Edit_GetPasswordChar", [](HWND hwnd)->TCHAR { return Edit_GetPasswordChar(hwnd); }),
-        xlb_f("Edit_GetRect", [](HWND hwnd, RECT* lprc) { Edit_GetRect(hwnd, lprc); }),
-        xlb_f("Edit_GetSel", [](HWND hwnd)->int { return Edit_GetSel(hwnd); }),
-        xlb_f("Edit_GetText", [](HWND hwnd, LPTSTR lpch, int cchMax) { Edit_GetText(hwnd, lpch, cchMax); }),
-        xlb_f("Edit_GetTextLength", [](HWND hwnd)->int { return Edit_GetTextLength(hwnd); }),
-        xlb_f("Edit_GetWordBreakProc", [](HWND hwnd)->EDITWORDBREAKPROC { return Edit_GetWordBreakProc(hwnd); }),
-        xlb_f("Edit_GetZoom", [](HWND hwnd, WPARAM numerator, LPARAM denominator)->BOOL { return Edit_GetZoom(hwnd, numerator, denominator); }),
-        xlb_f("Edit_HideBalloonTip", [](HWND hwnd) { Edit_HideBalloonTip(hwnd); }),
-        xlb_f("Edit_LimitText", [](HWND hwnd, int cchMax) { Edit_LimitText(hwnd, cchMax); }),
-        xlb_f("Edit_LineFromChar", [](HWND hwnd, int ich)->int { return Edit_LineFromChar(hwnd, ich); }),
-        xlb_f("Edit_LineIndex", [](HWND hwnd, int line)->int { return Edit_LineIndex(hwnd, line); }),
-        xlb_f("Edit_LineLength", [](HWND hwnd, int line)->int { return Edit_LineLength(hwnd, line); }),
-        xlb_f("Edit_NoSetFocus", [](HWND hwnd)->DWORD { return Edit_NoSetFocus(hwnd); }),
-        xlb_f("Edit_ReplaceSel", [](HWND hwnd, LPCTSTR lpszReplace) { Edit_ReplaceSel(hwnd, lpszReplace); }),
-        xlb_f("Edit_Scroll", [](HWND hwnd, int dv, int dh) { Edit_Scroll(hwnd, dv, dh); }),
-        xlb_f("Edit_ScrollCaret", [](HWND hwnd)->BOOL { return Edit_ScrollCaret(hwnd); }),
-        xlb_f("Edit_SetCaretIndex", [](HWND hwnd, int newCaretIndex)->BOOL { return Edit_SetCaretIndex(hwnd, newCaretIndex); }),
-        xlb_f("Edit_SetCueBannerText", [](HWND hwnd, LPCWSTR lpcwText)->BOOL { return Edit_SetCueBannerText(hwnd, lpcwText); }),
-        xlb_f("Edit_SetCueBannerTextFocused", [](HWND hwnd, LPCWSTR lpcwText, BOOL fDrawFocused)->BOOL { return Edit_SetCueBannerTextFocused(hwnd, lpcwText, fDrawFocused); }),
-        xlb_f("Edit_SetEndOfLine", [](HWND hwnd, EC_ENDOFLINE eolType)->DWORD { return Edit_SetEndOfLine(hwnd, eolType); }),
-        xlb_f("Edit_SetExtendedStyle", [](HWND hwnd, DWORD dw, DWORD dwMask)->DWORD { return Edit_SetExtendedStyle(hwnd, dw, dwMask); }),
+        xlb_f("Edit_GetExtendedStyle",
+              [](HWND hwnd) -> DWORD { return Edit_GetExtendedStyle(hwnd); }),
+        xlb_f("Edit_GetFirstVisibleLine",
+              [](HWND hwnd) -> int { return Edit_GetFirstVisibleLine(hwnd); }),
+        xlb_f("Edit_GetHandle",
+              [](HWND hwnd) -> HLOCAL { return Edit_GetHandle(hwnd); }),
+        xlb_f("Edit_GetHilite",
+              [](HWND hwnd) {
+                return Edit_GetHilite(hwnd);
+              }), // This macro is not implemented.
+        xlb_f("Edit_GetLine",
+              [](HWND hwnd, int line, LPTSTR lpch, int cchMax) {
+                Edit_GetLine(hwnd, line, lpch, cchMax);
+              }),
+        xlb_f("Edit_GetLineCount",
+              [](HWND hwnd) -> int { return Edit_GetLineCount(hwnd); }),
+        xlb_f("Edit_GetModify",
+              [](HWND hwnd) -> BOOL { return Edit_GetModify(hwnd); }),
+        xlb_f("Edit_GetPasswordChar",
+              [](HWND hwnd) -> TCHAR { return Edit_GetPasswordChar(hwnd); }),
+        xlb_f("Edit_GetRect",
+              [](HWND hwnd, RECT *lprc) { Edit_GetRect(hwnd, lprc); }),
+        xlb_f("Edit_GetSel",
+              [](HWND hwnd) -> int { return Edit_GetSel(hwnd); }),
+        xlb_f("Edit_GetText",
+              [](HWND hwnd, LPTSTR lpch, int cchMax) {
+                Edit_GetText(hwnd, lpch, cchMax);
+              }),
+        xlb_f("Edit_GetTextLength",
+              [](HWND hwnd) -> int { return Edit_GetTextLength(hwnd); }),
+        xlb_f("Edit_GetWordBreakProc",
+              [](HWND hwnd) -> EDITWORDBREAKPROC {
+                return Edit_GetWordBreakProc(hwnd);
+              }),
+        xlb_f("Edit_GetZoom",
+              [](HWND hwnd, WPARAM numerator, LPARAM denominator) -> BOOL {
+                return Edit_GetZoom(hwnd, numerator, denominator);
+              }),
+        xlb_f("Edit_HideBalloonTip",
+              [](HWND hwnd) { Edit_HideBalloonTip(hwnd); }),
+        xlb_f("Edit_LimitText",
+              [](HWND hwnd, int cchMax) { Edit_LimitText(hwnd, cchMax); }),
+        xlb_f("Edit_LineFromChar",
+              [](HWND hwnd, int ich) -> int {
+                return Edit_LineFromChar(hwnd, ich);
+              }),
+        xlb_f("Edit_LineIndex",
+              [](HWND hwnd, int line) -> int {
+                return Edit_LineIndex(hwnd, line);
+              }),
+        xlb_f("Edit_LineLength",
+              [](HWND hwnd, int line) -> int {
+                return Edit_LineLength(hwnd, line);
+              }),
+        xlb_f("Edit_NoSetFocus",
+              [](HWND hwnd) -> DWORD { return Edit_NoSetFocus(hwnd); }),
+        xlb_f("Edit_ReplaceSel",
+              [](HWND hwnd, LPCTSTR lpszReplace) {
+                Edit_ReplaceSel(hwnd, lpszReplace);
+              }),
+        xlb_f("Edit_Scroll",
+              [](HWND hwnd, int dv, int dh) { Edit_Scroll(hwnd, dv, dh); }),
+        xlb_f("Edit_ScrollCaret",
+              [](HWND hwnd) -> BOOL { return Edit_ScrollCaret(hwnd); }),
+        xlb_f("Edit_SetCaretIndex",
+              [](HWND hwnd, int newCaretIndex) -> BOOL {
+                return Edit_SetCaretIndex(hwnd, newCaretIndex);
+              }),
+        xlb_f("Edit_SetCueBannerText",
+              [](HWND hwnd, LPCWSTR lpcwText) -> BOOL {
+                return Edit_SetCueBannerText(hwnd, lpcwText);
+              }),
+        xlb_f("Edit_SetCueBannerTextFocused",
+              [](HWND hwnd, LPCWSTR lpcwText, BOOL fDrawFocused) -> BOOL {
+                return Edit_SetCueBannerTextFocused(hwnd, lpcwText,
+                                                    fDrawFocused);
+              }),
+        xlb_f("Edit_SetEndOfLine",
+              [](HWND hwnd, EC_ENDOFLINE eolType) -> DWORD {
+                return Edit_SetEndOfLine(hwnd, eolType);
+              }),
+        xlb_f("Edit_SetExtendedStyle",
+              [](HWND hwnd, DWORD dw, DWORD dwMask) -> DWORD {
+                return Edit_SetExtendedStyle(hwnd, dw, dwMask);
+              }),
         xlb_const("ES_EX_ALLOWEOL_CR", ES_EX_ALLOWEOL_CR),
         xlb_const("ES_EX_ALLOWEOL_LF", ES_EX_ALLOWEOL_LF),
         xlb_const("ES_EX_ALLOWEOL_ALL", ES_EX_ALLOWEOL_ALL),
         xlb_const("ES_EX_CONVERT_EOL_ON_PASTE", ES_EX_CONVERT_EOL_ON_PASTE),
         xlb_const("ES_EX_ZOOMABLE", ES_EX_ZOOMABLE),
-        xlb_f("Edit_SetHandle", [](HWND hwnd, HLOCAL h) { Edit_SetHandle(hwnd, h); }),
-        xlb_f("Edit_SetHilite", [](HWND hwnd, int ichStart, int ichEnd) { Edit_SetHilite(hwnd, ichStart, ichEnd); }),
-        xlb_f("Edit_SetModify", [](HWND hwnd, BOOL fModified) { Edit_SetModify(hwnd, fModified); }),
-        xlb_f("Edit_SetPasswordChar", [](HWND hwnd, UINT ch) { Edit_SetPasswordChar(hwnd, ch); }),
-        xlb_f("Edit_SetReadOnly", [](HWND hwnd, BOOL fReadOnly)->BOOL { return Edit_SetReadOnly(hwnd, fReadOnly); }),
-        xlb_f("Edit_SetRect", [](HWND hwnd, RECT* lprc) { Edit_SetRect(hwnd, lprc); }),
-        xlb_f("Edit_SetRectNoPaint", [](HWND hwnd, RECT* lprc) { Edit_SetRectNoPaint(hwnd, lprc); }),
-        xlb_f("Edit_SetSel", [](HWND hwnd, int ichStart, int ichEnd) { Edit_SetSel(hwnd, ichStart, ichEnd); }),
-        xlb_f("Edit_SetTabStops", [](HWND hwnd, int cTabs, int* lpTabs) { Edit_SetTabStops(hwnd, cTabs, lpTabs); }),
-        xlb_f("Edit_SetText", [](HWND hwnd, LPTSTR lpsz)->BOOL { return Edit_SetText(hwnd, lpsz); }),
-        xlb_f("Edit_SetWordBreakProc", [](HWND hwnd, EDITWORDBREAKPROC lpfnWordBreak) { Edit_SetWordBreakProc(hwnd, lpfnWordBreak); }),
-        xlb_f("Edit_SetZoom", [](HWND hwnd, WPARAM numerator, LPARAM denominator)->BOOL { return Edit_SetZoom(hwnd, numerator, denominator); }),
-        xlb_f("Edit_ShowBalloonTip", [](HWND hwnd, PEDITBALLOONTIP peditballoontip)->BOOL { return Edit_ShowBalloonTip(hwnd, peditballoontip); }),
-        xlb_f("Edit_TakeFocus", [](HWND hwnd)->DWORD { return Edit_TakeFocus(hwnd); }),
-        xlb_f("Edit_Undo", [](HWND hwnd)->BOOL { return Edit_Undo(hwnd); }),
+        xlb_f("Edit_SetHandle",
+              [](HWND hwnd, HLOCAL h) { Edit_SetHandle(hwnd, h); }),
+        xlb_f("Edit_SetHilite",
+              [](HWND hwnd, int ichStart, int ichEnd) {
+                Edit_SetHilite(hwnd, ichStart, ichEnd);
+              }),
+        xlb_f(
+            "Edit_SetModify",
+            [](HWND hwnd, BOOL fModified) { Edit_SetModify(hwnd, fModified); }),
+        xlb_f("Edit_SetPasswordChar",
+              [](HWND hwnd, UINT ch) { Edit_SetPasswordChar(hwnd, ch); }),
+        xlb_f("Edit_SetReadOnly",
+              [](HWND hwnd, BOOL fReadOnly) -> BOOL {
+                return Edit_SetReadOnly(hwnd, fReadOnly);
+              }),
+        xlb_f("Edit_SetRect",
+              [](HWND hwnd, RECT *lprc) { Edit_SetRect(hwnd, lprc); }),
+        xlb_f("Edit_SetRectNoPaint",
+              [](HWND hwnd, RECT *lprc) { Edit_SetRectNoPaint(hwnd, lprc); }),
+        xlb_f("Edit_SetSel",
+              [](HWND hwnd, int ichStart, int ichEnd) {
+                Edit_SetSel(hwnd, ichStart, ichEnd);
+              }),
+        xlb_f("Edit_SetTabStops",
+              [](HWND hwnd, int cTabs, int *lpTabs) {
+                Edit_SetTabStops(hwnd, cTabs, lpTabs);
+              }),
+        xlb_f("Edit_SetText",
+              [](HWND hwnd, LPTSTR lpsz) -> BOOL {
+                return Edit_SetText(hwnd, lpsz);
+              }),
+        xlb_f("Edit_SetWordBreakProc",
+              [](HWND hwnd, EDITWORDBREAKPROC lpfnWordBreak) {
+                Edit_SetWordBreakProc(hwnd, lpfnWordBreak);
+              }),
+        xlb_f("Edit_SetZoom",
+              [](HWND hwnd, WPARAM numerator, LPARAM denominator) -> BOOL {
+                return Edit_SetZoom(hwnd, numerator, denominator);
+              }),
+        xlb_f("Edit_ShowBalloonTip",
+              [](HWND hwnd, PEDITBALLOONTIP peditballoontip) -> BOOL {
+                return Edit_ShowBalloonTip(hwnd, peditballoontip);
+              }),
+        xlb_f("Edit_TakeFocus",
+              [](HWND hwnd) -> DWORD { return Edit_TakeFocus(hwnd); }),
+        xlb_f("Edit_Undo", [](HWND hwnd) -> BOOL { return Edit_Undo(hwnd); }),
         // Messages
         xlb_const("EM_CANUNDO", EM_CANUNDO),
         xlb_const("EM_CHARFROMPOS", EM_CHARFROMPOS),
@@ -565,8 +815,7 @@ int load_ctrl(lua_State* L)
         xlb_const("EM_GETMARGINS", EM_GETMARGINS),
         xlb_const("EM_GETMODIFY", EM_GETMODIFY),
         xlb_const("EM_GETPASSWORDCHAR", EM_GETPASSWORDCHAR),
-        xlb_const("EM_GETRECT", EM_GETRECT),
-        xlb_const("EM_GETSEL", EM_GETSEL),
+        xlb_const("EM_GETRECT", EM_GETRECT), xlb_const("EM_GETSEL", EM_GETSEL),
         xlb_const("EM_GETTHUMB", EM_GETTHUMB),
         xlb_const("EM_GETWORDBREAKPROC", EM_GETWORDBREAKPROC),
         xlb_const("EM_GETZOOM", EM_GETZOOM),
@@ -600,8 +849,7 @@ int load_ctrl(lua_State* L)
         xlb_const("EM_SETWORDBREAKPROC", EM_SETWORDBREAKPROC),
         xlb_const("EM_SETZOOM", EM_SETZOOM),
         xlb_const("EM_SHOWBALLOONTIP", EM_SHOWBALLOONTIP),
-        xlb_const("EM_TAKEFOCUS", EM_TAKEFOCUS),
-        xlb_const("EM_UNDO", EM_UNDO),
+        xlb_const("EM_TAKEFOCUS", EM_TAKEFOCUS), xlb_const("EM_UNDO", EM_UNDO),
         xlb_const("WM_UNDO", WM_UNDO),
         // Notifications
         xlb_const("EN_ALIGN_LTR_EC", EN_ALIGN_LTR_EC),
@@ -612,8 +860,7 @@ int load_ctrl(lua_State* L)
         xlb_const("EN_KILLFOCUS", EN_KILLFOCUS),
         xlb_const("EN_MAXTEXT", EN_MAXTEXT),
         xlb_const("EN_SETFOCUS", EN_SETFOCUS),
-        xlb_const("EN_UPDATE", EN_UPDATE),
-        xlb_const("EN_VSCROLL", EN_VSCROLL),
+        xlb_const("EN_UPDATE", EN_UPDATE), xlb_const("EN_VSCROLL", EN_VSCROLL),
         xlb_const("WM_CTLCOLOREDIT", WM_CTLCOLOREDIT),
         // Styles
         xlb_const("ES_AUTOHSCROLL", ES_AUTOHSCROLL),
@@ -626,13 +873,11 @@ int load_ctrl(lua_State* L)
         xlb_const("ES_NUMBER", ES_NUMBER),
         xlb_const("ES_OEMCONVERT", ES_OEMCONVERT),
         xlb_const("ES_PASSWORD", ES_PASSWORD),
-        xlb_const("ES_READONLY", ES_READONLY),
-        xlb_const("ES_RIGHT", ES_RIGHT),
+        xlb_const("ES_READONLY", ES_READONLY), xlb_const("ES_RIGHT", ES_RIGHT),
         xlb_const("ES_UPPERCASE", ES_UPPERCASE),
         xlb_const("ES_WANTRETURN", ES_WANTRETURN),
         // Flat Scroll Bar
-        xlb_const("SB_BOTH", SB_BOTH),
-        xlb_const("SB_HORZ", (uint32_t)SB_HORZ),
+        xlb_const("SB_BOTH", SB_BOTH), xlb_const("SB_HORZ", (uint32_t)SB_HORZ),
         xlb_const("SB_VERT", SB_VERT),
         xlb_const("ESB_DISABLE_BOTH", ESB_DISABLE_BOTH),
         xlb_const("ESB_DISABLE_DOWN", ESB_DISABLE_DOWN),
@@ -646,7 +891,8 @@ int load_ctrl(lua_State* L)
         xlb_f("FlatSB_GetScrollInfo", FlatSB_GetScrollInfo),
         xlb_f("FlatSB_GetScrollPos", FlatSB_GetScrollPos),
         xlb_f("FlatSB_GetScrollProp", FlatSB_GetScrollProp),
-        //xlb_f("FlatSB_GetScrollPropPtr", FlatSB_GetScrollPropPtr), // higher 6.0 do not support
+        // xlb_f("FlatSB_GetScrollPropPtr", FlatSB_GetScrollPropPtr), //
+        // higher 6.0 do not support
         xlb_f("FlatSB_GetScrollRange", FlatSB_GetScrollRange),
         xlb_f("FlatSB_SetScrollInfo", FlatSB_SetScrollInfo),
         xlb_f("FlatSB_SetScrollPos", FlatSB_SetScrollPos),
@@ -667,34 +913,103 @@ int load_ctrl(lua_State* L)
         xlb_const("WSB_PROP_VBKGCOLOR", WSB_PROP_VBKGCOLOR),
         xlb_const("WSB_PROP_VSTYLE", WSB_PROP_VSTYLE),
         xlb_const("WSB_PROP_WINSTYLE", WSB_PROP_WINSTYLE),
-        
+
         // Header Control
-        xlb_f("Header_ClearAllFilters", [](HWND hwnd)->int { return Header_ClearAllFilters(hwnd); }),
-        xlb_f("Header_ClearFilter", [](HWND hwnd, int i)->int { return Header_ClearFilter(hwnd, i); }),
-        xlb_f("Header_CreateDragImage", [](HWND hwnd, int i)->HIMAGELIST { return Header_CreateDragImage(hwnd, i); }),
-        xlb_f("Header_DeleteItem", [](HWND hwnd, int index)->BOOL { return Header_DeleteItem(hwnd, index); }),
-        xlb_f("Header_EditFilter", [](HWND hwnd, int i, BOOL fDiscardChanges)->BOOL { return Header_EditFilter(hwnd, i, fDiscardChanges); }),
-        xlb_f("Header_GetBitmapMargin", [](HWND hwnd)->int { return Header_GetBitmapMargin(hwnd); }),
-        xlb_f("Header_GetImageList", [](HWND hwnd)->HIMAGELIST { return Header_GetImageList(hwnd); }),
-        xlb_f("Header_GetItem", [](HWND hwnd, int i, LPHDITEM phdi)->BOOL { return Header_GetItem(hwnd, i, phdi); }),
-        xlb_f("Header_GetItemCount", [](HWND hwnd)->int { return Header_GetItemCount(hwnd); }),
-        xlb_f("Header_GetItemDropDownRect", [](HWND hwnd, int iItem, LPRECT lprc)->BOOL { return Header_GetItemDropDownRect(hwnd, iItem, lprc); }),
-        xlb_f("Header_GetOrderArray", [](HWND hwnd, int iCount, int* lpi)->BOOL { return Header_GetOrderArray(hwnd, iCount, lpi); }),
-        xlb_f("Header_GetOverflowRect", [](HWND hwnd, LPRECT lprc)->BOOL { return Header_GetOverflowRect(hwnd, lprc); }),
-        xlb_f("Header_GetStateImageList", [](HWND hwnd)->HIMAGELIST { return Header_GetStateImageList(hwnd); }),
-        xlb_f("Header_GetUnicodeFormat", [](HWND hwnd)->BOOL { return Header_GetUnicodeFormat(hwnd); }),
-        xlb_f("Header_InsertItem", [](HWND hwnd, int i, LPHDITEM phdi)->int { return Header_InsertItem(hwnd, i, phdi); }),
-        xlb_f("Header_Layout", [](HWND hwnd, int i, LPHDLAYOUT playout)->BOOL { return Header_Layout(hwnd, playout); }),
-        xlb_f("Header_OrderToIndex", [](HWND hwnd, int i)->int { return Header_OrderToIndex(hwnd, i); }),
-        xlb_f("Header_SetBitmapMargin", [](HWND hwnd, int iWidth)->int { return Header_SetBitmapMargin(hwnd, iWidth); }),
-        xlb_f("Header_SetFilterChangeTimeout", [](HWND hwnd, int i)->int { return Header_SetFilterChangeTimeout(hwnd, i); }),
-        xlb_f("Header_SetFocusedItem", [](HWND hwnd, int iItem)->BOOL { return Header_SetFocusedItem(hwnd, iItem); }),
-        xlb_f("Header_SetHotDivider", [](HWND hwnd, BOOL fPos, DWORD dw)->int { return Header_SetHotDivider(hwnd, fPos, dw); }),
-        xlb_f("Header_SetImageList", [](HWND hwnd, BOOL fPos, HIMAGELIST himl)->HIMAGELIST { return Header_SetImageList(hwnd, himl); }),
-        xlb_f("Header_SetItem", [](HWND hwnd, int i, LPHDITEM phdi)->BOOL { return Header_SetItem(hwnd, i, phdi); }),
-        xlb_f("Header_SetOrderArray", [](HWND hwnd, int iCount, int* lpi)->BOOL { return Header_SetOrderArray(hwnd, iCount, lpi); }),
-        xlb_f("Header_SetStateImageList", [](HWND hwnd, HIMAGELIST himl)->HIMAGELIST { return Header_SetStateImageList(hwnd, himl); }),
-        xlb_f("Header_SetUnicodeFormat", [](HWND hwnd, BOOL fUnicode)->BOOL { return Header_SetUnicodeFormat(hwnd, fUnicode); }),
+        xlb_f("Header_ClearAllFilters",
+              [](HWND hwnd) -> int { return Header_ClearAllFilters(hwnd); }),
+        xlb_f("Header_ClearFilter",
+              [](HWND hwnd, int i) -> int {
+                return Header_ClearFilter(hwnd, i);
+              }),
+        xlb_f("Header_CreateDragImage",
+              [](HWND hwnd, int i) -> HIMAGELIST {
+                return Header_CreateDragImage(hwnd, i);
+              }),
+        xlb_f("Header_DeleteItem",
+              [](HWND hwnd, int index) -> BOOL {
+                return Header_DeleteItem(hwnd, index);
+              }),
+        xlb_f("Header_EditFilter",
+              [](HWND hwnd, int i, BOOL fDiscardChanges) -> BOOL {
+                return Header_EditFilter(hwnd, i, fDiscardChanges);
+              }),
+        xlb_f("Header_GetBitmapMargin",
+              [](HWND hwnd) -> int { return Header_GetBitmapMargin(hwnd); }),
+        xlb_f(
+            "Header_GetImageList",
+            [](HWND hwnd) -> HIMAGELIST { return Header_GetImageList(hwnd); }),
+        xlb_f("Header_GetItem",
+              [](HWND hwnd, int i, LPHDITEM phdi) -> BOOL {
+                return Header_GetItem(hwnd, i, phdi);
+              }),
+        xlb_f("Header_GetItemCount",
+              [](HWND hwnd) -> int { return Header_GetItemCount(hwnd); }),
+        xlb_f("Header_GetItemDropDownRect",
+              [](HWND hwnd, int iItem, LPRECT lprc) -> BOOL {
+                return Header_GetItemDropDownRect(hwnd, iItem, lprc);
+              }),
+        xlb_f("Header_GetOrderArray",
+              [](HWND hwnd, int iCount, int *lpi) -> BOOL {
+                return Header_GetOrderArray(hwnd, iCount, lpi);
+              }),
+        xlb_f("Header_GetOverflowRect",
+              [](HWND hwnd, LPRECT lprc) -> BOOL {
+                return Header_GetOverflowRect(hwnd, lprc);
+              }),
+        xlb_f("Header_GetStateImageList",
+              [](HWND hwnd) -> HIMAGELIST {
+                return Header_GetStateImageList(hwnd);
+              }),
+        xlb_f("Header_GetUnicodeFormat",
+              [](HWND hwnd) -> BOOL { return Header_GetUnicodeFormat(hwnd); }),
+        xlb_f("Header_InsertItem",
+              [](HWND hwnd, int i, LPHDITEM phdi) -> int {
+                return Header_InsertItem(hwnd, i, phdi);
+              }),
+        xlb_f("Header_Layout",
+              [](HWND hwnd, int i, LPHDLAYOUT playout) -> BOOL {
+                return Header_Layout(hwnd, playout);
+              }),
+        xlb_f("Header_OrderToIndex",
+              [](HWND hwnd, int i) -> int {
+                return Header_OrderToIndex(hwnd, i);
+              }),
+        xlb_f("Header_SetBitmapMargin",
+              [](HWND hwnd, int iWidth) -> int {
+                return Header_SetBitmapMargin(hwnd, iWidth);
+              }),
+        xlb_f("Header_SetFilterChangeTimeout",
+              [](HWND hwnd, int i) -> int {
+                return Header_SetFilterChangeTimeout(hwnd, i);
+              }),
+        xlb_f("Header_SetFocusedItem",
+              [](HWND hwnd, int iItem) -> BOOL {
+                return Header_SetFocusedItem(hwnd, iItem);
+              }),
+        xlb_f("Header_SetHotDivider",
+              [](HWND hwnd, BOOL fPos, DWORD dw) -> int {
+                return Header_SetHotDivider(hwnd, fPos, dw);
+              }),
+        xlb_f("Header_SetImageList",
+              [](HWND hwnd, BOOL fPos, HIMAGELIST himl) -> HIMAGELIST {
+                return Header_SetImageList(hwnd, himl);
+              }),
+        xlb_f("Header_SetItem",
+              [](HWND hwnd, int i, LPHDITEM phdi) -> BOOL {
+                return Header_SetItem(hwnd, i, phdi);
+              }),
+        xlb_f("Header_SetOrderArray",
+              [](HWND hwnd, int iCount, int *lpi) -> BOOL {
+                return Header_SetOrderArray(hwnd, iCount, lpi);
+              }),
+        xlb_f("Header_SetStateImageList",
+              [](HWND hwnd, HIMAGELIST himl) -> HIMAGELIST {
+                return Header_SetStateImageList(hwnd, himl);
+              }),
+        xlb_f("Header_SetUnicodeFormat",
+              [](HWND hwnd, BOOL fUnicode) -> BOOL {
+                return Header_SetUnicodeFormat(hwnd, fUnicode);
+              }),
         // Messages
         xlb_const("HDM_CLEARFILTER", HDM_CLEARFILTER),
         xlb_const("HDM_CREATEDRAGIMAGE", HDM_CREATEDRAGIMAGE),
@@ -722,7 +1037,8 @@ int load_ctrl(lua_State* L)
         xlb_const("HDM_SETITEM", HDM_SETITEM),
         xlb_const("HDM_SETORDERARRAY", HDM_SETORDERARRAY),
         xlb_const("HDM_SETUNICODEFORMAT", HDM_SETUNICODEFORMAT),
-        //xlb_const("HDM_TRANSLATEACCELERATOR", HDM_TRANSLATEACCELERATOR), // not implemented
+        // xlb_const("HDM_TRANSLATEACCELERATOR", HDM_TRANSLATEACCELERATOR), //
+        // not implemented
         // Notifications
         xlb_const("HDN_BEGINDRAG", HDN_BEGINDRAG),
         xlb_const("HDN_BEGINFILTEREDIT", HDN_BEGINFILTEREDIT),
@@ -765,11 +1081,11 @@ int load_ctrl(lua_State* L)
         xlb_const("HKM_SETRULES", HKM_SETRULES),
 
         // Image Lists
-        //xlb_f("HIMAGELIST_QueryInterface", HIMAGELIST_QueryInterface),
+        // xlb_f("HIMAGELIST_QueryInterface", HIMAGELIST_QueryInterface),
         xlb_f("ImageList_Add", ImageList_Add),
         xlb_f("ImageList_AddMasked", ImageList_AddMasked),
         xlb_f("ImageList_BeginDrag", ImageList_BeginDrag),
-        //xlb_f("ImageList_CoCreateInstance", ImageList_CoCreateInstance),
+        // xlb_f("ImageList_CoCreateInstance", ImageList_CoCreateInstance),
         xlb_f("ImageList_Copy", ImageList_Copy),
         xlb_f("ImageList_Create", ImageList_Create),
         xlb_f("ImageList_Destroy", ImageList_Destroy),
@@ -791,30 +1107,42 @@ int load_ctrl(lua_State* L)
         xlb_f("ImageList_LoadImage", ImageList_LoadImage),
         xlb_f("ImageList_Merge", ImageList_Merge),
         xlb_f("ImageList_Read", ImageList_Read),
-        //xlb_f("ImageList_ReadEx", ImageList_ReadEx), // FIXME: can not find entry
+        // xlb_f("ImageList_ReadEx", ImageList_ReadEx), // FIXME: can not find
+        // entry
         xlb_f("ImageList_Remove", ImageList_Remove),
         xlb_f("ImageList_Replace", ImageList_Replace),
         xlb_f("ImageList_ReplaceIcon", ImageList_ReplaceIcon),
         xlb_f("ImageList_SetBkColor", ImageList_SetBkColor),
-        //xlb_f("ImageList_SetColorTable", ImageList_SetColorTable), // FIXME: undeclared identifier
+        // xlb_f("ImageList_SetColorTable", ImageList_SetColorTable), // FIXME:
+        // undeclared identifier
         xlb_f("ImageList_SetDragCursorImage", ImageList_SetDragCursorImage),
         xlb_f("ImageList_SetIconSize", ImageList_SetIconSize),
         xlb_f("ImageList_SetImageCount", ImageList_SetImageCount),
         xlb_f("ImageList_SetOverlayImage", ImageList_SetOverlayImage),
         xlb_f("ImageList_Write", ImageList_Write),
-        //xlb_f("ImageList_WriteEx", ImageList_WriteEx), // FIXME: crash, do not exists in COMCTL32.dll
+        // xlb_f("ImageList_WriteEx", ImageList_WriteEx), // FIXME: crash, do
+        // not exists in COMCTL32.dll
         xlb_const("ILP_NORMAL", (uint32_t)ILP_NORMAL),
         xlb_const("ILP_DOWNLEVEL", ILP_DOWNLEVEL),
-        //Macro
-        xlb_f("ImageList_AddIcon", [](HIMAGELIST himl, HICON hicon) 
-                { ImageList_AddIcon(himl, hicon); }),
-        xlb_f("ImageList_ExtractIcon", [](HINSTANCE h, HIMAGELIST himl, int i)->HICON 
-                { return ImageList_ExtractIcon(h, himl, i); }),
-        xlb_f("ImageList_LoadBitmap", [](HINSTANCE h, LPCTSTR lpbmp, int cx, int cGrow, COLORREF crMask)->HIMAGELIST 
-                { return ImageList_LoadBitmap(h, lpbmp, cx, cGrow, crMask); }),
-        xlb_f("ImageList_RemoveAll", [](HIMAGELIST himl) -> BOOL
-                { return ImageList_RemoveAll(himl); }),
-        xlb_f("INDEXTOOVERLAYMASK", [](int i) -> int { return INDEXTOOVERLAYMASK(i); }),
+        // Macro
+        xlb_f("ImageList_AddIcon",
+              [](HIMAGELIST himl, HICON hicon) {
+                ImageList_AddIcon(himl, hicon);
+              }),
+        xlb_f("ImageList_ExtractIcon",
+              [](HINSTANCE h, HIMAGELIST himl, int i) -> HICON {
+                return ImageList_ExtractIcon(h, himl, i);
+              }),
+        xlb_f("ImageList_LoadBitmap",
+              [](HINSTANCE h, LPCTSTR lpbmp, int cx, int cGrow,
+                 COLORREF crMask) -> HIMAGELIST {
+                return ImageList_LoadBitmap(h, lpbmp, cx, cGrow, crMask);
+              }),
+        xlb_f(
+            "ImageList_RemoveAll",
+            [](HIMAGELIST himl) -> BOOL { return ImageList_RemoveAll(himl); }),
+        xlb_f("INDEXTOOVERLAYMASK",
+              [](int i) -> int { return INDEXTOOVERLAYMASK(i); }),
 
         // Interface
         xlb_class<IImageList>("IImageList")
@@ -846,45 +1174,59 @@ int load_ctrl(lua_State* L)
             .method("SetDragCursorImage", &IImageList::SetDragCursorImage)
             .method("SetIconSize", &IImageList::SetIconSize)
             .method("SetImageCount", &IImageList::SetImageCount)
-            .method("SetOverlayImage", &IImageList::SetOverlayImage)
-            ,
+            .method("SetOverlayImage", &IImageList::SetOverlayImage),
 
-    xlb_class<IMAGEINFO>("IMAGEINFO") .constructor<>() .destructor()
-        .property("hbmImage", &IMAGEINFO::hbmImage)
-        .property("hbmMask", &IMAGEINFO::hbmMask)
-        .property("Unused1", &IMAGEINFO::Unused1)
-        .property("Unused2", &IMAGEINFO::Unused2)
-        .property("rcImage", &IMAGEINFO::rcImage)
-        ,
-    xlb_class<IMAGELISTDRAWPARAMS>("IMAGELISTDRAWPARAMS") .constructor<>() .destructor()
-        .property("cbSize", &IMAGELISTDRAWPARAMS::cbSize)
-        .property("himl", &IMAGELISTDRAWPARAMS::himl)
-        .property("i", &IMAGELISTDRAWPARAMS::i)
-        .property("hdcDst", &IMAGELISTDRAWPARAMS::hdcDst)
-        .property("x", &IMAGELISTDRAWPARAMS::x)
-        .property("y", &IMAGELISTDRAWPARAMS::y)
-        .property("cx", &IMAGELISTDRAWPARAMS::cx)
-        .property("cy", &IMAGELISTDRAWPARAMS::cy)
-        .property("xBitmap", &IMAGELISTDRAWPARAMS::xBitmap)
-        .property("yBitmap", &IMAGELISTDRAWPARAMS::yBitmap)
-        .property("rgbBk", &IMAGELISTDRAWPARAMS::rgbBk)
-        .property("rgbFg", &IMAGELISTDRAWPARAMS::rgbFg)
-        .property("fStyle", &IMAGELISTDRAWPARAMS::fStyle)
-        .property("dwRop", &IMAGELISTDRAWPARAMS::dwRop)
-        .property("fState", &IMAGELISTDRAWPARAMS::fState)
-        .property("Frame", &IMAGELISTDRAWPARAMS::Frame)
-        .property("crEffect", &IMAGELISTDRAWPARAMS::crEffect)
-        ,
+        xlb_class<IMAGEINFO>("IMAGEINFO")
+            .constructor<>()
+            .destructor()
+            .property("hbmImage", &IMAGEINFO::hbmImage)
+            .property("hbmMask", &IMAGEINFO::hbmMask)
+            .property("Unused1", &IMAGEINFO::Unused1)
+            .property("Unused2", &IMAGEINFO::Unused2)
+            .property("rcImage", &IMAGEINFO::rcImage),
+        xlb_class<IMAGELISTDRAWPARAMS>("IMAGELISTDRAWPARAMS")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &IMAGELISTDRAWPARAMS::cbSize)
+            .property("himl", &IMAGELISTDRAWPARAMS::himl)
+            .property("i", &IMAGELISTDRAWPARAMS::i)
+            .property("hdcDst", &IMAGELISTDRAWPARAMS::hdcDst)
+            .property("x", &IMAGELISTDRAWPARAMS::x)
+            .property("y", &IMAGELISTDRAWPARAMS::y)
+            .property("cx", &IMAGELISTDRAWPARAMS::cx)
+            .property("cy", &IMAGELISTDRAWPARAMS::cy)
+            .property("xBitmap", &IMAGELISTDRAWPARAMS::xBitmap)
+            .property("yBitmap", &IMAGELISTDRAWPARAMS::yBitmap)
+            .property("rgbBk", &IMAGELISTDRAWPARAMS::rgbBk)
+            .property("rgbFg", &IMAGELISTDRAWPARAMS::rgbFg)
+            .property("fStyle", &IMAGELISTDRAWPARAMS::fStyle)
+            .property("dwRop", &IMAGELISTDRAWPARAMS::dwRop)
+            .property("fState", &IMAGELISTDRAWPARAMS::fState)
+            .property("Frame", &IMAGELISTDRAWPARAMS::Frame)
+            .property("crEffect", &IMAGELISTDRAWPARAMS::crEffect),
 
-    // IP Address Controls
-        xlb_f("FIRST_IPADDRESS", [](LPARAM x) -> auto { return FIRST_IPADDRESS(x); }),
-        xlb_f("SECOND_IPADDRESS", [](LPARAM x) -> auto { return SECOND_IPADDRESS(x); }),
-        xlb_f("THIRD_IPADDRESS", [](LPARAM x) -> auto { return THIRD_IPADDRESS(x); }),
-        xlb_f("FOURTH_IPADDRESS", [](LPARAM x) -> auto { return FOURTH_IPADDRESS(x); }),
-        xlb_f("MAKEIPADDRESS", [](BYTE b1, BYTE b2, BYTE b3, BYTE b4) -> auto { return MAKEIPADDRESS(b1,b2,b3,b4); }),
-        xlb_f("MAKEIPRANGE", [](BYTE low, BYTE high) -> auto { return MAKEIPRANGE(low, high); }),
+        // IP Address Controls
+        xlb_f(
+            "FIRST_IPADDRESS",
+            [](LPARAM x) -> auto { return FIRST_IPADDRESS(x); }),
+        xlb_f(
+            "SECOND_IPADDRESS",
+            [](LPARAM x) -> auto { return SECOND_IPADDRESS(x); }),
+        xlb_f(
+            "THIRD_IPADDRESS",
+            [](LPARAM x) -> auto { return THIRD_IPADDRESS(x); }),
+        xlb_f(
+            "FOURTH_IPADDRESS",
+            [](LPARAM x) -> auto { return FOURTH_IPADDRESS(x); }),
+        xlb_f(
+            "MAKEIPADDRESS", [](BYTE b1, BYTE b2, BYTE b3, BYTE b4) -> auto {
+              return MAKEIPADDRESS(b1, b2, b3, b4);
+            }),
+        xlb_f(
+            "MAKEIPRANGE",
+            [](BYTE low, BYTE high) -> auto { return MAKEIPRANGE(low, high); }),
 
-    // Messages
+        // Messages
         xlb_const("BCM_GETIDEALSIZE", BCM_GETIDEALSIZE),
         xlb_const("IPM_CLEARADDRESS", IPM_CLEARADDRESS),
         xlb_const("IPM_GETADDRESS", IPM_GETADDRESS),
@@ -894,14 +1236,15 @@ int load_ctrl(lua_State* L)
         xlb_const("IPM_SETRANGE", IPM_SETRANGE),
         xlb_const("IPN_FIELDCHANGED", IPN_FIELDCHANGED),
 
-    // Structures
-    xlb_class<NMIPADDRESS>("NMIPADDRESS") .constructor<>() .destructor()
-        .property("hdr", &NMIPADDRESS::hdr)
-        .property("iField", &NMIPADDRESS::iField)
-        .property("iValue", &NMIPADDRESS::iValue)
-        ,
+        // Structures
+        xlb_class<NMIPADDRESS>("NMIPADDRESS")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMIPADDRESS::hdr)
+            .property("iField", &NMIPADDRESS::iField)
+            .property("iValue", &NMIPADDRESS::iValue),
 
-    // ListBox
+        // ListBox
         xlb_f("DlgDirList", DlgDirList),
         xlb_f("DlgDirSelectEx", DlgDirSelectEx),
         xlb_f("DrawInsert", DrawInsert),
@@ -912,8 +1255,7 @@ int load_ctrl(lua_State* L)
         xlb_const("LB_ADDFILE", LB_ADDFILE),
         xlb_const("LB_ADDSTRING", LB_ADDSTRING),
         xlb_const("LB_DELETESTRING", LB_DELETESTRING),
-        xlb_const("LB_DIR", LB_DIR),
-        xlb_const("LB_FINDSTRING", LB_FINDSTRING),
+        xlb_const("LB_DIR", LB_DIR), xlb_const("LB_FINDSTRING", LB_FINDSTRING),
         xlb_const("LB_FINDSTRINGEXACT", LB_FINDSTRINGEXACT),
         xlb_const("LB_GETANCHORINDEX", LB_GETANCHORINDEX),
         xlb_const("LB_GETCARETINDEX", LB_GETCARETINDEX),
@@ -964,24 +1306,25 @@ int load_ctrl(lua_State* L)
         xlb_const("DL_CANCELDRAG", DL_CANCELDRAG),
         xlb_const("DL_DRAGGING", DL_DRAGGING),
         xlb_const("DL_DROPPED", DL_DROPPED),
-   
-   xlb_class<DELETEITEMSTRUCT>("DELETEITEMSTRUCT") .constructor<>() .destructor()
-        .property("CtlType", &DELETEITEMSTRUCT::CtlType)
-        .property("CtlID", &DELETEITEMSTRUCT::CtlID)
-        .property("itemID", &DELETEITEMSTRUCT::itemID)
-        .property("hwndItem", &DELETEITEMSTRUCT::hwndItem)
-        .property("itemData", &DELETEITEMSTRUCT::itemData)
-        ,
+
+        xlb_class<DELETEITEMSTRUCT>("DELETEITEMSTRUCT")
+            .constructor<>()
+            .destructor()
+            .property("CtlType", &DELETEITEMSTRUCT::CtlType)
+            .property("CtlID", &DELETEITEMSTRUCT::CtlID)
+            .property("itemID", &DELETEITEMSTRUCT::itemID)
+            .property("hwndItem", &DELETEITEMSTRUCT::hwndItem)
+            .property("itemData", &DELETEITEMSTRUCT::itemData),
 
         xlb_const("ODT_LISTBOX", ODT_LISTBOX),
         xlb_const("ODT_COMBOBOX", ODT_COMBOBOX),
 
-    
-    xlb_class<DRAGLISTINFO>("DRAGLISTINFO") .constructor<>() .destructor()
-        .property("uNotification", &DRAGLISTINFO::uNotification)
-        .property("hWnd", &DRAGLISTINFO::hWnd)
-        .property("ptCursor", &DRAGLISTINFO::ptCursor)
-        ,
+        xlb_class<DRAGLISTINFO>("DRAGLISTINFO")
+            .constructor<>()
+            .destructor()
+            .property("uNotification", &DRAGLISTINFO::uNotification)
+            .property("hWnd", &DRAGLISTINFO::hWnd)
+            .property("ptCursor", &DRAGLISTINFO::ptCursor),
 
         xlb_const("LBS_COMBOBOX", LBS_COMBOBOX),
         xlb_const("LBS_DISABLENOSCROLL", LBS_DISABLENOSCROLL),
@@ -992,8 +1335,7 @@ int load_ctrl(lua_State* L)
         xlb_const("LBS_NODATA", LBS_NODATA),
         xlb_const("LBS_NOINTEGRALHEIGHT", LBS_NOINTEGRALHEIGHT),
         xlb_const("LBS_NOREDRAW", LBS_NOREDRAW),
-        xlb_const("LBS_NOSEL", LBS_NOSEL),
-        xlb_const("LBS_NOTIFY", LBS_NOTIFY),
+        xlb_const("LBS_NOSEL", LBS_NOSEL), xlb_const("LBS_NOTIFY", LBS_NOTIFY),
         xlb_const("LBS_OWNERDRAWFIXED", LBS_OWNERDRAWFIXED),
         xlb_const("LBS_OWNERDRAWVARIABLE", LBS_OWNERDRAWVARIABLE),
         xlb_const("LBS_SORT", LBS_SORT),
@@ -1001,376 +1343,845 @@ int load_ctrl(lua_State* L)
         xlb_const("LBS_USETABSTOPS", LBS_USETABSTOPS),
         xlb_const("LBS_WANTKEYBOARDINPUT", LBS_WANTKEYBOARDINPUT),
 
-    // List view
-        xlb_f("ListView_ApproximateViewRect", [](HWND hwnd, int iWidth, int iHeight, int iCount)->auto { return ListView_ApproximateViewRect(hwnd, iWidth, iHeight, iCount); }),
-        xlb_f("ListView_Arrange", [](HWND hwnd, UINT code)->auto { return ListView_Arrange(hwnd, code); }),
-        xlb_f("ListView_CancelEditLabel", [](HWND hwnd)->auto { return ListView_CancelEditLabel(hwnd); }),
-        xlb_f("ListView_CreateDragImage", [](HWND hwnd, int i, LPPOINT lpptUpLeft)->auto { return ListView_CreateDragImage(hwnd, i, lpptUpLeft); }),
-        xlb_f("ListView_DeleteAllItems", [](HWND hwnd)->auto { return ListView_DeleteAllItems(hwnd); }),
-        xlb_f("ListView_DeleteColumn", [](HWND hwnd, int iCol)->auto { return ListView_DeleteColumn(hwnd, iCol); }),
-        xlb_f("ListView_DeleteItem", [](HWND hwnd, int i)->auto { return ListView_DeleteItem(hwnd, i); }),
-        xlb_f("ListView_EditLabel", [](HWND hwnd, int i)->auto { return ListView_EditLabel(hwnd, i); }),
-        xlb_f("ListView_EnableGroupView", [](HWND hwnd, BOOL fEnable)->auto { return ListView_EnableGroupView(hwnd, fEnable); }),
-        xlb_f("ListView_EnsureVisible", [](HWND hwnd, int i, BOOL fParitalOK)->auto { return ListView_EnsureVisible(hwnd, i, fParitalOK); }),
-        xlb_f("ListView_FindItem", [](HWND hwnd, int iStart, const LV_FINDINFO* plvfi)->auto { return ListView_FindItem(hwnd, iStart, plvfi); }),
-        xlb_f("ListView_GetBkColor", [](HWND hwnd)->auto { return ListView_GetBkColor(hwnd); }),
-        xlb_f("ListView_GetBkImage", [](HWND hwnd, LPLVBKIMAGE plvbki)->auto { return ListView_GetBkImage(hwnd, plvbki); }),
-        xlb_f("ListView_GetCallbackMask", [](HWND hwnd)->auto { return ListView_GetCallbackMask(hwnd); }),
-        xlb_f("ListView_GetCheckState", [](HWND hwnd, UINT i)->auto { return ListView_GetCheckState(hwnd, i); }),
-        xlb_f("ListView_GetColumn", [](HWND hwnd, int iCol, LV_COLUMN* pcol)->auto { return ListView_GetColumn(hwnd, iCol, pcol); }),
-        xlb_f("ListView_GetColumnOrderArray", [](HWND hwnd, int iCount, int* pi)->auto { return ListView_GetColumnOrderArray(hwnd, iCount, pi); }),
-        xlb_f("ListView_GetColumnWidth", [](HWND hwnd, int iCol)->auto { return ListView_GetColumnWidth(hwnd, iCol); }),
-        xlb_f("ListView_GetCountPerPage", [](HWND hwnd)->auto { return ListView_GetCountPerPage(hwnd); }),
-        xlb_f("ListView_GetEditControl", [](HWND hwnd)->auto { return ListView_GetEditControl(hwnd); }),
-        xlb_f("ListView_GetEmptyText", [](HWND hwnd, PWSTR pszText, UINT cchText)->auto { return ListView_GetEmptyText(hwnd, pszText, cchText); }),
-        xlb_f("ListView_GetExtendedListViewStyle", [](HWND hwnd)->auto { return ListView_GetExtendedListViewStyle(hwnd); }),
-        xlb_f("ListView_GetFocusedGroup", [](HWND hwnd)->auto { return ListView_GetFocusedGroup(hwnd); }),
-        xlb_f("ListView_GetFooterInfo", [](HWND hwnd, LPLVFOOTERINFO plvfi)->auto { return ListView_GetFooterInfo(hwnd, plvfi); }),
-        xlb_f("ListView_GetFooterItem", [](HWND hwnd, UINT iItem, LVFOOTERITEM* pfi)->auto { return ListView_GetFooterItem(hwnd, iItem, pfi); }),
-        xlb_f("ListView_GetFooterItemRect", [](HWND hwnd, UINT iItem, RECT* prc)->auto { return ListView_GetFooterItemRect(hwnd, iItem, prc); }),
-        xlb_f("ListView_GetFooterRect", [](HWND hwnd, RECT* prc)->auto { return ListView_GetFooterRect(hwnd, prc); }),
-        xlb_f("ListView_GetGroupCount", [](HWND hwnd)->auto { return ListView_GetGroupCount(hwnd); }),
-        xlb_f("ListView_GetGroupHeaderImageList", [](HWND hwnd)->auto { return ListView_GetGroupHeaderImageList(hwnd); }),
-        xlb_f("ListView_GetGroupInfo", [](HWND hwnd, int iGroupId, PLVGROUP pgrp)->auto { return ListView_GetGroupInfo(hwnd, iGroupId, pgrp); }),
-        xlb_f("ListView_GetGroupInfoByIndex", [](HWND hwnd, int iIndex, PLVGROUP pgrp)->auto { return ListView_GetGroupInfoByIndex(hwnd, iIndex, pgrp); }),
-        xlb_f("ListView_GetGroupMetrics", [](HWND hwnd, PLVGROUPMETRICS pGroupMetrics)->auto { return ListView_GetGroupMetrics(hwnd, pGroupMetrics); }),
-        xlb_f("ListView_GetGroupRect", [](HWND hwnd, int iGroupId, LONG type, RECT* prc)->auto { return ListView_GetGroupRect(hwnd, iGroupId, type, prc); }),
-        xlb_f("ListView_GetGroupState", [](HWND hwnd, UINT dwGroupId, UINT dwMask)->auto { return ListView_GetGroupState(hwnd, dwGroupId, dwMask); }),
-        xlb_f("ListView_GetHeader", [](HWND hwnd)->auto { return ListView_GetHeader(hwnd); }),
-        xlb_f("ListView_GetHotCursor", [](HWND hwnd)->auto { return ListView_GetHotCursor(hwnd); }),
-        xlb_f("ListView_GetHotItem", [](HWND hwnd)->auto { return ListView_GetHotItem(hwnd); }),
-        xlb_f("ListView_GetHoverTime", [](HWND hwnd)->auto { return ListView_GetHoverTime(hwnd); }),
-        xlb_f("ListView_GetImageList", [](HWND hwnd, int iImageList)->auto { return ListView_GetImageList(hwnd, iImageList); }),
-        xlb_f("ListView_GetInsertMark", [](HWND hwnd, LPLVINSERTMARK lvim)->auto { return ListView_GetInsertMark(hwnd, lvim); }),
-        xlb_f("ListView_GetInsertMarkColor", [](HWND hwnd)->auto { return ListView_GetInsertMarkColor(hwnd); }),
-        xlb_f("ListView_GetInsertMarkRect", [](HWND hwnd, LPRECT rc)->auto { return ListView_GetInsertMarkRect(hwnd, rc); }),
-        xlb_f("ListView_GetISearchString", [](HWND hwnd, LPSTR lpsz)->auto { return ListView_GetISearchString(hwnd, lpsz); }),
-        xlb_f("ListView_GetItem", [](HWND hwnd, LPLVITEM pitem)->auto { return ListView_GetItem(hwnd, pitem); }),
-        xlb_f("ListView_GetItemCount", [](HWND hwnd)->auto { return ListView_GetItemCount(hwnd); }),
-        xlb_f("ListView_GetItemIndexRect", [](HWND hwnd, LVITEMINDEX* plvii, LONG iSubItem, LONG code, LPRECT prc)->auto { return ListView_GetItemIndexRect(hwnd, plvii, iSubItem, code, prc); }),
-        xlb_f("ListView_GetItemPosition", [](HWND hwnd, int i, POINT* ppt)->auto { return ListView_GetItemPosition(hwnd, i, ppt); }),
-        xlb_f("ListView_GetItemRect", [](HWND hwnd, int i, RECT* prc, int code)->auto { return ListView_GetItemRect(hwnd, i, prc, code); }),
-        xlb_f("ListView_GetItemSpacing", [](HWND hwnd, BOOL fSmall)->auto { return ListView_GetItemSpacing(hwnd, fSmall); }),
-        xlb_f("ListView_GetItemState", [](HWND hwnd, int i, UINT mask)->auto { return ListView_GetItemState(hwnd, i, mask); }),
-        xlb_f("ListView_GetItemText", [](HWND hwnd, int i, int iSubItem_, LPTSTR pszText_, int cchTextMax_) { ListView_GetItemText(hwnd, i, iSubItem_, pszText_, cchTextMax_); }), //XXX: no return
-        xlb_f("ListView_GetNextItem", [](HWND hwnd, int i, UINT flags)->auto { return ListView_GetNextItem(hwnd, i, flags); }),
-        xlb_f("ListView_GetNextItemIndex", [](HWND hwnd, LVITEMINDEX* plvii, LPARAM flags)->auto { return ListView_GetNextItemIndex(hwnd, plvii, flags); }),
+        // List view
+        xlb_f(
+            "ListView_ApproximateViewRect",
+            [](HWND hwnd, int iWidth, int iHeight, int iCount) -> auto {
+              return ListView_ApproximateViewRect(hwnd, iWidth, iHeight,
+                                                  iCount);
+            }),
+        xlb_f(
+            "ListView_Arrange", [](HWND hwnd, UINT code) -> auto {
+              return ListView_Arrange(hwnd, code);
+            }),
+        xlb_f(
+            "ListView_CancelEditLabel",
+            [](HWND hwnd) -> auto { return ListView_CancelEditLabel(hwnd); }),
+        xlb_f(
+            "ListView_CreateDragImage",
+            [](HWND hwnd, int i, LPPOINT lpptUpLeft) -> auto {
+              return ListView_CreateDragImage(hwnd, i, lpptUpLeft);
+            }),
+        xlb_f(
+            "ListView_DeleteAllItems",
+            [](HWND hwnd) -> auto { return ListView_DeleteAllItems(hwnd); }),
+        xlb_f(
+            "ListView_DeleteColumn", [](HWND hwnd, int iCol) -> auto {
+              return ListView_DeleteColumn(hwnd, iCol);
+            }),
+        xlb_f(
+            "ListView_DeleteItem", [](HWND hwnd, int i) -> auto {
+              return ListView_DeleteItem(hwnd, i);
+            }),
+        xlb_f(
+            "ListView_EditLabel", [](HWND hwnd, int i) -> auto {
+              return ListView_EditLabel(hwnd, i);
+            }),
+        xlb_f(
+            "ListView_EnableGroupView", [](HWND hwnd, BOOL fEnable) -> auto {
+              return ListView_EnableGroupView(hwnd, fEnable);
+            }),
+        xlb_f(
+            "ListView_EnsureVisible",
+            [](HWND hwnd, int i, BOOL fParitalOK) -> auto {
+              return ListView_EnsureVisible(hwnd, i, fParitalOK);
+            }),
+        xlb_f(
+            "ListView_FindItem",
+            [](HWND hwnd, int iStart, const LV_FINDINFO *plvfi) -> auto {
+              return ListView_FindItem(hwnd, iStart, plvfi);
+            }),
+        xlb_f(
+            "ListView_GetBkColor",
+            [](HWND hwnd) -> auto { return ListView_GetBkColor(hwnd); }),
+        xlb_f(
+            "ListView_GetBkImage", [](HWND hwnd, LPLVBKIMAGE plvbki) -> auto {
+              return ListView_GetBkImage(hwnd, plvbki);
+            }),
+        xlb_f(
+            "ListView_GetCallbackMask",
+            [](HWND hwnd) -> auto { return ListView_GetCallbackMask(hwnd); }),
+        xlb_f(
+            "ListView_GetCheckState", [](HWND hwnd, UINT i) -> auto {
+              return ListView_GetCheckState(hwnd, i);
+            }),
+        xlb_f(
+            "ListView_GetColumn",
+            [](HWND hwnd, int iCol, LV_COLUMN *pcol) -> auto {
+              return ListView_GetColumn(hwnd, iCol, pcol);
+            }),
+        xlb_f(
+            "ListView_GetColumnOrderArray",
+            [](HWND hwnd, int iCount, int *pi) -> auto {
+              return ListView_GetColumnOrderArray(hwnd, iCount, pi);
+            }),
+        xlb_f(
+            "ListView_GetColumnWidth", [](HWND hwnd, int iCol) -> auto {
+              return ListView_GetColumnWidth(hwnd, iCol);
+            }),
+        xlb_f(
+            "ListView_GetCountPerPage",
+            [](HWND hwnd) -> auto { return ListView_GetCountPerPage(hwnd); }),
+        xlb_f(
+            "ListView_GetEditControl",
+            [](HWND hwnd) -> auto { return ListView_GetEditControl(hwnd); }),
+        xlb_f(
+            "ListView_GetEmptyText",
+            [](HWND hwnd, PWSTR pszText, UINT cchText) -> auto {
+              return ListView_GetEmptyText(hwnd, pszText, cchText);
+            }),
+        xlb_f(
+            "ListView_GetExtendedListViewStyle", [](HWND hwnd) -> auto {
+              return ListView_GetExtendedListViewStyle(hwnd);
+            }),
+        xlb_f(
+            "ListView_GetFocusedGroup",
+            [](HWND hwnd) -> auto { return ListView_GetFocusedGroup(hwnd); }),
+        xlb_f(
+            "ListView_GetFooterInfo",
+            [](HWND hwnd, LPLVFOOTERINFO plvfi) -> auto {
+              return ListView_GetFooterInfo(hwnd, plvfi);
+            }),
+        xlb_f(
+            "ListView_GetFooterItem",
+            [](HWND hwnd, UINT iItem, LVFOOTERITEM * pfi) -> auto {
+              return ListView_GetFooterItem(hwnd, iItem, pfi);
+            }),
+        xlb_f(
+            "ListView_GetFooterItemRect",
+            [](HWND hwnd, UINT iItem, RECT * prc) -> auto {
+              return ListView_GetFooterItemRect(hwnd, iItem, prc);
+            }),
+        xlb_f(
+            "ListView_GetFooterRect", [](HWND hwnd, RECT * prc) -> auto {
+              return ListView_GetFooterRect(hwnd, prc);
+            }),
+        xlb_f(
+            "ListView_GetGroupCount",
+            [](HWND hwnd) -> auto { return ListView_GetGroupCount(hwnd); }),
+        xlb_f(
+            "ListView_GetGroupHeaderImageList", [](HWND hwnd) -> auto {
+              return ListView_GetGroupHeaderImageList(hwnd);
+            }),
+        xlb_f(
+            "ListView_GetGroupInfo",
+            [](HWND hwnd, int iGroupId, PLVGROUP pgrp) -> auto {
+              return ListView_GetGroupInfo(hwnd, iGroupId, pgrp);
+            }),
+        xlb_f(
+            "ListView_GetGroupInfoByIndex",
+            [](HWND hwnd, int iIndex, PLVGROUP pgrp) -> auto {
+              return ListView_GetGroupInfoByIndex(hwnd, iIndex, pgrp);
+            }),
+        xlb_f(
+            "ListView_GetGroupMetrics",
+            [](HWND hwnd, PLVGROUPMETRICS pGroupMetrics) -> auto {
+              return ListView_GetGroupMetrics(hwnd, pGroupMetrics);
+            }),
+        xlb_f(
+            "ListView_GetGroupRect",
+            [](HWND hwnd, int iGroupId, LONG type, RECT *prc) -> auto {
+              return ListView_GetGroupRect(hwnd, iGroupId, type, prc);
+            }),
+        xlb_f(
+            "ListView_GetGroupState",
+            [](HWND hwnd, UINT dwGroupId, UINT dwMask) -> auto {
+              return ListView_GetGroupState(hwnd, dwGroupId, dwMask);
+            }),
+        xlb_f(
+            "ListView_GetHeader",
+            [](HWND hwnd) -> auto { return ListView_GetHeader(hwnd); }),
+        xlb_f(
+            "ListView_GetHotCursor",
+            [](HWND hwnd) -> auto { return ListView_GetHotCursor(hwnd); }),
+        xlb_f(
+            "ListView_GetHotItem",
+            [](HWND hwnd) -> auto { return ListView_GetHotItem(hwnd); }),
+        xlb_f(
+            "ListView_GetHoverTime",
+            [](HWND hwnd) -> auto { return ListView_GetHoverTime(hwnd); }),
+        xlb_f(
+            "ListView_GetImageList", [](HWND hwnd, int iImageList) -> auto {
+              return ListView_GetImageList(hwnd, iImageList);
+            }),
+        xlb_f(
+            "ListView_GetInsertMark",
+            [](HWND hwnd, LPLVINSERTMARK lvim) -> auto {
+              return ListView_GetInsertMark(hwnd, lvim);
+            }),
+        xlb_f(
+            "ListView_GetInsertMarkColor", [](HWND hwnd) -> auto {
+              return ListView_GetInsertMarkColor(hwnd);
+            }),
+        xlb_f(
+            "ListView_GetInsertMarkRect", [](HWND hwnd, LPRECT rc) -> auto {
+              return ListView_GetInsertMarkRect(hwnd, rc);
+            }),
+        xlb_f(
+            "ListView_GetISearchString", [](HWND hwnd, LPSTR lpsz) -> auto {
+              return ListView_GetISearchString(hwnd, lpsz);
+            }),
+        xlb_f(
+            "ListView_GetItem", [](HWND hwnd, LPLVITEM pitem) -> auto {
+              return ListView_GetItem(hwnd, pitem);
+            }),
+        xlb_f(
+            "ListView_GetItemCount",
+            [](HWND hwnd) -> auto { return ListView_GetItemCount(hwnd); }),
+        xlb_f(
+            "ListView_GetItemIndexRect",
+            [](HWND hwnd, LVITEMINDEX * plvii, LONG iSubItem, LONG code,
+               LPRECT prc) -> auto {
+              return ListView_GetItemIndexRect(hwnd, plvii, iSubItem, code,
+                                               prc);
+            }),
+        xlb_f(
+            "ListView_GetItemPosition",
+            [](HWND hwnd, int i, POINT *ppt) -> auto {
+              return ListView_GetItemPosition(hwnd, i, ppt);
+            }),
+        xlb_f(
+            "ListView_GetItemRect",
+            [](HWND hwnd, int i, RECT *prc, int code) -> auto {
+              return ListView_GetItemRect(hwnd, i, prc, code);
+            }),
+        xlb_f(
+            "ListView_GetItemSpacing", [](HWND hwnd, BOOL fSmall) -> auto {
+              return ListView_GetItemSpacing(hwnd, fSmall);
+            }),
+        xlb_f(
+            "ListView_GetItemState", [](HWND hwnd, int i, UINT mask) -> auto {
+              return ListView_GetItemState(hwnd, i, mask);
+            }),
+        xlb_f("ListView_GetItemText",
+              [](HWND hwnd, int i, int iSubItem_, LPTSTR pszText_,
+                 int cchTextMax_) {
+                ListView_GetItemText(hwnd, i, iSubItem_, pszText_, cchTextMax_);
+              }), // XXX: no return
+        xlb_f(
+            "ListView_GetNextItem", [](HWND hwnd, int i, UINT flags) -> auto {
+              return ListView_GetNextItem(hwnd, i, flags);
+            }),
+        xlb_f(
+            "ListView_GetNextItemIndex",
+            [](HWND hwnd, LVITEMINDEX * plvii, LPARAM flags) -> auto {
+              return ListView_GetNextItemIndex(hwnd, plvii, flags);
+            }),
 
-        xlb_f("ListView_GetNumberOfWorkAreas", [](HWND hwnd, LPUINT pnWorkAreas)->auto { return ListView_GetNumberOfWorkAreas(hwnd, pnWorkAreas); }),
-        xlb_f("ListView_GetOrigin", [](HWND hwnd, LPPOINT ppt)->auto { return ListView_GetOrigin(hwnd, ppt); }),
-        xlb_f("ListView_GetOutlineColor", [](HWND hwnd)->auto { return ListView_GetOutlineColor(hwnd); }),
-        xlb_f("ListView_GetSelectedColumn", [](HWND hwnd)->auto { return ListView_GetSelectedColumn(hwnd); }),
-        xlb_f("ListView_GetSelectedCount", [](HWND hwnd)->auto { return ListView_GetSelectedCount(hwnd); }),
-        xlb_f("ListView_GetSelectionMark", [](HWND hwnd)->auto { return ListView_GetSelectionMark(hwnd); }),
-        xlb_f("ListView_GetStringWidth", [](HWND hwnd, LPCSTR psz)->auto { return ListView_GetStringWidth(hwnd, psz); }),
-        xlb_f("ListView_GetSubItemRect", [](HWND hwnd, int iItem, int iSubItem, int code, LPRECT prc)->auto { return ListView_GetSubItemRect(hwnd, iItem, iSubItem, code, prc); }),
-        xlb_f("ListView_GetTextBkColor", [](HWND hwnd)->auto { return ListView_GetTextBkColor(hwnd); }),
-        xlb_f("ListView_GetTextColor", [](HWND hwnd)->auto { return ListView_GetTextColor(hwnd); }),
-        xlb_f("ListView_GetTileInfo", [](HWND hwnd, PLVTILEINFO pti)->auto { return ListView_GetTileInfo(hwnd, pti); }),
-        xlb_f("ListView_GetTileViewInfo", [](HWND hwnd, PLVTILEVIEWINFO ptvi)->auto { return ListView_GetTileViewInfo(hwnd, ptvi); }),
-        xlb_f("ListView_GetToolTips", [](HWND hwnd)->auto { return ListView_GetToolTips(hwnd); }),
-        xlb_f("ListView_GetTopIndex", [](HWND hwnd)->auto { return ListView_GetTopIndex(hwnd); }),
-        xlb_f("ListView_GetUnicodeFormat", [](HWND hwnd)->auto { return ListView_GetUnicodeFormat(hwnd); }),
-        xlb_f("ListView_GetView", [](HWND hwnd)->auto { return ListView_GetView(hwnd); }),
-        xlb_f("ListView_GetViewRect", [](HWND hwnd, RECT* prc)->auto { return ListView_GetViewRect(hwnd, prc); }),
-        xlb_f("ListView_GetWorkAreas", [](HWND hwnd, INT nWorkAreas, LPRECT prc)->auto { return ListView_GetWorkAreas(hwnd, nWorkAreas, prc); }),
-        xlb_f("ListView_HasGroup", [](HWND hwnd, int dwGroupId)->auto { return ListView_HasGroup(hwnd, dwGroupId); }),
-        xlb_f("ListView_HitTest", [](HWND hwnd, LPLVHITTESTINFO pinfo)->auto { return ListView_HitTest(hwnd, pinfo); }),
-        xlb_f("ListView_HitTestEx", [](HWND hwnd, LPLVHITTESTINFO pinfo)->auto { return ListView_HitTestEx(hwnd, pinfo); }),
-        xlb_f("ListView_InsertColumn", [](HWND hwnd, int iCol, const LPLVCOLUMN pcol)->auto { return ListView_InsertColumn(hwnd, iCol, pcol); }),
-        xlb_f("ListView_InsertGroup", [](HWND hwnd, int index, PLVGROUP pgrp)->auto { return ListView_InsertGroup(hwnd, index, pgrp); }),
-        xlb_f("ListView_InsertGroupSorted", [](HWND hwnd, PLVINSERTGROUPSORTED structInsert)->auto { return ListView_InsertGroupSorted(hwnd, structInsert); }),
-        xlb_f("ListView_InsertItem", [](HWND hwnd, const LPLVITEM pitem)->auto { return ListView_InsertItem(hwnd, pitem); }),
-        xlb_f("ListView_InsertMarkHitTest", [](HWND hwnd, LPPOINT point, LPLVINSERTMARK lvim)->auto { return ListView_InsertMarkHitTest(hwnd, point, lvim); }),
-        xlb_f("ListView_IsGroupViewEnabled", [](HWND hwnd)->auto { return ListView_IsGroupViewEnabled(hwnd); }),
-        xlb_f("ListView_IsItemVisible", [](HWND hwnd, UINT index)->auto { return ListView_IsItemVisible(hwnd, index); }),
-        xlb_f("ListView_MapIDToIndex", [](HWND hwnd, UINT id)->auto { return ListView_MapIDToIndex(hwnd, id); }),
-        xlb_f("ListView_MapIndexToID", [](HWND hwnd, UINT index)->auto { return ListView_MapIndexToID(hwnd, index); }),
-        xlb_f("ListView_MoveGroup", [](HWND hwnd, int iGroupId, int toIndex)->auto { return ListView_MoveGroup(hwnd, iGroupId, toIndex); }),
-        xlb_f("ListView_MoveItemToGroup", [](HWND hwnd, int idItemFrom, int idGroupTo)->auto { return ListView_MoveItemToGroup(hwnd, idItemFrom, idGroupTo); }),
-        xlb_f("ListView_RedrawItems", [](HWND hwnd, int iFirst, int iLast)->auto { return ListView_RedrawItems(hwnd, iFirst, iLast); }),
-        xlb_f("ListView_RemoveAllGroups", [](HWND hwnd)->auto { return ListView_RemoveAllGroups(hwnd); }),
-        xlb_f("ListView_RemoveGroup", [](HWND hwnd, int iGroupId)->auto { return ListView_RemoveGroup(hwnd, iGroupId); }),
-        xlb_f("ListView_Scroll", [](HWND hwnd, int dx, int dy)->auto { return ListView_Scroll(hwnd, dx, dy); }),
-        xlb_f("ListView_SetBkColor", [](HWND hwnd, COLORREF clrBk)->auto { return ListView_SetBkColor(hwnd, clrBk); }),
-        xlb_f("ListView_SetBkImage", [](HWND hwnd, LPLVBKIMAGE plvbki)->auto { return ListView_SetBkImage(hwnd, plvbki); }),
-        xlb_f("ListView_SetCallbackMask", [](HWND hwnd, UINT mask)->auto { return ListView_SetCallbackMask(hwnd, mask); }),
-        xlb_f("ListView_SetCheckState", [](HWND hwnd, UINT i, BOOL fCheck) { ListView_SetCheckState(hwnd, i, fCheck); }), //XXX: no return
-        xlb_f("ListView_SetColumn", [](HWND hwnd, int iCol, LPLVCOLUMN pcol)->auto { return ListView_SetColumn(hwnd, iCol, pcol); }),
-        xlb_f("ListView_SetColumnOrderArray", [](HWND hwnd, int iCount, int* pi)->auto { return ListView_SetColumnOrderArray(hwnd, iCount, pi); }),
-        xlb_f("ListView_SetColumnWidth", [](HWND hwnd, int iCol, int cx)->auto { return ListView_SetColumnWidth(hwnd, iCol, cx); }),
-        xlb_f("ListView_SetExtendedListViewStyle", [](HWND hwnd, DWORD dw)->auto { return ListView_SetExtendedListViewStyle(hwnd, dw); }),
-        xlb_f("ListView_SetExtendedListViewStyleEx", [](HWND hwnd, DWORD dwMask, DWORD dw)->auto { return ListView_SetExtendedListViewStyleEx(hwnd, dwMask, dw); }),
-        xlb_f("ListView_SetGroupHeaderImageList", [](HWND hwnd, HIMAGELIST himl)->auto { return ListView_SetGroupHeaderImageList(hwnd, himl); }),
-        xlb_f("ListView_SetGroupInfo", [](HWND hwnd, int iGroupId, PLVGROUP pgrp)->auto { return ListView_SetGroupInfo(hwnd, iGroupId, pgrp); }),
-        xlb_f("ListView_SetGroupMetrics", [](HWND hwnd, PLVGROUPMETRICS pGroupMetrics)->auto { return ListView_SetGroupMetrics(hwnd, pGroupMetrics); }),
-        xlb_f("ListView_SetGroupState", [](HWND hwnd, UINT dwGroupId, UINT dwMask, UINT dwState) { ListView_SetGroupState(hwnd, dwGroupId, dwMask, dwState); }), //XXX: no return
-        xlb_f("ListView_SetHotCursor", [](HWND hwnd, HCURSOR hcur)->auto { return ListView_SetHotCursor(hwnd, hcur); }),
-        xlb_f("ListView_SetHotItem", [](HWND hwnd, INT i)->auto { return ListView_SetHotItem(hwnd, i); }),
-        xlb_f("ListView_SetHoverTime", [](HWND hwnd, DWORD dwHoverTimeMs)->auto { return ListView_SetHoverTime(hwnd, dwHoverTimeMs); }),
-        xlb_f("ListView_SetIconSpacing", [](HWND hwnd, int cx, int cy)->auto { return ListView_SetIconSpacing(hwnd, cx, cy); }),
-        xlb_f("ListView_SetImageList", [](HWND hwnd, HIMAGELIST himl, int iImageList)->auto { return ListView_SetImageList(hwnd, himl, iImageList); }),
-        xlb_f("ListView_SetInfoTip", [](HWND hwnd, PLVSETINFOTIP plvInfoTip)->auto { return ListView_SetInfoTip(hwnd, plvInfoTip); }),
-        xlb_f("ListView_SetInsertMark", [](HWND hwnd, LPLVINSERTMARK lvim)->auto { return ListView_SetInsertMark(hwnd, lvim); }),
-        xlb_f("ListView_SetInsertMarkColor", [](HWND hwnd, COLORREF color)->auto { return ListView_SetInsertMarkColor(hwnd, color); }),
-        xlb_f("ListView_SetItem", [](HWND hwnd, const LPLVITEM pitem)->auto { return ListView_SetItem(hwnd, pitem); }),
-        xlb_f("ListView_SetItemCount", [](HWND hwnd, int cItems)->auto { return ListView_SetItemCount(hwnd, cItems); }),
-        xlb_f("ListView_SetItemCountEx", [](HWND hwnd, int cItems, DWORD dwFlags)->auto { return ListView_SetItemCountEx(hwnd, cItems, dwFlags); }),
-        xlb_f("ListView_SetItemIndexState", [](HWND hwnd, LVITEMINDEX* plvii, UINT data, UINT mask) { ListView_SetItemIndexState(hwnd, plvii, data, mask); }), //XXX: no return
-        xlb_f("ListView_SetItemPosition", [](HWND hwnd, int i, int x, int y)->auto { return ListView_SetItemPosition(hwnd, i, x, y); }),
-        xlb_f("ListView_SetItemPosition32", [](HWND hwnd, int i, int x0, int y0) { ListView_SetItemPosition32(hwnd, i, x0, y0); }),
-        xlb_f("ListView_SetItemState", [](HWND hwnd, int i, UINT data, UINT mask) { ListView_SetItemState(hwnd, i, data, mask); }),
-        xlb_f("ListView_SetItemText", [](HWND hwnd, int i, int iSubItem_, LPSTR pszText_) { ListView_SetItemText(hwnd, i, iSubItem_, pszText_); }),
-        xlb_f("ListView_SetOutlineColor", [](HWND hwnd, COLORREF color)->auto { return ListView_SetOutlineColor(hwnd, color); }),
-        xlb_f("ListView_SetSelectedColumn", [](HWND hwnd, int iCol)->auto { return ListView_SetSelectedColumn(hwnd, iCol); }),
-        xlb_f("ListView_SetSelectionMark", [](HWND hwnd, INT i)->auto { return ListView_SetSelectionMark(hwnd, i); }),
-        xlb_f("ListView_SetTextBkColor", [](HWND hwnd, COLORREF clrTextBk)->auto { return ListView_SetTextBkColor(hwnd, clrTextBk); }),
-        xlb_f("ListView_SetTextColor", [](HWND hwnd, COLORREF clrText)->auto { return ListView_SetTextColor(hwnd, clrText); }),
-        xlb_f("ListView_SetTileInfo", [](HWND hwnd, PLVTILEINFO pti)->auto { return ListView_SetTileInfo(hwnd, pti); }),
-        xlb_f("ListView_SetTileViewInfo", [](HWND hwnd, PLVTILEVIEWINFO ptvi)->auto { return ListView_SetTileViewInfo(hwnd, ptvi); }),
-        xlb_f("ListView_SetToolTips", [](HWND hwnd, HWND hwndNewHwnd)->auto { return ListView_SetToolTips(hwnd, hwndNewHwnd); }),
-        xlb_f("ListView_SetUnicodeFormat", [](HWND hwnd, BOOL fUnicode)->auto { return ListView_SetUnicodeFormat(hwnd, fUnicode); }),
-        xlb_f("ListView_SetView", [](HWND hwnd, DWORD iView)->auto { return ListView_SetView(hwnd, iView); }),
-        xlb_f("ListView_SetWorkAreas", [](HWND hwnd, INT nWorkAreas, LPRECT prc)->auto { return ListView_SetWorkAreas(hwnd, nWorkAreas, prc); }),
-        xlb_f("ListView_SortGroups", [](HWND hwnd, PFNLVGROUPCOMPARE _pfnGroupCompate, LPVOID _plv)->auto { return ListView_SortGroups(hwnd, _pfnGroupCompate, _plv); }),
-        xlb_f("ListView_SortItems", [](HWND hwnd, PFNLVCOMPARE _pfnCompare, LPARAM _lPrm)->auto { return ListView_SortItems(hwnd, _pfnCompare, _lPrm); }),
-        xlb_f("ListView_SortItemsEx", [](HWND hwnd, PFNLVCOMPARE _pfnCompare, LPARAM _lPrm)->auto { return ListView_SortItemsEx(hwnd, _pfnCompare, _lPrm); }),
-        xlb_f("ListView_SubItemHitTest", [](HWND hwnd, LPLVHITTESTINFO plvhti)->auto { return ListView_SubItemHitTest(hwnd, plvhti); }),
-        xlb_f("ListView_SubItemHitTestEx", [](HWND hwnd, LPLVHITTESTINFO plvhti)->auto { return ListView_SubItemHitTestEx(hwnd, plvhti); }),
-        xlb_f("ListView_Update", [](HWND hwnd, int i)->auto { return ListView_Update(hwnd, i); }),
+        xlb_f(
+            "ListView_GetNumberOfWorkAreas",
+            [](HWND hwnd, LPUINT pnWorkAreas) -> auto {
+              return ListView_GetNumberOfWorkAreas(hwnd, pnWorkAreas);
+            }),
+        xlb_f(
+            "ListView_GetOrigin", [](HWND hwnd, LPPOINT ppt) -> auto {
+              return ListView_GetOrigin(hwnd, ppt);
+            }),
+        xlb_f(
+            "ListView_GetOutlineColor",
+            [](HWND hwnd) -> auto { return ListView_GetOutlineColor(hwnd); }),
+        xlb_f(
+            "ListView_GetSelectedColumn",
+            [](HWND hwnd) -> auto { return ListView_GetSelectedColumn(hwnd); }),
+        xlb_f(
+            "ListView_GetSelectedCount",
+            [](HWND hwnd) -> auto { return ListView_GetSelectedCount(hwnd); }),
+        xlb_f(
+            "ListView_GetSelectionMark",
+            [](HWND hwnd) -> auto { return ListView_GetSelectionMark(hwnd); }),
+        xlb_f(
+            "ListView_GetStringWidth", [](HWND hwnd, LPCSTR psz) -> auto {
+              return ListView_GetStringWidth(hwnd, psz);
+            }),
+        xlb_f(
+            "ListView_GetSubItemRect",
+            [](HWND hwnd, int iItem, int iSubItem, int code,
+               LPRECT prc) -> auto {
+              return ListView_GetSubItemRect(hwnd, iItem, iSubItem, code, prc);
+            }),
+        xlb_f(
+            "ListView_GetTextBkColor",
+            [](HWND hwnd) -> auto { return ListView_GetTextBkColor(hwnd); }),
+        xlb_f(
+            "ListView_GetTextColor",
+            [](HWND hwnd) -> auto { return ListView_GetTextColor(hwnd); }),
+        xlb_f(
+            "ListView_GetTileInfo", [](HWND hwnd, PLVTILEINFO pti) -> auto {
+              return ListView_GetTileInfo(hwnd, pti);
+            }),
+        xlb_f(
+            "ListView_GetTileViewInfo",
+            [](HWND hwnd, PLVTILEVIEWINFO ptvi) -> auto {
+              return ListView_GetTileViewInfo(hwnd, ptvi);
+            }),
+        xlb_f(
+            "ListView_GetToolTips",
+            [](HWND hwnd) -> auto { return ListView_GetToolTips(hwnd); }),
+        xlb_f(
+            "ListView_GetTopIndex",
+            [](HWND hwnd) -> auto { return ListView_GetTopIndex(hwnd); }),
+        xlb_f(
+            "ListView_GetUnicodeFormat",
+            [](HWND hwnd) -> auto { return ListView_GetUnicodeFormat(hwnd); }),
+        xlb_f(
+            "ListView_GetView",
+            [](HWND hwnd) -> auto { return ListView_GetView(hwnd); }),
+        xlb_f(
+            "ListView_GetViewRect", [](HWND hwnd, RECT * prc) -> auto {
+              return ListView_GetViewRect(hwnd, prc);
+            }),
+        xlb_f(
+            "ListView_GetWorkAreas",
+            [](HWND hwnd, INT nWorkAreas, LPRECT prc) -> auto {
+              return ListView_GetWorkAreas(hwnd, nWorkAreas, prc);
+            }),
+        xlb_f(
+            "ListView_HasGroup", [](HWND hwnd, int dwGroupId) -> auto {
+              return ListView_HasGroup(hwnd, dwGroupId);
+            }),
+        xlb_f(
+            "ListView_HitTest", [](HWND hwnd, LPLVHITTESTINFO pinfo) -> auto {
+              return ListView_HitTest(hwnd, pinfo);
+            }),
+        xlb_f(
+            "ListView_HitTestEx", [](HWND hwnd, LPLVHITTESTINFO pinfo) -> auto {
+              return ListView_HitTestEx(hwnd, pinfo);
+            }),
+        xlb_f(
+            "ListView_InsertColumn",
+            [](HWND hwnd, int iCol, const LPLVCOLUMN pcol) -> auto {
+              return ListView_InsertColumn(hwnd, iCol, pcol);
+            }),
+        xlb_f(
+            "ListView_InsertGroup",
+            [](HWND hwnd, int index, PLVGROUP pgrp) -> auto {
+              return ListView_InsertGroup(hwnd, index, pgrp);
+            }),
+        xlb_f(
+            "ListView_InsertGroupSorted",
+            [](HWND hwnd, PLVINSERTGROUPSORTED structInsert) -> auto {
+              return ListView_InsertGroupSorted(hwnd, structInsert);
+            }),
+        xlb_f(
+            "ListView_InsertItem", [](HWND hwnd, const LPLVITEM pitem) -> auto {
+              return ListView_InsertItem(hwnd, pitem);
+            }),
+        xlb_f(
+            "ListView_InsertMarkHitTest",
+            [](HWND hwnd, LPPOINT point, LPLVINSERTMARK lvim) -> auto {
+              return ListView_InsertMarkHitTest(hwnd, point, lvim);
+            }),
+        xlb_f(
+            "ListView_IsGroupViewEnabled", [](HWND hwnd) -> auto {
+              return ListView_IsGroupViewEnabled(hwnd);
+            }),
+        xlb_f(
+            "ListView_IsItemVisible", [](HWND hwnd, UINT index) -> auto {
+              return ListView_IsItemVisible(hwnd, index);
+            }),
+        xlb_f(
+            "ListView_MapIDToIndex", [](HWND hwnd, UINT id) -> auto {
+              return ListView_MapIDToIndex(hwnd, id);
+            }),
+        xlb_f(
+            "ListView_MapIndexToID", [](HWND hwnd, UINT index) -> auto {
+              return ListView_MapIndexToID(hwnd, index);
+            }),
+        xlb_f(
+            "ListView_MoveGroup",
+            [](HWND hwnd, int iGroupId, int toIndex) -> auto {
+              return ListView_MoveGroup(hwnd, iGroupId, toIndex);
+            }),
+        xlb_f(
+            "ListView_MoveItemToGroup",
+            [](HWND hwnd, int idItemFrom, int idGroupTo) -> auto {
+              return ListView_MoveItemToGroup(hwnd, idItemFrom, idGroupTo);
+            }),
+        xlb_f(
+            "ListView_RedrawItems",
+            [](HWND hwnd, int iFirst, int iLast) -> auto {
+              return ListView_RedrawItems(hwnd, iFirst, iLast);
+            }),
+        xlb_f(
+            "ListView_RemoveAllGroups",
+            [](HWND hwnd) -> auto { return ListView_RemoveAllGroups(hwnd); }),
+        xlb_f(
+            "ListView_RemoveGroup", [](HWND hwnd, int iGroupId) -> auto {
+              return ListView_RemoveGroup(hwnd, iGroupId);
+            }),
+        xlb_f(
+            "ListView_Scroll", [](HWND hwnd, int dx, int dy) -> auto {
+              return ListView_Scroll(hwnd, dx, dy);
+            }),
+        xlb_f(
+            "ListView_SetBkColor", [](HWND hwnd, COLORREF clrBk) -> auto {
+              return ListView_SetBkColor(hwnd, clrBk);
+            }),
+        xlb_f(
+            "ListView_SetBkImage", [](HWND hwnd, LPLVBKIMAGE plvbki) -> auto {
+              return ListView_SetBkImage(hwnd, plvbki);
+            }),
+        xlb_f(
+            "ListView_SetCallbackMask", [](HWND hwnd, UINT mask) -> auto {
+              return ListView_SetCallbackMask(hwnd, mask);
+            }),
+        xlb_f("ListView_SetCheckState",
+              [](HWND hwnd, UINT i, BOOL fCheck) {
+                ListView_SetCheckState(hwnd, i, fCheck);
+              }), // XXX: no return
+        xlb_f(
+            "ListView_SetColumn",
+            [](HWND hwnd, int iCol, LPLVCOLUMN pcol) -> auto {
+              return ListView_SetColumn(hwnd, iCol, pcol);
+            }),
+        xlb_f(
+            "ListView_SetColumnOrderArray",
+            [](HWND hwnd, int iCount, int *pi) -> auto {
+              return ListView_SetColumnOrderArray(hwnd, iCount, pi);
+            }),
+        xlb_f(
+            "ListView_SetColumnWidth", [](HWND hwnd, int iCol, int cx) -> auto {
+              return ListView_SetColumnWidth(hwnd, iCol, cx);
+            }),
+        xlb_f(
+            "ListView_SetExtendedListViewStyle",
+            [](HWND hwnd, DWORD dw) -> auto {
+              return ListView_SetExtendedListViewStyle(hwnd, dw);
+            }),
+        xlb_f(
+            "ListView_SetExtendedListViewStyleEx",
+            [](HWND hwnd, DWORD dwMask, DWORD dw) -> auto {
+              return ListView_SetExtendedListViewStyleEx(hwnd, dwMask, dw);
+            }),
+        xlb_f(
+            "ListView_SetGroupHeaderImageList",
+            [](HWND hwnd, HIMAGELIST himl) -> auto {
+              return ListView_SetGroupHeaderImageList(hwnd, himl);
+            }),
+        xlb_f(
+            "ListView_SetGroupInfo",
+            [](HWND hwnd, int iGroupId, PLVGROUP pgrp) -> auto {
+              return ListView_SetGroupInfo(hwnd, iGroupId, pgrp);
+            }),
+        xlb_f(
+            "ListView_SetGroupMetrics",
+            [](HWND hwnd, PLVGROUPMETRICS pGroupMetrics) -> auto {
+              return ListView_SetGroupMetrics(hwnd, pGroupMetrics);
+            }),
+        xlb_f("ListView_SetGroupState",
+              [](HWND hwnd, UINT dwGroupId, UINT dwMask, UINT dwState) {
+                ListView_SetGroupState(hwnd, dwGroupId, dwMask, dwState);
+              }), // XXX: no return
+        xlb_f(
+            "ListView_SetHotCursor", [](HWND hwnd, HCURSOR hcur) -> auto {
+              return ListView_SetHotCursor(hwnd, hcur);
+            }),
+        xlb_f(
+            "ListView_SetHotItem", [](HWND hwnd, INT i) -> auto {
+              return ListView_SetHotItem(hwnd, i);
+            }),
+        xlb_f(
+            "ListView_SetHoverTime",
+            [](HWND hwnd, DWORD dwHoverTimeMs) -> auto {
+              return ListView_SetHoverTime(hwnd, dwHoverTimeMs);
+            }),
+        xlb_f(
+            "ListView_SetIconSpacing", [](HWND hwnd, int cx, int cy) -> auto {
+              return ListView_SetIconSpacing(hwnd, cx, cy);
+            }),
+        xlb_f(
+            "ListView_SetImageList",
+            [](HWND hwnd, HIMAGELIST himl, int iImageList) -> auto {
+              return ListView_SetImageList(hwnd, himl, iImageList);
+            }),
+        xlb_f(
+            "ListView_SetInfoTip",
+            [](HWND hwnd, PLVSETINFOTIP plvInfoTip) -> auto {
+              return ListView_SetInfoTip(hwnd, plvInfoTip);
+            }),
+        xlb_f(
+            "ListView_SetInsertMark",
+            [](HWND hwnd, LPLVINSERTMARK lvim) -> auto {
+              return ListView_SetInsertMark(hwnd, lvim);
+            }),
+        xlb_f(
+            "ListView_SetInsertMarkColor",
+            [](HWND hwnd, COLORREF color) -> auto {
+              return ListView_SetInsertMarkColor(hwnd, color);
+            }),
+        xlb_f(
+            "ListView_SetItem", [](HWND hwnd, const LPLVITEM pitem) -> auto {
+              return ListView_SetItem(hwnd, pitem);
+            }),
+        xlb_f(
+            "ListView_SetItemCount", [](HWND hwnd, int cItems) -> auto {
+              return ListView_SetItemCount(hwnd, cItems);
+            }),
+        xlb_f(
+            "ListView_SetItemCountEx",
+            [](HWND hwnd, int cItems, DWORD dwFlags) -> auto {
+              return ListView_SetItemCountEx(hwnd, cItems, dwFlags);
+            }),
+        xlb_f("ListView_SetItemIndexState",
+              [](HWND hwnd, LVITEMINDEX *plvii, UINT data, UINT mask) {
+                ListView_SetItemIndexState(hwnd, plvii, data, mask);
+              }), // XXX: no return
+        xlb_f(
+            "ListView_SetItemPosition",
+            [](HWND hwnd, int i, int x, int y) -> auto {
+              return ListView_SetItemPosition(hwnd, i, x, y);
+            }),
+        xlb_f("ListView_SetItemPosition32",
+              [](HWND hwnd, int i, int x0, int y0) {
+                ListView_SetItemPosition32(hwnd, i, x0, y0);
+              }),
+        xlb_f("ListView_SetItemState",
+              [](HWND hwnd, int i, UINT data, UINT mask) {
+                ListView_SetItemState(hwnd, i, data, mask);
+              }),
+        xlb_f("ListView_SetItemText",
+              [](HWND hwnd, int i, int iSubItem_, LPTSTR pszText_) {
+                ListView_SetItemText(hwnd, i, iSubItem_, pszText_);
+              }),
+        xlb_f(
+            "ListView_SetOutlineColor", [](HWND hwnd, COLORREF color) -> auto {
+              return ListView_SetOutlineColor(hwnd, color);
+            }),
+        xlb_f(
+            "ListView_SetSelectedColumn", [](HWND hwnd, int iCol) -> auto {
+              return ListView_SetSelectedColumn(hwnd, iCol);
+            }),
+        xlb_f(
+            "ListView_SetSelectionMark", [](HWND hwnd, INT i) -> auto {
+              return ListView_SetSelectionMark(hwnd, i);
+            }),
+        xlb_f(
+            "ListView_SetTextBkColor",
+            [](HWND hwnd, COLORREF clrTextBk) -> auto {
+              return ListView_SetTextBkColor(hwnd, clrTextBk);
+            }),
+        xlb_f(
+            "ListView_SetTextColor", [](HWND hwnd, COLORREF clrText) -> auto {
+              return ListView_SetTextColor(hwnd, clrText);
+            }),
+        xlb_f(
+            "ListView_SetTileInfo", [](HWND hwnd, PLVTILEINFO pti) -> auto {
+              return ListView_SetTileInfo(hwnd, pti);
+            }),
+        xlb_f(
+            "ListView_SetTileViewInfo",
+            [](HWND hwnd, PLVTILEVIEWINFO ptvi) -> auto {
+              return ListView_SetTileViewInfo(hwnd, ptvi);
+            }),
+        xlb_f(
+            "ListView_SetToolTips", [](HWND hwnd, HWND hwndNewHwnd) -> auto {
+              return ListView_SetToolTips(hwnd, hwndNewHwnd);
+            }),
+        xlb_f(
+            "ListView_SetUnicodeFormat", [](HWND hwnd, BOOL fUnicode) -> auto {
+              return ListView_SetUnicodeFormat(hwnd, fUnicode);
+            }),
+        xlb_f(
+            "ListView_SetView", [](HWND hwnd, DWORD iView) -> auto {
+              return ListView_SetView(hwnd, iView);
+            }),
+        xlb_f(
+            "ListView_SetWorkAreas",
+            [](HWND hwnd, INT nWorkAreas, LPRECT prc) -> auto {
+              return ListView_SetWorkAreas(hwnd, nWorkAreas, prc);
+            }),
+        xlb_f(
+            "ListView_SortGroups",
+            [](HWND hwnd, PFNLVGROUPCOMPARE _pfnGroupCompate,
+               LPVOID _plv) -> auto {
+              return ListView_SortGroups(hwnd, _pfnGroupCompate, _plv);
+            }),
+        xlb_f(
+            "ListView_SortItems",
+            [](HWND hwnd, PFNLVCOMPARE _pfnCompare, LPARAM _lPrm) -> auto {
+              return ListView_SortItems(hwnd, _pfnCompare, _lPrm);
+            }),
+        xlb_f(
+            "ListView_SortItemsEx",
+            [](HWND hwnd, PFNLVCOMPARE _pfnCompare, LPARAM _lPrm) -> auto {
+              return ListView_SortItemsEx(hwnd, _pfnCompare, _lPrm);
+            }),
+        xlb_f(
+            "ListView_SubItemHitTest",
+            [](HWND hwnd, LPLVHITTESTINFO plvhti) -> auto {
+              return ListView_SubItemHitTest(hwnd, plvhti);
+            }),
+        xlb_f(
+            "ListView_SubItemHitTestEx",
+            [](HWND hwnd, LPLVHITTESTINFO plvhti) -> auto {
+              return ListView_SubItemHitTestEx(hwnd, plvhti);
+            }),
+        xlb_f(
+            "ListView_Update",
+            [](HWND hwnd, int i) -> auto { return ListView_Update(hwnd, i); }),
 
-    xlb_class<xlb_cbf<PFNLVGROUPCOMPARE>>("PFNLVGROUPCOMPARE").constructor<xlb_luafunc>(),
-    xlb_class<xlb_cbf<PFNLVCOMPARE>>("PFNLVCOMPARE").constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNLVGROUPCOMPARE>>("PFNLVGROUPCOMPARE")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNLVCOMPARE>>("PFNLVCOMPARE")
+            .constructor<xlb_luafunc>(),
 
-    xlb_class<LVBKIMAGEA>("LVBKIMAGEA") .constructor<>() .destructor()
-        .property("ulFlags", &LVBKIMAGEA::ulFlags)
-        .property("hbm", &LVBKIMAGEA::hbm)
-        .property("pszImage", &LVBKIMAGEA::pszImage)
-        .property("cchImageMax", &LVBKIMAGEA::cchImageMax)
-        .property("xOffsetPercent", &LVBKIMAGEA::xOffsetPercent)
-        .property("yOffsetPercent", &LVBKIMAGEA::yOffsetPercent)
+        xlb_class<LVBKIMAGEA>("LVBKIMAGEA")
+            .constructor<>()
+            .destructor()
+            .property("ulFlags", &LVBKIMAGEA::ulFlags)
+            .property("hbm", &LVBKIMAGEA::hbm)
+            .property("pszImage", &LVBKIMAGEA::pszImage)
+            .property("cchImageMax", &LVBKIMAGEA::cchImageMax)
+            .property("xOffsetPercent", &LVBKIMAGEA::xOffsetPercent)
+            .property("yOffsetPercent", &LVBKIMAGEA::yOffsetPercent),
+        xlb_class<LVCOLUMNA>("LVCOLUMNA")
+            .constructor<>()
+            .destructor()
+            .property("mask", &LVCOLUMNA::mask)
+            .property("fmt", &LVCOLUMNA::fmt)
+            .property("cx", &LVCOLUMNA::cx)
+            .property("pszText", &LVCOLUMNA::pszText)
+            .property("cchTextMax", &LVCOLUMNA::cchTextMax)
+            .property("iSubItem", &LVCOLUMNA::iSubItem)
+            .property("iImage", &LVCOLUMNA::iImage)
+            .property("iOrder", &LVCOLUMNA::iOrder)
+            .property("cxMin", &LVCOLUMNA::cxMin)
+            .property("cxDefault", &LVCOLUMNA::cxDefault)
+            .property("cxIdeal", &LVCOLUMNA::cxIdeal),
+        xlb_class<LVFINDINFOA>("LVFINDINFOA")
+            .constructor<>()
+            .destructor()
+            .property("flags", &LVFINDINFOA::flags)
+            .property("psz", &LVFINDINFOA::psz)
+            .property("lParam", &LVFINDINFOA::lParam)
+            .property("pt", &LVFINDINFOA::pt)
+            .property("vkDirection", &LVFINDINFOA::vkDirection),
+        xlb_class<LVFOOTERINFO>("LVFOOTERINFO")
+            .constructor<>()
+            .destructor()
+            .property("mask", &LVFOOTERINFO::mask)
+            .property("pszText", &LVFOOTERINFO::pszText)
+            .property("cchTextMax", &LVFOOTERINFO::cchTextMax)
+            .property("cItems", &LVFOOTERINFO::cItems),
+        xlb_class<LVFOOTERITEM>("LVFOOTERITEM")
+            .constructor<>()
+            .destructor()
+            .property("mask", &LVFOOTERITEM::mask)
+            .property("iItem", &LVFOOTERITEM::iItem)
+            .property("pszText", &LVFOOTERITEM::pszText)
+            .property("cchTextMax", &LVFOOTERITEM::cchTextMax)
+            .property("state", &LVFOOTERITEM::state)
+            .property("stateMask", &LVFOOTERITEM::stateMask),
+        xlb_class<LVGROUP>("LVGROUP")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &LVGROUP::cbSize)
+            .property("mask", &LVGROUP::mask)
+            .property("pszHeader", &LVGROUP::pszHeader)
+            .property("cchHeader", &LVGROUP::cchHeader)
+            .property("pszFooter", &LVGROUP::pszFooter)
+            .property("cchFooter", &LVGROUP::cchFooter)
+            .property("iGroupId", &LVGROUP::iGroupId)
+            .property("stateMask", &LVGROUP::stateMask)
+            .property("state", &LVGROUP::state)
+            .property("uAlign", &LVGROUP::uAlign)
+            .property("pszSubtitle", &LVGROUP::pszSubtitle)
+            .property("cchSubtitle", &LVGROUP::cchSubtitle)
+            .property("pszTask", &LVGROUP::pszTask)
+            .property("cchTask", &LVGROUP::cchTask)
+            .property("pszDescriptionTop", &LVGROUP::pszDescriptionTop)
+            .property("cchDescriptionTop", &LVGROUP::cchDescriptionTop)
+            .property("pszDescriptionBottom", &LVGROUP::pszDescriptionBottom)
+            .property("cchDescriptionBottom", &LVGROUP::cchDescriptionBottom)
+            .property("iTitleImage", &LVGROUP::iTitleImage)
+            .property("iExtendedImage", &LVGROUP::iExtendedImage)
+            .property("iFirstItem", &LVGROUP::iFirstItem)
+            .property("cItems", &LVGROUP::cItems)
+            .property("pszSubsetTitle", &LVGROUP::pszSubsetTitle)
+            .property("cchSubsetTitle", &LVGROUP::cchSubsetTitle),
+        xlb_class<LVGROUPMETRICS>("LVGROUPMETRICS")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &LVGROUPMETRICS::cbSize)
+            .property("mask", &LVGROUPMETRICS::mask)
+            .property("Left", &LVGROUPMETRICS::Left)
+            .property("Top", &LVGROUPMETRICS::Top)
+            .property("Right", &LVGROUPMETRICS::Right)
+            .property("Bottom", &LVGROUPMETRICS::Bottom)
+            .property("crLeft", &LVGROUPMETRICS::crLeft)
+            .property("crTop", &LVGROUPMETRICS::crTop)
+            .property("crRight", &LVGROUPMETRICS::crRight)
+            .property("crBottom", &LVGROUPMETRICS::crBottom)
+            .property("crHeader", &LVGROUPMETRICS::crHeader)
+            .property("crFooter", &LVGROUPMETRICS::crFooter),
+        xlb_class<LVHITTESTINFO>("LVHITTESTINFO")
+            .constructor<>()
+            .destructor()
+            .property("pt", &LVHITTESTINFO::pt)
+            .property("flags", &LVHITTESTINFO::flags)
+            .property("iItem", &LVHITTESTINFO::iItem)
+            .property("iSubItem", &LVHITTESTINFO::iSubItem)
+            .property("iGroup", &LVHITTESTINFO::iGroup),
+        xlb_class<LVINSERTGROUPSORTED>("LVINSERTGROUPSORTED")
+            .constructor<>()
+            .destructor()
+            .property("pfnGroupCompare", &LVINSERTGROUPSORTED::pfnGroupCompare)
+            .property("pvData", &LVINSERTGROUPSORTED::pvData)
+            .property("lvGroup", &LVINSERTGROUPSORTED::lvGroup),
+        xlb_class<LVINSERTMARK>("LVINSERTMARK")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &LVINSERTMARK::cbSize)
+            .property("dwFlags", &LVINSERTMARK::dwFlags)
+            .property("iItem", &LVINSERTMARK::iItem)
+            .property("dwReserved", &LVINSERTMARK::dwReserved),
+        xlb_class<LVITEMA>("LVITEMA")
+            .constructor<>()
+            .destructor()
+            .property("mask", &LVITEMA::mask)
+            .property("iItem", &LVITEMA::iItem)
+            .property("iSubItem", &LVITEMA::iSubItem)
+            .property("state", &LVITEMA::state)
+            .property("stateMask", &LVITEMA::stateMask)
+            .property("pszText", &LVITEMA::pszText)
+            .property("cchTextMax", &LVITEMA::cchTextMax)
+            .property("iImage", &LVITEMA::iImage)
+            .property("lParam", &LVITEMA::lParam)
+            .property("iIndent", &LVITEMA::iIndent)
+            .property("iGroupId", &LVITEMA::iGroupId)
+            .property("cColumns", &LVITEMA::cColumns)
+            .property("puColumns", &LVITEMA::puColumns)
+            .property("piColFmt", &LVITEMA::piColFmt)
+            .property("iGroup", &LVITEMA::iGroup),
+        xlb_class<LVITEMINDEX>("LVITEMINDEX")
+            .constructor<>()
+            .destructor()
+            .property("iItem", &LVITEMINDEX::iItem)
+            .property("iGroup", &LVITEMINDEX::iGroup),
+        xlb_class<LVSETINFOTIP>("LVSETINFOTIP")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &LVSETINFOTIP::cbSize)
+            .property("dwFlags", &LVSETINFOTIP::dwFlags)
+            .property("pszText", &LVSETINFOTIP::pszText)
+            .property("iItem", &LVSETINFOTIP::iItem)
+            .property("iSubItem", &LVSETINFOTIP::iSubItem),
+        xlb_class<LVTILEINFO>("LVTILEINFO")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &LVTILEINFO::cbSize)
+            .property("iItem", &LVTILEINFO::iItem)
+            .property("cColumns", &LVTILEINFO::cColumns)
+            .property("puColumns", &LVTILEINFO::puColumns)
+            .property("piColFmt", &LVTILEINFO::piColFmt),
+        xlb_class<LVTILEVIEWINFO>("LVTILEVIEWINFO")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &LVTILEVIEWINFO::cbSize)
+            .property("dwMask", &LVTILEVIEWINFO::dwMask)
+            .property("dwFlags", &LVTILEVIEWINFO::dwFlags)
+            .property("sizeTile", &LVTILEVIEWINFO::sizeTile)
+            .property("cLines", &LVTILEVIEWINFO::cLines)
+            .property("rcLabelMargin", &LVTILEVIEWINFO::rcLabelMargin),
+        xlb_class<NMITEMACTIVATE>("NMITEMACTIVATE")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMITEMACTIVATE::hdr)
+            .property("iItem", &NMITEMACTIVATE::iItem)
+            .property("iSubItem", &NMITEMACTIVATE::iSubItem)
+            .property("uNewState", &NMITEMACTIVATE::uNewState)
+            .property("uOldState", &NMITEMACTIVATE::uOldState)
+            .property("uChanged", &NMITEMACTIVATE::uChanged)
+            .property("ptAction", &NMITEMACTIVATE::ptAction)
+            .property("lParam", &NMITEMACTIVATE::lParam)
+            .property("uKeyFlags", &NMITEMACTIVATE::uKeyFlags),
+        xlb_class<NMLISTVIEW>("NMLISTVIEW")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMLISTVIEW::hdr)
+            .property("iItem", &NMLISTVIEW::iItem)
+            .property("iSubItem", &NMLISTVIEW::iSubItem)
+            .property("uNewState", &NMLISTVIEW::uNewState)
+            .property("uOldState", &NMLISTVIEW::uOldState)
+            .property("uChanged", &NMLISTVIEW::uChanged)
+            .property("ptAction", &NMLISTVIEW::ptAction)
+            .property("lParam", &NMLISTVIEW::lParam),
+        xlb_class<NMLVCACHEHINT>("NMLVCACHEHINT")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMLVCACHEHINT::hdr)
+            .property("iFrom", &NMLVCACHEHINT::iFrom)
+            .property("iTo", &NMLVCACHEHINT::iTo),
+        xlb_class<NMLVCUSTOMDRAW>("NMLVCUSTOMDRAW")
+            .constructor<>()
+            .destructor()
+            .property("nmcd", &NMLVCUSTOMDRAW::nmcd)
+            .property("clrText", &NMLVCUSTOMDRAW::clrText)
+            .property("clrTextBk", &NMLVCUSTOMDRAW::clrTextBk)
+            .property("iSubItem", &NMLVCUSTOMDRAW::iSubItem)
+            .property("dwItemType", &NMLVCUSTOMDRAW::dwItemType)
+            .property("clrFace", &NMLVCUSTOMDRAW::clrFace)
+            .property("iIconEffect", &NMLVCUSTOMDRAW::iIconEffect)
+            .property("iIconPhase", &NMLVCUSTOMDRAW::iIconPhase)
+            .property("iPartId", &NMLVCUSTOMDRAW::iPartId)
+            .property("iStateId", &NMLVCUSTOMDRAW::iStateId)
+            .property("rcText", &NMLVCUSTOMDRAW::rcText)
+            .property("uAlign", &NMLVCUSTOMDRAW::uAlign),
+        xlb_class<NMLVDISPINFOA>("NMLVDISPINFOA")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMLVDISPINFOA::hdr)
+            .property("item", &NMLVDISPINFOA::item),
+        xlb_class<NMLVEMPTYMARKUP>("NMLVEMPTYMARKUP")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMLVEMPTYMARKUP::hdr)
+            .property("dwFlags", &NMLVEMPTYMARKUP::dwFlags)
+        //        .property("szMarkup", &NMLVEMPTYMARKUP::szMarkup)
         ,
-    xlb_class<LVCOLUMNA>("LVCOLUMNA") .constructor<>() .destructor()
-        .property("mask", &LVCOLUMNA::mask)
-        .property("fmt", &LVCOLUMNA::fmt)
-        .property("cx", &LVCOLUMNA::cx)
-        .property("pszText", &LVCOLUMNA::pszText)
-        .property("cchTextMax", &LVCOLUMNA::cchTextMax)
-        .property("iSubItem", &LVCOLUMNA::iSubItem)
-        .property("iImage", &LVCOLUMNA::iImage)
-        .property("iOrder", &LVCOLUMNA::iOrder)
-        .property("cxMin", &LVCOLUMNA::cxMin)
-        .property("cxDefault", &LVCOLUMNA::cxDefault)
-        .property("cxIdeal", &LVCOLUMNA::cxIdeal)
-        ,
-    xlb_class<LVFINDINFOA>("LVFINDINFOA") .constructor<>() .destructor()
-        .property("flags", &LVFINDINFOA::flags)
-        .property("psz", &LVFINDINFOA::psz)
-        .property("lParam", &LVFINDINFOA::lParam)
-        .property("pt", &LVFINDINFOA::pt)
-        .property("vkDirection", &LVFINDINFOA::vkDirection)
-        ,
-    xlb_class<LVFOOTERINFO>("LVFOOTERINFO") .constructor<>() .destructor()
-        .property("mask", &LVFOOTERINFO::mask)
-        .property("pszText", &LVFOOTERINFO::pszText)
-        .property("cchTextMax", &LVFOOTERINFO::cchTextMax)
-        .property("cItems", &LVFOOTERINFO::cItems)
-        ,
-    xlb_class<LVFOOTERITEM>("LVFOOTERITEM") .constructor<>() .destructor()
-        .property("mask", &LVFOOTERITEM::mask)
-        .property("iItem", &LVFOOTERITEM::iItem)
-        .property("pszText", &LVFOOTERITEM::pszText)
-        .property("cchTextMax", &LVFOOTERITEM::cchTextMax)
-        .property("state", &LVFOOTERITEM::state)
-        .property("stateMask", &LVFOOTERITEM::stateMask)
-        ,
-    xlb_class<LVGROUP>("LVGROUP") .constructor<>() .destructor()
-        .property("cbSize", &LVGROUP::cbSize)
-        .property("mask", &LVGROUP::mask)
-        .property("pszHeader", &LVGROUP::pszHeader)
-        .property("cchHeader", &LVGROUP::cchHeader)
-        .property("pszFooter", &LVGROUP::pszFooter)
-        .property("cchFooter", &LVGROUP::cchFooter)
-        .property("iGroupId", &LVGROUP::iGroupId)
-        .property("stateMask", &LVGROUP::stateMask)
-        .property("state", &LVGROUP::state)
-        .property("uAlign", &LVGROUP::uAlign)
-        .property("pszSubtitle", &LVGROUP::pszSubtitle)
-        .property("cchSubtitle", &LVGROUP::cchSubtitle)
-        .property("pszTask", &LVGROUP::pszTask)
-        .property("cchTask", &LVGROUP::cchTask)
-        .property("pszDescriptionTop", &LVGROUP::pszDescriptionTop)
-        .property("cchDescriptionTop", &LVGROUP::cchDescriptionTop)
-        .property("pszDescriptionBottom", &LVGROUP::pszDescriptionBottom)
-        .property("cchDescriptionBottom", &LVGROUP::cchDescriptionBottom)
-        .property("iTitleImage", &LVGROUP::iTitleImage)
-        .property("iExtendedImage", &LVGROUP::iExtendedImage)
-        .property("iFirstItem", &LVGROUP::iFirstItem)
-        .property("cItems", &LVGROUP::cItems)
-        .property("pszSubsetTitle", &LVGROUP::pszSubsetTitle)
-        .property("cchSubsetTitle", &LVGROUP::cchSubsetTitle)
-        ,
-    xlb_class<LVGROUPMETRICS>("LVGROUPMETRICS") .constructor<>() .destructor()
-        .property("cbSize", &LVGROUPMETRICS::cbSize)
-        .property("mask", &LVGROUPMETRICS::mask)
-        .property("Left", &LVGROUPMETRICS::Left)
-        .property("Top", &LVGROUPMETRICS::Top)
-        .property("Right", &LVGROUPMETRICS::Right)
-        .property("Bottom", &LVGROUPMETRICS::Bottom)
-        .property("crLeft", &LVGROUPMETRICS::crLeft)
-        .property("crTop", &LVGROUPMETRICS::crTop)
-        .property("crRight", &LVGROUPMETRICS::crRight)
-        .property("crBottom", &LVGROUPMETRICS::crBottom)
-        .property("crHeader", &LVGROUPMETRICS::crHeader)
-        .property("crFooter", &LVGROUPMETRICS::crFooter)
-        ,
-    xlb_class<LVHITTESTINFO>("LVHITTESTINFO") .constructor<>() .destructor()
-        .property("pt", &LVHITTESTINFO::pt)
-        .property("flags", &LVHITTESTINFO::flags)
-        .property("iItem", &LVHITTESTINFO::iItem)
-        .property("iSubItem", &LVHITTESTINFO::iSubItem)
-        .property("iGroup", &LVHITTESTINFO::iGroup)
-        ,
-xlb_class<LVINSERTGROUPSORTED>("LVINSERTGROUPSORTED") .constructor<>() .destructor()
-        .property("pfnGroupCompare", &LVINSERTGROUPSORTED::pfnGroupCompare)
-        .property("pvData", &LVINSERTGROUPSORTED::pvData)
-        .property("lvGroup", &LVINSERTGROUPSORTED::lvGroup)
-        ,
-xlb_class<LVINSERTMARK>("LVINSERTMARK") .constructor<>() .destructor()
-        .property("cbSize", &LVINSERTMARK::cbSize)
-        .property("dwFlags", &LVINSERTMARK::dwFlags)
-        .property("iItem", &LVINSERTMARK::iItem)
-        .property("dwReserved", &LVINSERTMARK::dwReserved)
-        ,
-xlb_class<LVITEMA>("LVITEMA") .constructor<>() .destructor()
-        .property("mask", &LVITEMA::mask)
-        .property("iItem", &LVITEMA::iItem)
-        .property("iSubItem", &LVITEMA::iSubItem)
-        .property("state", &LVITEMA::state)
-        .property("stateMask", &LVITEMA::stateMask)
-        .property("pszText", &LVITEMA::pszText)
-        .property("cchTextMax", &LVITEMA::cchTextMax)
-        .property("iImage", &LVITEMA::iImage)
-        .property("lParam", &LVITEMA::lParam)
-        .property("iIndent", &LVITEMA::iIndent)
-        .property("iGroupId", &LVITEMA::iGroupId)
-        .property("cColumns", &LVITEMA::cColumns)
-        .property("puColumns", &LVITEMA::puColumns)
-        .property("piColFmt", &LVITEMA::piColFmt)
-        .property("iGroup", &LVITEMA::iGroup)
-        ,
-xlb_class<LVITEMINDEX>("LVITEMINDEX") .constructor<>() .destructor()
-        .property("iItem", &LVITEMINDEX::iItem)
-        .property("iGroup", &LVITEMINDEX::iGroup)
-        ,
-xlb_class<LVSETINFOTIP>("LVSETINFOTIP") .constructor<>() .destructor()
-        .property("cbSize", &LVSETINFOTIP::cbSize)
-        .property("dwFlags", &LVSETINFOTIP::dwFlags)
-        .property("pszText", &LVSETINFOTIP::pszText)
-        .property("iItem", &LVSETINFOTIP::iItem)
-        .property("iSubItem", &LVSETINFOTIP::iSubItem)
-        ,
-xlb_class<LVTILEINFO>("LVTILEINFO") .constructor<>() .destructor()
-        .property("cbSize", &LVTILEINFO::cbSize)
-        .property("iItem", &LVTILEINFO::iItem)
-        .property("cColumns", &LVTILEINFO::cColumns)
-        .property("puColumns", &LVTILEINFO::puColumns)
-        .property("piColFmt", &LVTILEINFO::piColFmt)
-        ,
-xlb_class<LVTILEVIEWINFO>("LVTILEVIEWINFO") .constructor<>() .destructor()
-        .property("cbSize", &LVTILEVIEWINFO::cbSize)
-        .property("dwMask", &LVTILEVIEWINFO::dwMask)
-        .property("dwFlags", &LVTILEVIEWINFO::dwFlags)
-        .property("sizeTile", &LVTILEVIEWINFO::sizeTile)
-        .property("cLines", &LVTILEVIEWINFO::cLines)
-        .property("rcLabelMargin", &LVTILEVIEWINFO::rcLabelMargin)
-        ,
-xlb_class<NMITEMACTIVATE>("NMITEMACTIVATE") .constructor<>() .destructor()
-        .property("hdr", &NMITEMACTIVATE::hdr)
-        .property("iItem", &NMITEMACTIVATE::iItem)
-        .property("iSubItem", &NMITEMACTIVATE::iSubItem)
-        .property("uNewState", &NMITEMACTIVATE::uNewState)
-        .property("uOldState", &NMITEMACTIVATE::uOldState)
-        .property("uChanged", &NMITEMACTIVATE::uChanged)
-        .property("ptAction", &NMITEMACTIVATE::ptAction)
-        .property("lParam", &NMITEMACTIVATE::lParam)
-        .property("uKeyFlags", &NMITEMACTIVATE::uKeyFlags)
-        ,
-xlb_class<NMLISTVIEW>("NMLISTVIEW") .constructor<>() .destructor()
-        .property("hdr", &NMLISTVIEW::hdr)
-        .property("iItem", &NMLISTVIEW::iItem)
-        .property("iSubItem", &NMLISTVIEW::iSubItem)
-        .property("uNewState", &NMLISTVIEW::uNewState)
-        .property("uOldState", &NMLISTVIEW::uOldState)
-        .property("uChanged", &NMLISTVIEW::uChanged)
-        .property("ptAction", &NMLISTVIEW::ptAction)
-        .property("lParam", &NMLISTVIEW::lParam)
-        ,
-xlb_class<NMLVCACHEHINT>("NMLVCACHEHINT") .constructor<>() .destructor()
-        .property("hdr", &NMLVCACHEHINT::hdr)
-        .property("iFrom", &NMLVCACHEHINT::iFrom)
-        .property("iTo", &NMLVCACHEHINT::iTo)
-        ,
-xlb_class<NMLVCUSTOMDRAW>("NMLVCUSTOMDRAW") .constructor<>() .destructor()
-        .property("nmcd", &NMLVCUSTOMDRAW::nmcd)
-        .property("clrText", &NMLVCUSTOMDRAW::clrText)
-        .property("clrTextBk", &NMLVCUSTOMDRAW::clrTextBk)
-        .property("iSubItem", &NMLVCUSTOMDRAW::iSubItem)
-        .property("dwItemType", &NMLVCUSTOMDRAW::dwItemType)
-        .property("clrFace", &NMLVCUSTOMDRAW::clrFace)
-        .property("iIconEffect", &NMLVCUSTOMDRAW::iIconEffect)
-        .property("iIconPhase", &NMLVCUSTOMDRAW::iIconPhase)
-        .property("iPartId", &NMLVCUSTOMDRAW::iPartId)
-        .property("iStateId", &NMLVCUSTOMDRAW::iStateId)
-        .property("rcText", &NMLVCUSTOMDRAW::rcText)
-        .property("uAlign", &NMLVCUSTOMDRAW::uAlign)
-        ,
-xlb_class<NMLVDISPINFOA>("NMLVDISPINFOA") .constructor<>() .destructor()
-        .property("hdr", &NMLVDISPINFOA::hdr)
-        .property("item", &NMLVDISPINFOA::item)
-        ,
-xlb_class<NMLVEMPTYMARKUP>("NMLVEMPTYMARKUP") .constructor<>() .destructor()
-        .property("hdr", &NMLVEMPTYMARKUP::hdr)
-        .property("dwFlags", &NMLVEMPTYMARKUP::dwFlags)
-//        .property("szMarkup", &NMLVEMPTYMARKUP::szMarkup)
-        ,
-xlb_class<NMLVFINDITEMA>("NMLVFINDITEMA") .constructor<>() .destructor()
-        .property("hdr", &NMLVFINDITEMA::hdr)
-        .property("iStart", &NMLVFINDITEMA::iStart)
-        .property("lvfi", &NMLVFINDITEMA::lvfi)
-        ,
-xlb_class<NMLVGETINFOTIPA>("NMLVGETINFOTIPA") .constructor<>() .destructor()
-        .property("hdr", &NMLVGETINFOTIPA::hdr)
-        .property("dwFlags", &NMLVGETINFOTIPA::dwFlags)
-        .property("pszText", &NMLVGETINFOTIPA::pszText)
-        .property("cchTextMax", &NMLVGETINFOTIPA::cchTextMax)
-        .property("iItem", &NMLVGETINFOTIPA::iItem)
-        .property("iSubItem", &NMLVGETINFOTIPA::iSubItem)
-        .property("lParam", &NMLVGETINFOTIPA::lParam)
-        ,
-xlb_class<NMLVKEYDOWN>("NMLVKEYDOWN") .constructor<>() .destructor()
-        .property("hdr", &NMLVKEYDOWN::hdr)
-        .property("wVKey", &NMLVKEYDOWN::wVKey)
-        .property("flags", &NMLVKEYDOWN::flags)
-        ,
-xlb_class<NMLVLINK>("NMLVLINK") .constructor<>() .destructor()
-        .property("hdr", &NMLVLINK::hdr)
-        .property("link", &NMLVLINK::link)
-        .property("iItem", &NMLVLINK::iItem)
-        .property("iSubItem", &NMLVLINK::iSubItem)
-        ,
-xlb_class<NMLVODSTATECHANGE>("NMLVODSTATECHANGE") .constructor<>() .destructor()
-        .property("hdr", &NMLVODSTATECHANGE::hdr)
-        .property("iFrom", &NMLVODSTATECHANGE::iFrom)
-        .property("iTo", &NMLVODSTATECHANGE::iTo)
-        .property("uNewState", &NMLVODSTATECHANGE::uNewState)
-        .property("uOldState", &NMLVODSTATECHANGE::uOldState)
-        ,
-xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
-        .property("hdr", &NMLVSCROLL::hdr)
-        .property("dx", &NMLVSCROLL::dx)
-        .property("dy", &NMLVSCROLL::dy)
-        ,
+        xlb_class<NMLVFINDITEMA>("NMLVFINDITEMA")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMLVFINDITEMA::hdr)
+            .property("iStart", &NMLVFINDITEMA::iStart)
+            .property("lvfi", &NMLVFINDITEMA::lvfi),
+        xlb_class<NMLVGETINFOTIPA>("NMLVGETINFOTIPA")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMLVGETINFOTIPA::hdr)
+            .property("dwFlags", &NMLVGETINFOTIPA::dwFlags)
+            .property("pszText", &NMLVGETINFOTIPA::pszText)
+            .property("cchTextMax", &NMLVGETINFOTIPA::cchTextMax)
+            .property("iItem", &NMLVGETINFOTIPA::iItem)
+            .property("iSubItem", &NMLVGETINFOTIPA::iSubItem)
+            .property("lParam", &NMLVGETINFOTIPA::lParam),
+        xlb_class<NMLVKEYDOWN>("NMLVKEYDOWN")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMLVKEYDOWN::hdr)
+            .property("wVKey", &NMLVKEYDOWN::wVKey)
+            .property("flags", &NMLVKEYDOWN::flags),
+        xlb_class<NMLVLINK>("NMLVLINK")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMLVLINK::hdr)
+            .property("link", &NMLVLINK::link)
+            .property("iItem", &NMLVLINK::iItem)
+            .property("iSubItem", &NMLVLINK::iSubItem),
+        xlb_class<NMLVODSTATECHANGE>("NMLVODSTATECHANGE")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMLVODSTATECHANGE::hdr)
+            .property("iFrom", &NMLVODSTATECHANGE::iFrom)
+            .property("iTo", &NMLVODSTATECHANGE::iTo)
+            .property("uNewState", &NMLVODSTATECHANGE::uNewState)
+            .property("uOldState", &NMLVODSTATECHANGE::uOldState),
+        xlb_class<NMLVSCROLL>("NMLVSCROLL")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMLVSCROLL::hdr)
+            .property("dx", &NMLVSCROLL::dx)
+            .property("dy", &NMLVSCROLL::dy),
         xlb_const("LVS_ALIGNLEFT", LVS_ALIGNLEFT),
         xlb_const("LVS_ALIGNMASK", LVS_ALIGNMASK),
         xlb_const("LVS_ALIGNTOP", LVS_ALIGNTOP),
@@ -1433,7 +2244,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("LVIS_DROPHILITED", LVIS_DROPHILITED),
         xlb_const("LVIS_FOCUSED", LVIS_FOCUSED),
         xlb_const("LVIS_SELECTED", LVIS_SELECTED),
-        
+
         xlb_const("LVM_APPROXIMATEVIEWRECT", LVM_APPROXIMATEVIEWRECT),
         xlb_const("LVM_ARRANGE", LVM_ARRANGE),
         xlb_const("LVM_CANCELEDITLABEL", LVM_CANCELEDITLABEL),
@@ -1551,7 +2362,8 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("LVM_SETTEXTCOLOR", LVM_SETTEXTCOLOR),
         xlb_const("LVM_SETTILEINFO", LVM_SETTILEINFO),
         xlb_const("LVM_SETTILEVIEWINFO", LVM_SETTILEVIEWINFO),
-        //xlb_const("LVM_SETTILEWIDTH", LVM_SETTILEWIDTH), //XXX: This Message is unsupported.
+        // xlb_const("LVM_SETTILEWIDTH", LVM_SETTILEWIDTH), //XXX: This Message
+        // is unsupported.
         xlb_const("LVM_SETTOOLTIPS", LVM_SETTOOLTIPS),
         xlb_const("LVM_SETUNICODEFORMAT", LVM_SETUNICODEFORMAT),
         xlb_const("LVM_SETVIEW", LVM_SETVIEW),
@@ -1590,11 +2402,9 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("LVN_SETDISPINFO", LVN_SETDISPINFO),
         xlb_const("NM_CLICK", NM_CLICK),
         xlb_const("NM_CUSTOMDRAW", NM_CUSTOMDRAW),
-        xlb_const("NM_DBLCLK", NM_DBLCLK),
-        xlb_const("NM_HOVER", NM_HOVER),
+        xlb_const("NM_DBLCLK", NM_DBLCLK), xlb_const("NM_HOVER", NM_HOVER),
         xlb_const("NM_KILLFOCUS", NM_KILLFOCUS),
-        xlb_const("NM_RCLICK", NM_RCLICK),
-        xlb_const("NM_RDBLCLK", NM_RDBLCLK),
+        xlb_const("NM_RCLICK", NM_RCLICK), xlb_const("NM_RDBLCLK", NM_RDBLCLK),
         xlb_const("NM_RELEASEDCAPTURE", NM_RELEASEDCAPTURE),
         xlb_const("NM_RETURN", NM_RETURN),
         xlb_const("NM_SETFOCUS", NM_SETFOCUS),
@@ -1606,8 +2416,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("LVBKIF_FLAG_TILEOFFSET", LVBKIF_FLAG_TILEOFFSET),
         xlb_const("LVBKIF_TYPE_WATERMARK", LVBKIF_TYPE_WATERMARK),
         xlb_const("LVBKIF_FLAG_ALPHABLEND", LVBKIF_FLAG_ALPHABLEND),
-        xlb_const("LVCF_FMT", LVCF_FMT),
-        xlb_const("LVCF_WIDTH", LVCF_WIDTH),
+        xlb_const("LVCF_FMT", LVCF_FMT), xlb_const("LVCF_WIDTH", LVCF_WIDTH),
         xlb_const("LVCF_TEXT", LVCF_TEXT),
         xlb_const("LVCF_SUBITEM", LVCF_SUBITEM),
         xlb_const("LVCF_IMAGE", LVCF_IMAGE),
@@ -1695,8 +2504,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("LVIF_INDENT", LVIF_INDENT),
         xlb_const("LVIF_NORECOMPUTE", LVIF_NORECOMPUTE),
         xlb_const("LVIF_PARAM", LVIF_PARAM),
-        xlb_const("LVIF_STATE", LVIF_STATE),
-        xlb_const("LVIF_TEXT", LVIF_TEXT),
+        xlb_const("LVIF_STATE", LVIF_STATE), xlb_const("LVIF_TEXT", LVIF_TEXT),
         xlb_const("I_GROUPIDCALLBACK", I_GROUPIDCALLBACK),
         xlb_const("I_GROUPIDNONE", I_GROUPIDNONE),
         xlb_const("LVCFMT_LINE_BREAK", LVCFMT_LINE_BREAK),
@@ -1721,39 +2529,131 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("EMF_CENTERED", EMF_CENTERED),
 
         // Month Calendar
-        xlb_f("MonthCal_GetCalendarBorder", [](HWND hwnd)->auto { return MonthCal_GetCalendarBorder(hwnd); }),
-        xlb_f("MonthCal_GetCalendarCount", [](HWND hwnd)->auto { return MonthCal_GetCalendarCount(hwnd); }),
-        xlb_f("MonthCal_GetCalendarGridInfo", [](HWND hwnd, MCGRIDINFO* pmcGridInfo)->auto { return MonthCal_GetCalendarGridInfo(hwnd, pmcGridInfo); }),
-        xlb_f("MonthCal_GetCALID", [](HWND hwnd)->auto { return MonthCal_GetCALID(hwnd); }),
-        xlb_f("MonthCal_GetColor", [](HWND hwnd, int iCol)->auto { return MonthCal_GetColor(hwnd, iCol); }),
-        xlb_f("MonthCal_GetCurrentView", [](HWND hwnd)->auto { return MonthCal_GetCurrentView(hwnd); }),
-        xlb_f("MonthCal_GetCurSel", [](HWND hwnd, LPSYSTEMTIME pst)->auto { return MonthCal_GetCurSel(hwnd, pst); }),
-        xlb_f("MonthCal_GetFirstDayOfWeek", [](HWND hwnd)->auto { return MonthCal_GetFirstDayOfWeek(hwnd); }),
-        xlb_f("MonthCal_GetMaxSelCount", [](HWND hwnd)->auto { return MonthCal_GetMaxSelCount(hwnd); }),
-        xlb_f("MonthCal_GetMaxTodayWidth", [](HWND hwnd)->auto { return MonthCal_GetMaxTodayWidth(hwnd); }),
-        xlb_f("MonthCal_GetMinReqRect", [](HWND hwnd, LPRECT prc)->auto { return MonthCal_GetMinReqRect(hwnd, prc); }),
-        xlb_f("MonthCal_GetMonthDelta", [](HWND hwnd)->auto { return MonthCal_GetMonthDelta(hwnd); }),
-        xlb_f("MonthCal_GetMonthRange", [](HWND hwnd, DWORD gmr, LPSYSTEMTIME rgst)->auto { return MonthCal_GetMonthRange(hwnd, gmr, rgst); }),
-        xlb_f("MonthCal_GetRange", [](HWND hwnd, LPSYSTEMTIME rgst)->auto { return MonthCal_GetRange(hwnd, rgst); }),
-        xlb_f("MonthCal_GetSelRange", [](HWND hwnd, LPSYSTEMTIME rgst)->auto { return MonthCal_GetSelRange(hwnd, rgst); }),
-        xlb_f("MonthCal_GetToday", [](HWND hwnd, LPSETUPHOOKPROC pst)->auto { return MonthCal_GetToday(hwnd, pst); }),
-        xlb_f("MonthCal_GetUnicodeFormat", [](HWND hwnd)->auto { return MonthCal_GetUnicodeFormat(hwnd); }),
-        xlb_f("MonthCal_HitTest", [](HWND hwnd, PMCHITTESTINFO pinfo)->auto { return MonthCal_HitTest(hwnd, pinfo); }),
-        xlb_f("MonthCal_SetCalendarBorder", [](HWND hwnd, BOOL fset, int xyborder)->auto { return MonthCal_SetCalendarBorder(hwnd, fset, xyborder); }),
-        xlb_f("MonthCal_SetCALID", [](HWND hwnd, UINT calid)->auto { return MonthCal_SetCALID(hwnd, calid); }),
-        xlb_f("MonthCal_SetColor", [](HWND hwnd, INT iCol, COLORREF clr)->auto { return MonthCal_SetColor(hwnd, iCol, clr); }),
-        xlb_f("MonthCal_SetCurrentView", [](HWND hwnd, DWORD dwNewView)->auto { return MonthCal_SetCurrentView(hwnd, dwNewView); }),
-        xlb_f("MonthCal_SetCurSel", [](HWND hwnd, LPSYSTEMTIME pst)->auto { return MonthCal_SetCurSel(hwnd, pst); }),
-        xlb_f("MonthCal_SetDayState", [](HWND hwnd, INT cbds, LPMONTHDAYSTATE rgds)->auto { return MonthCal_SetDayState(hwnd, cbds, rgds); }),
-        xlb_f("MonthCal_SetFirstDayOfWeek", [](HWND hwnd, INT iDay)->auto { return MonthCal_SetFirstDayOfWeek(hwnd, iDay); }),
-        xlb_f("MonthCal_SetMaxSelCount", [](HWND hwnd, UINT n)->auto { return MonthCal_SetMaxSelCount(hwnd, n); }),
-        xlb_f("MonthCal_SetMonthDelta", [](HWND hwnd, INT n)->auto { return MonthCal_SetMonthDelta(hwnd, n); }),
-        xlb_f("MonthCal_SetRange", [](HWND hwnd, DWORD gd, LPSYSTEMTIME rgst)->auto { return MonthCal_SetRange(hwnd, gd, rgst); }),
-        xlb_f("MonthCal_SetSelRange", [](HWND hwnd, LPSYSTEMTIME rgst)->auto { return MonthCal_SetSelRange(hwnd, rgst); }),
-        xlb_f("MonthCal_SetToday", [](HWND hwnd, LPSYSTEMTIME pst)->auto { return MonthCal_SetToday(hwnd, pst); }),
-        xlb_f("MonthCal_SetUnicodeFormat", [](HWND hwnd, BOOL fUnicode)->auto { return MonthCal_SetUnicodeFormat(hwnd, fUnicode); }),
-        xlb_f("MonthCal_SizeRectToMin", [](HWND hwnd, LPRECT prc)->auto { return MonthCal_SizeRectToMin(hwnd, prc); }),
-        
+        xlb_f(
+            "MonthCal_GetCalendarBorder",
+            [](HWND hwnd) -> auto { return MonthCal_GetCalendarBorder(hwnd); }),
+        xlb_f(
+            "MonthCal_GetCalendarCount",
+            [](HWND hwnd) -> auto { return MonthCal_GetCalendarCount(hwnd); }),
+        xlb_f(
+            "MonthCal_GetCalendarGridInfo",
+            [](HWND hwnd, MCGRIDINFO * pmcGridInfo) -> auto {
+              return MonthCal_GetCalendarGridInfo(hwnd, pmcGridInfo);
+            }),
+        xlb_f(
+            "MonthCal_GetCALID",
+            [](HWND hwnd) -> auto { return MonthCal_GetCALID(hwnd); }),
+        xlb_f(
+            "MonthCal_GetColor", [](HWND hwnd, int iCol) -> auto {
+              return MonthCal_GetColor(hwnd, iCol);
+            }),
+        xlb_f(
+            "MonthCal_GetCurrentView",
+            [](HWND hwnd) -> auto { return MonthCal_GetCurrentView(hwnd); }),
+        xlb_f(
+            "MonthCal_GetCurSel", [](HWND hwnd, LPSYSTEMTIME pst) -> auto {
+              return MonthCal_GetCurSel(hwnd, pst);
+            }),
+        xlb_f(
+            "MonthCal_GetFirstDayOfWeek",
+            [](HWND hwnd) -> auto { return MonthCal_GetFirstDayOfWeek(hwnd); }),
+        xlb_f(
+            "MonthCal_GetMaxSelCount",
+            [](HWND hwnd) -> auto { return MonthCal_GetMaxSelCount(hwnd); }),
+        xlb_f(
+            "MonthCal_GetMaxTodayWidth",
+            [](HWND hwnd) -> auto { return MonthCal_GetMaxTodayWidth(hwnd); }),
+        xlb_f(
+            "MonthCal_GetMinReqRect", [](HWND hwnd, LPRECT prc) -> auto {
+              return MonthCal_GetMinReqRect(hwnd, prc);
+            }),
+        xlb_f(
+            "MonthCal_GetMonthDelta",
+            [](HWND hwnd) -> auto { return MonthCal_GetMonthDelta(hwnd); }),
+        xlb_f(
+            "MonthCal_GetMonthRange",
+            [](HWND hwnd, DWORD gmr, LPSYSTEMTIME rgst) -> auto {
+              return MonthCal_GetMonthRange(hwnd, gmr, rgst);
+            }),
+        xlb_f(
+            "MonthCal_GetRange", [](HWND hwnd, LPSYSTEMTIME rgst) -> auto {
+              return MonthCal_GetRange(hwnd, rgst);
+            }),
+        xlb_f(
+            "MonthCal_GetSelRange", [](HWND hwnd, LPSYSTEMTIME rgst) -> auto {
+              return MonthCal_GetSelRange(hwnd, rgst);
+            }),
+        xlb_f(
+            "MonthCal_GetToday", [](HWND hwnd, LPSETUPHOOKPROC pst) -> auto {
+              return MonthCal_GetToday(hwnd, pst);
+            }),
+        xlb_f(
+            "MonthCal_GetUnicodeFormat",
+            [](HWND hwnd) -> auto { return MonthCal_GetUnicodeFormat(hwnd); }),
+        xlb_f(
+            "MonthCal_HitTest", [](HWND hwnd, PMCHITTESTINFO pinfo) -> auto {
+              return MonthCal_HitTest(hwnd, pinfo);
+            }),
+        xlb_f(
+            "MonthCal_SetCalendarBorder",
+            [](HWND hwnd, BOOL fset, int xyborder) -> auto {
+              return MonthCal_SetCalendarBorder(hwnd, fset, xyborder);
+            }),
+        xlb_f(
+            "MonthCal_SetCALID", [](HWND hwnd, UINT calid) -> auto {
+              return MonthCal_SetCALID(hwnd, calid);
+            }),
+        xlb_f(
+            "MonthCal_SetColor", [](HWND hwnd, INT iCol, COLORREF clr) -> auto {
+              return MonthCal_SetColor(hwnd, iCol, clr);
+            }),
+        xlb_f(
+            "MonthCal_SetCurrentView", [](HWND hwnd, DWORD dwNewView) -> auto {
+              return MonthCal_SetCurrentView(hwnd, dwNewView);
+            }),
+        xlb_f(
+            "MonthCal_SetCurSel", [](HWND hwnd, LPSYSTEMTIME pst) -> auto {
+              return MonthCal_SetCurSel(hwnd, pst);
+            }),
+        xlb_f(
+            "MonthCal_SetDayState",
+            [](HWND hwnd, INT cbds, LPMONTHDAYSTATE rgds) -> auto {
+              return MonthCal_SetDayState(hwnd, cbds, rgds);
+            }),
+        xlb_f(
+            "MonthCal_SetFirstDayOfWeek", [](HWND hwnd, INT iDay) -> auto {
+              return MonthCal_SetFirstDayOfWeek(hwnd, iDay);
+            }),
+        xlb_f(
+            "MonthCal_SetMaxSelCount", [](HWND hwnd, UINT n) -> auto {
+              return MonthCal_SetMaxSelCount(hwnd, n);
+            }),
+        xlb_f(
+            "MonthCal_SetMonthDelta", [](HWND hwnd, INT n) -> auto {
+              return MonthCal_SetMonthDelta(hwnd, n);
+            }),
+        xlb_f(
+            "MonthCal_SetRange",
+            [](HWND hwnd, DWORD gd, LPSYSTEMTIME rgst) -> auto {
+              return MonthCal_SetRange(hwnd, gd, rgst);
+            }),
+        xlb_f(
+            "MonthCal_SetSelRange", [](HWND hwnd, LPSYSTEMTIME rgst) -> auto {
+              return MonthCal_SetSelRange(hwnd, rgst);
+            }),
+        xlb_f(
+            "MonthCal_SetToday", [](HWND hwnd, LPSYSTEMTIME pst) -> auto {
+              return MonthCal_SetToday(hwnd, pst);
+            }),
+        xlb_f(
+            "MonthCal_SetUnicodeFormat", [](HWND hwnd, BOOL fUnicode) -> auto {
+              return MonthCal_SetUnicodeFormat(hwnd, fUnicode);
+            }),
+        xlb_f(
+            "MonthCal_SizeRectToMin", [](HWND hwnd, LPRECT prc) -> auto {
+              return MonthCal_SizeRectToMin(hwnd, prc);
+            }),
+
         xlb_const("MCSC_BACKGROUND", MCSC_BACKGROUND),
         xlb_const("MCSC_MONTHBK", MCSC_MONTHBK),
         xlb_const("MCSC_TEXT", MCSC_TEXT),
@@ -1768,12 +2668,10 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("MCSC_TITLEBK", MCSC_TITLEBK),
         xlb_const("MCSC_TITLETEXT", MCSC_TITLETEXT),
         xlb_const("MCSC_TRAILINGTEXT", MCSC_TRAILINGTEXT),
-        xlb_const("MCMV_MONTH", MCMV_MONTH),
-        xlb_const("MCMV_YEAR", MCMV_YEAR),
+        xlb_const("MCMV_MONTH", MCMV_MONTH), xlb_const("MCMV_YEAR", MCMV_YEAR),
         xlb_const("MCMV_DECADE", MCMV_DECADE),
         xlb_const("MCMV_CENTURY", MCMV_CENTURY),
-        xlb_const("GDTR_MAX", GDTR_MAX),
-        xlb_const("GDTR_MIN", GDTR_MIN),
+        xlb_const("GDTR_MAX", GDTR_MAX), xlb_const("GDTR_MIN", GDTR_MIN),
 
         xlb_const("MCM_GETCALENDARBORDER", MCM_GETCALENDARBORDER),
         xlb_const("MCM_GETCALENDARCOUNT", MCM_GETCALENDARCOUNT),
@@ -1812,7 +2710,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("MCN_SELECT", MCN_SELECT),
         xlb_const("MCN_VIEWCHANGE", MCN_VIEWCHANGE),
         xlb_const("NM_RELEASEDCAPTURE", NM_RELEASEDCAPTURE),
-        
+
         xlb_const("MCS_DAYSTATE", MCS_DAYSTATE),
         xlb_const("MCS_MULTISELECT", MCS_MULTISELECT),
         xlb_const("MCS_WEEKNUMBERS", MCS_WEEKNUMBERS),
@@ -1837,310 +2735,374 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("MCHT_TITLEBTNPREV", MCHT_TITLEBTNPREV),
         xlb_const("MCHT_TITLEMONTH", MCHT_TITLEMONTH),
         xlb_const("MCHT_TITLEYEAR", MCHT_TITLEYEAR),
-        
 
-    xlb_class<MCGRIDINFO>("MCGRIDINFO") .constructor<>() .destructor()
-        .property("cbSize", &MCGRIDINFO::cbSize)
-        .property("dwPart", &MCGRIDINFO::dwPart)
-        .property("dwFlags", &MCGRIDINFO::dwFlags)
-        .property("iCalendar", &MCGRIDINFO::iCalendar)
-        .property("iRow", &MCGRIDINFO::iRow)
-        .property("iCol", &MCGRIDINFO::iCol)
-        .property("bSelected", &MCGRIDINFO::bSelected)
-        .property("stStart", &MCGRIDINFO::stStart)
-        .property("stEnd", &MCGRIDINFO::stEnd)
-        .property("rc", &MCGRIDINFO::rc)
-        .property("pszName", &MCGRIDINFO::pszName)
-        .property("cchName", &MCGRIDINFO::cchName)
-        ,
+        xlb_class<MCGRIDINFO>("MCGRIDINFO")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &MCGRIDINFO::cbSize)
+            .property("dwPart", &MCGRIDINFO::dwPart)
+            .property("dwFlags", &MCGRIDINFO::dwFlags)
+            .property("iCalendar", &MCGRIDINFO::iCalendar)
+            .property("iRow", &MCGRIDINFO::iRow)
+            .property("iCol", &MCGRIDINFO::iCol)
+            .property("bSelected", &MCGRIDINFO::bSelected)
+            .property("stStart", &MCGRIDINFO::stStart)
+            .property("stEnd", &MCGRIDINFO::stEnd)
+            .property("rc", &MCGRIDINFO::rc)
+            .property("pszName", &MCGRIDINFO::pszName)
+            .property("cchName", &MCGRIDINFO::cchName),
 
-    xlb_class<MCHITTESTINFO>("MCHITTESTINFO") .constructor<>() .destructor()
-        .property("cbSize", &MCHITTESTINFO::cbSize)
-        .property("pt", &MCHITTESTINFO::pt)
-        .property("uHit", &MCHITTESTINFO::uHit)
-        .property("st", &MCHITTESTINFO::st)
-        .property("rc", &MCHITTESTINFO::rc)
-        .property("iOffset", &MCHITTESTINFO::iOffset)
-        .property("iRow", &MCHITTESTINFO::iRow)
-        .property("iCol", &MCHITTESTINFO::iCol)
-        ,
+        xlb_class<MCHITTESTINFO>("MCHITTESTINFO")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &MCHITTESTINFO::cbSize)
+            .property("pt", &MCHITTESTINFO::pt)
+            .property("uHit", &MCHITTESTINFO::uHit)
+            .property("st", &MCHITTESTINFO::st)
+            .property("rc", &MCHITTESTINFO::rc)
+            .property("iOffset", &MCHITTESTINFO::iOffset)
+            .property("iRow", &MCHITTESTINFO::iRow)
+            .property("iCol", &MCHITTESTINFO::iCol),
 
-    xlb_class<NMDAYSTATE>("NMDAYSTATE") .constructor<>() .destructor()
-        .property("nmhdr", &NMDAYSTATE::nmhdr)
-        .property("stStart", &NMDAYSTATE::stStart)
-        .property("cDayState", &NMDAYSTATE::cDayState)
-        .property("prgDayState", &NMDAYSTATE::prgDayState)
-        ,
+        xlb_class<NMDAYSTATE>("NMDAYSTATE")
+            .constructor<>()
+            .destructor()
+            .property("nmhdr", &NMDAYSTATE::nmhdr)
+            .property("stStart", &NMDAYSTATE::stStart)
+            .property("cDayState", &NMDAYSTATE::cDayState)
+            .property("prgDayState", &NMDAYSTATE::prgDayState),
 
-    xlb_class<NMSELCHANGE>("NMSELCHANGE") .constructor<>() .destructor()
-        .property("nmhdr", &NMSELCHANGE::nmhdr)
-        .property("stSelStart", &NMSELCHANGE::stSelStart)
-        .property("stSelEnd", &NMSELCHANGE::stSelEnd)
-        ,
-        
-    xlb_class<NMVIEWCHANGE>("NMVIEWCHANGE") .constructor<>() .destructor()
-        .property("nmhdr", &NMVIEWCHANGE::nmhdr)
-        .property("dwOldView", &NMVIEWCHANGE::dwOldView)
-        .property("dwNewView", &NMVIEWCHANGE::dwNewView)
-        ,
+        xlb_class<NMSELCHANGE>("NMSELCHANGE")
+            .constructor<>()
+            .destructor()
+            .property("nmhdr", &NMSELCHANGE::nmhdr)
+            .property("stSelStart", &NMSELCHANGE::stSelStart)
+            .property("stSelEnd", &NMSELCHANGE::stSelEnd),
 
-    // Pager
-    xlb_f("Pager_ForwardMouse", [](HWND hwnd, BOOL fFoward)->auto { return Pager_ForwardMouse(hwnd, fFoward); }),
-    xlb_f("Pager_GetBkColor", [](HWND hwnd)->auto { return Pager_GetBkColor(hwnd); }),
-    xlb_f("Pager_GetBorder", [](HWND hwnd)->auto { return Pager_GetBorder(hwnd); }),
-    xlb_f("Pager_GetButtonSize", [](HWND hwnd)->auto { return Pager_GetButtonSize(hwnd); }),
-    xlb_f("Pager_GetButtonState", [](HWND hwnd, int iButton)->auto { return Pager_GetButtonState(hwnd, iButton); }),
-    xlb_f("Pager_GetDropTarget", [](HWND hwnd, IDropTarget** ppdt)->auto { return Pager_GetDropTarget(hwnd, ppdt); }),
-    xlb_f("Pager_GetPos", [](HWND hwnd)->auto { return Pager_GetPos(hwnd); }),
-    xlb_f("Pager_RecalcSize", [](HWND hwnd)->auto { return Pager_RecalcSize(hwnd); }),
-    xlb_f("Pager_SetBkColor", [](HWND hwnd, COLORREF clr)->auto { return Pager_SetBkColor(hwnd, clr); }),
-    xlb_f("Pager_SetBorder", [](HWND hwnd, int iBorder)->auto { return Pager_SetBorder(hwnd, iBorder); }),
-    xlb_f("Pager_SetButtonSize", [](HWND hwnd, int iSize)->auto { return Pager_SetButtonSize(hwnd, iSize); }),
-    xlb_f("Pager_SetChild", [](HWND hwnd, HWND hwndChild)->auto { return Pager_SetChild(hwnd, hwndChild); }),
-    xlb_f("Pager_SetPos", [](HWND hwnd, int iPos)->auto { return Pager_SetPos(hwnd, iPos); }),
-    xlb_f("Pager_SetScrollInfo", [](HWND hwnd, UINT cTimeOut, UINT cLinesPer, UINT cPixelsPerLine)->auto { return Pager_SetScrollInfo(hwnd, cTimeOut, cLinesPer, cPixelsPerLine); }),
+        xlb_class<NMVIEWCHANGE>("NMVIEWCHANGE")
+            .constructor<>()
+            .destructor()
+            .property("nmhdr", &NMVIEWCHANGE::nmhdr)
+            .property("dwOldView", &NMVIEWCHANGE::dwOldView)
+            .property("dwNewView", &NMVIEWCHANGE::dwNewView),
 
-    xlb_class<NMPGCALCSIZE>("NMPGCALCSIZE") .constructor<>() .destructor()
-        .property("hdr", &NMPGCALCSIZE::hdr)
-        .property("dwFlag", &NMPGCALCSIZE::dwFlag)
-        .property("iWidth", &NMPGCALCSIZE::iWidth)
-        .property("iHeight", &NMPGCALCSIZE::iHeight)
-        ,
+        // Pager
+        xlb_f(
+            "Pager_ForwardMouse", [](HWND hwnd, BOOL fFoward) -> auto {
+              return Pager_ForwardMouse(hwnd, fFoward);
+            }),
+        xlb_f(
+            "Pager_GetBkColor",
+            [](HWND hwnd) -> auto { return Pager_GetBkColor(hwnd); }),
+        xlb_f(
+            "Pager_GetBorder",
+            [](HWND hwnd) -> auto { return Pager_GetBorder(hwnd); }),
+        xlb_f(
+            "Pager_GetButtonSize",
+            [](HWND hwnd) -> auto { return Pager_GetButtonSize(hwnd); }),
+        xlb_f(
+            "Pager_GetButtonState", [](HWND hwnd, int iButton) -> auto {
+              return Pager_GetButtonState(hwnd, iButton);
+            }),
+        xlb_f(
+            "Pager_GetDropTarget", [](HWND hwnd, IDropTarget * *ppdt) -> auto {
+              return Pager_GetDropTarget(hwnd, ppdt);
+            }),
+        xlb_f(
+            "Pager_GetPos",
+            [](HWND hwnd) -> auto { return Pager_GetPos(hwnd); }),
+        xlb_f(
+            "Pager_RecalcSize",
+            [](HWND hwnd) -> auto { return Pager_RecalcSize(hwnd); }),
+        xlb_f(
+            "Pager_SetBkColor", [](HWND hwnd, COLORREF clr) -> auto {
+              return Pager_SetBkColor(hwnd, clr);
+            }),
+        xlb_f(
+            "Pager_SetBorder", [](HWND hwnd, int iBorder) -> auto {
+              return Pager_SetBorder(hwnd, iBorder);
+            }),
+        xlb_f(
+            "Pager_SetButtonSize", [](HWND hwnd, int iSize) -> auto {
+              return Pager_SetButtonSize(hwnd, iSize);
+            }),
+        xlb_f(
+            "Pager_SetChild", [](HWND hwnd, HWND hwndChild) -> auto {
+              return Pager_SetChild(hwnd, hwndChild);
+            }),
+        xlb_f(
+            "Pager_SetPos", [](HWND hwnd, int iPos) -> auto {
+              return Pager_SetPos(hwnd, iPos);
+            }),
+        xlb_f(
+            "Pager_SetScrollInfo",
+            [](HWND hwnd, UINT cTimeOut, UINT cLinesPer,
+               UINT cPixelsPerLine) -> auto {
+              return Pager_SetScrollInfo(hwnd, cTimeOut, cLinesPer,
+                                         cPixelsPerLine);
+            }),
 
-    xlb_class<NMPGHOTITEM>("NMPGHOTITEM") .constructor<>() .destructor()
-        .property("hdr", &NMPGHOTITEM::hdr)
-        .property("idOld", &NMPGHOTITEM::idOld)
-        .property("idNew", &NMPGHOTITEM::idNew)
-        .property("dwFlags", &NMPGHOTITEM::dwFlags)
-        ,
-    xlb_class<NMPGSCROLL>("NMPGSCROLL") .constructor<>() .destructor()
-        .property("hdr", &NMPGSCROLL::hdr)
-        .property("fwKeys", &NMPGSCROLL::fwKeys)
-        .property("rcParent", &NMPGSCROLL::rcParent)
-        .property("iDir", &NMPGSCROLL::iDir)
-        .property("iXpos", &NMPGSCROLL::iXpos)
-        .property("iYpos", &NMPGSCROLL::iYpos)
-        .property("iScroll", &NMPGSCROLL::iScroll)
-        ,
+        xlb_class<NMPGCALCSIZE>("NMPGCALCSIZE")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMPGCALCSIZE::hdr)
+            .property("dwFlag", &NMPGCALCSIZE::dwFlag)
+            .property("iWidth", &NMPGCALCSIZE::iWidth)
+            .property("iHeight", &NMPGCALCSIZE::iHeight),
 
-    xlb_const("PGM_FORWARDMOUSE", PGM_FORWARDMOUSE),
-    xlb_const("PGM_GETBKCOLOR", PGM_GETBKCOLOR),
-    xlb_const("PGM_GETBORDER", PGM_GETBORDER),
-    xlb_const("PGM_GETBUTTONSIZE", PGM_GETBUTTONSIZE),
-    xlb_const("PGM_GETBUTTONSTATE", PGM_GETBUTTONSTATE),
-    xlb_const("PGM_GETDROPTARGET", PGM_GETDROPTARGET),
-    xlb_const("PGM_GETPOS", PGM_GETPOS),
-    xlb_const("PGM_RECALCSIZE", PGM_RECALCSIZE),
-    xlb_const("PGM_SETBKCOLOR", PGM_SETBKCOLOR),
-    xlb_const("PGM_SETBORDER", PGM_SETBORDER),
-    xlb_const("PGM_SETBUTTONSIZE", PGM_SETBUTTONSIZE),
-    xlb_const("PGM_SETCHILD", PGM_SETCHILD),
-    xlb_const("PGM_SETPOS", PGM_SETPOS),
-    xlb_const("PGM_SETSCROLLINFO", PGM_SETSCROLLINFO),
-    xlb_const("NM_RELEASEDCAPTURE", NM_RELEASEDCAPTURE),
-    xlb_const("PGN_CALCSIZE", PGN_CALCSIZE),
-    xlb_const("PGN_HOTITEMCHANGE", PGN_HOTITEMCHANGE),
-    xlb_const("PGN_SCROLL", PGN_SCROLL),
-    xlb_const("NM_RELEASEDCAPTURE", NM_RELEASEDCAPTURE),
-    xlb_const("PGN_CALCSIZE", PGN_CALCSIZE),
-    xlb_const("PGN_HOTITEMCHANGE", PGN_HOTITEMCHANGE),
-    xlb_const("PGN_SCROLL", PGN_SCROLL),
-    xlb_const("PGF_CALCHEIGHT", PGF_CALCHEIGHT),
-    xlb_const("PGF_CALCWIDTH", PGF_CALCWIDTH),
-    xlb_const("HICF_ENTERING", HICF_ENTERING),
-    xlb_const("HICF_LEAVING", HICF_LEAVING),
-    xlb_const("PGK_SHIFT", PGK_SHIFT),
-    xlb_const("PGK_CONTROL", PGK_CONTROL),
-    xlb_const("PGK_MENU", PGK_MENU),
-    xlb_const("PGF_SCROLLDOWN", PGF_SCROLLDOWN),
-    xlb_const("PGF_SCROLLLEFT", PGF_SCROLLLEFT),
-    xlb_const("PGF_SCROLLRIGHT", PGF_SCROLLRIGHT),
-    xlb_const("PGF_SCROLLUP", PGF_SCROLLUP),
+        xlb_class<NMPGHOTITEM>("NMPGHOTITEM")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMPGHOTITEM::hdr)
+            .property("idOld", &NMPGHOTITEM::idOld)
+            .property("idNew", &NMPGHOTITEM::idNew)
+            .property("dwFlags", &NMPGHOTITEM::dwFlags),
+        xlb_class<NMPGSCROLL>("NMPGSCROLL")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMPGSCROLL::hdr)
+            .property("fwKeys", &NMPGSCROLL::fwKeys)
+            .property("rcParent", &NMPGSCROLL::rcParent)
+            .property("iDir", &NMPGSCROLL::iDir)
+            .property("iXpos", &NMPGSCROLL::iXpos)
+            .property("iYpos", &NMPGSCROLL::iYpos)
+            .property("iScroll", &NMPGSCROLL::iScroll),
 
-    // Progress Bar
-    xlb_class<PBRANGE>("PBRANGE") .constructor<>() .destructor()
-        .property("iLow", &PBRANGE::iLow)
-        .property("iHigh", &PBRANGE::iHigh)
-        ,
+        xlb_const("PGM_FORWARDMOUSE", PGM_FORWARDMOUSE),
+        xlb_const("PGM_GETBKCOLOR", PGM_GETBKCOLOR),
+        xlb_const("PGM_GETBORDER", PGM_GETBORDER),
+        xlb_const("PGM_GETBUTTONSIZE", PGM_GETBUTTONSIZE),
+        xlb_const("PGM_GETBUTTONSTATE", PGM_GETBUTTONSTATE),
+        xlb_const("PGM_GETDROPTARGET", PGM_GETDROPTARGET),
+        xlb_const("PGM_GETPOS", PGM_GETPOS),
+        xlb_const("PGM_RECALCSIZE", PGM_RECALCSIZE),
+        xlb_const("PGM_SETBKCOLOR", PGM_SETBKCOLOR),
+        xlb_const("PGM_SETBORDER", PGM_SETBORDER),
+        xlb_const("PGM_SETBUTTONSIZE", PGM_SETBUTTONSIZE),
+        xlb_const("PGM_SETCHILD", PGM_SETCHILD),
+        xlb_const("PGM_SETPOS", PGM_SETPOS),
+        xlb_const("PGM_SETSCROLLINFO", PGM_SETSCROLLINFO),
+        xlb_const("NM_RELEASEDCAPTURE", NM_RELEASEDCAPTURE),
+        xlb_const("PGN_CALCSIZE", PGN_CALCSIZE),
+        xlb_const("PGN_HOTITEMCHANGE", PGN_HOTITEMCHANGE),
+        xlb_const("PGN_SCROLL", PGN_SCROLL),
+        xlb_const("NM_RELEASEDCAPTURE", NM_RELEASEDCAPTURE),
+        xlb_const("PGN_CALCSIZE", PGN_CALCSIZE),
+        xlb_const("PGN_HOTITEMCHANGE", PGN_HOTITEMCHANGE),
+        xlb_const("PGN_SCROLL", PGN_SCROLL),
+        xlb_const("PGF_CALCHEIGHT", PGF_CALCHEIGHT),
+        xlb_const("PGF_CALCWIDTH", PGF_CALCWIDTH),
+        xlb_const("HICF_ENTERING", HICF_ENTERING),
+        xlb_const("HICF_LEAVING", HICF_LEAVING),
+        xlb_const("PGK_SHIFT", PGK_SHIFT),
+        xlb_const("PGK_CONTROL", PGK_CONTROL), xlb_const("PGK_MENU", PGK_MENU),
+        xlb_const("PGF_SCROLLDOWN", PGF_SCROLLDOWN),
+        xlb_const("PGF_SCROLLLEFT", PGF_SCROLLLEFT),
+        xlb_const("PGF_SCROLLRIGHT", PGF_SCROLLRIGHT),
+        xlb_const("PGF_SCROLLUP", PGF_SCROLLUP),
 
-    xlb_const("PBM_DELTAPOS", PBM_DELTAPOS),
-    xlb_const("PBM_GETBARCOLOR", PBM_GETBARCOLOR),
-    xlb_const("PBM_GETBKCOLOR", PBM_GETBKCOLOR),
-    xlb_const("PBM_GETPOS", PBM_GETPOS),
-    xlb_const("PBM_GETRANGE", PBM_GETRANGE),
-    xlb_const("PBM_GETSTATE", PBM_GETSTATE),
-    xlb_const("PBM_GETSTEP", PBM_GETSTEP),
-    xlb_const("PBM_SETBARCOLOR", PBM_SETBARCOLOR),
-    xlb_const("PBM_SETBKCOLOR", PBM_SETBKCOLOR),
-    xlb_const("PBM_SETMARQUEE", PBM_SETMARQUEE),
-    xlb_const("PBM_SETPOS", PBM_SETPOS),
-    xlb_const("PBM_SETRANGE", PBM_SETRANGE),
-    xlb_const("PBM_SETRANGE32", PBM_SETRANGE32),
-    xlb_const("PBM_SETSTATE", PBM_SETSTATE),
-    xlb_const("PBM_SETSTEP", PBM_SETSTEP),
-    xlb_const("PBM_STEPIT", PBM_STEPIT),
-    xlb_const("PBS_MARQUEE", PBS_MARQUEE),
-    xlb_const("PBS_SMOOTH", PBS_SMOOTH),
-    xlb_const("PBS_SMOOTHREVERSE", PBS_SMOOTHREVERSE),
-    xlb_const("PBS_VERTICAL", PBS_VERTICAL),
+        // Progress Bar
+        xlb_class<PBRANGE>("PBRANGE")
+            .constructor<>()
+            .destructor()
+            .property("iLow", &PBRANGE::iLow)
+            .property("iHigh", &PBRANGE::iHigh),
 
-    // Property Sheet
-    xlb_const("PSM_ADDPAGE", PSM_ADDPAGE),
-    xlb_const("PSM_APPLY", PSM_APPLY),
-    xlb_const("PSM_CANCELTOCLOSE", PSM_CANCELTOCLOSE),
-    xlb_const("PSM_CHANGED", PSM_CHANGED),
-    xlb_const("PSM_ENABLEWIZBUTTONS", PSM_ENABLEWIZBUTTONS),
-    xlb_const("PSM_GETCURRENTPAGEHWND", PSM_GETCURRENTPAGEHWND),
-    xlb_const("PSM_GETRESULT", PSM_GETRESULT),
-    xlb_const("PSM_GETTABCONTROL", PSM_GETTABCONTROL),
-    xlb_const("PSM_HWNDTOINDEX", PSM_HWNDTOINDEX),
-    xlb_const("PSM_IDTOINDEX", PSM_IDTOINDEX),
-    xlb_const("PSM_INDEXTOHWND", PSM_INDEXTOHWND),
-    xlb_const("PSM_INDEXTOID", PSM_INDEXTOID),
-    xlb_const("PSM_INDEXTOPAGE", PSM_INDEXTOPAGE),
-    xlb_const("PSM_INSERTPAGE", PSM_INSERTPAGE),
-    xlb_const("PSM_ISDIALOGMESSAGE", PSM_ISDIALOGMESSAGE),
-    xlb_const("PSM_PAGETOINDEX", PSM_PAGETOINDEX),
-    xlb_const("PSM_PRESSBUTTON", PSM_PRESSBUTTON),
-    xlb_const("PSM_QUERYSIBLINGS", PSM_QUERYSIBLINGS),
-    xlb_const("PSM_REBOOTSYSTEM", PSM_REBOOTSYSTEM),
-    xlb_const("PSM_RECALCPAGESIZES", PSM_RECALCPAGESIZES),
-    xlb_const("PSM_REMOVEPAGE", PSM_REMOVEPAGE),
-    xlb_const("PSM_RESTARTWINDOWS", PSM_RESTARTWINDOWS),
-    xlb_const("PSM_SETBUTTONTEXT", PSM_SETBUTTONTEXT),
-    xlb_const("PSM_SETCURSEL", PSM_SETCURSEL),
-    xlb_const("PSM_SETCURSELID", PSM_SETCURSELID),
-    xlb_const("PSM_SETFINISHTEXT", PSM_SETFINISHTEXT),
-    //xlb_const("PSM_SETHEADERBITMAP", PSM_SETHEADERBITMAP), // not implemented
-    //xlb_const("PSM_SETHEADERBITMAPRESOURCE", PSM_SETHEADERBITMAPRESOURCE), // not implemented
-    xlb_const("PSM_SETHEADERSUBTITLE", PSM_SETHEADERSUBTITLE),
-    xlb_const("PSM_SETHEADERTITLE", PSM_SETHEADERTITLE),
-    xlb_const("PSM_SETNEXTTEXT", PSM_SETNEXTTEXT),
-    xlb_const("PSM_SETTITLE", PSM_SETTITLE),
-    xlb_const("PSM_SETWIZBUTTONS", PSM_SETWIZBUTTONS),
-    xlb_const("PSM_SHOWWIZBUTTONS", PSM_SHOWWIZBUTTONS),
-    xlb_const("PSM_UNCHANGED", PSM_UNCHANGED),
-    xlb_const("PSN_APPLY", PSN_APPLY),
-    xlb_const("PSN_GETOBJECT", PSN_GETOBJECT),
-    xlb_const("PSN_HELP", PSN_HELP),
-    xlb_const("PSN_KILLACTIVE", PSN_KILLACTIVE),
-    xlb_const("PSN_QUERYCANCEL", PSN_QUERYCANCEL),
-    xlb_const("PSN_QUERYINITIALFOCUS", PSN_QUERYINITIALFOCUS),
-    xlb_const("PSN_RESET", PSN_RESET),
-    xlb_const("PSN_SETACTIVE", PSN_SETACTIVE),
-    xlb_const("PSN_TRANSLATEACCELERATOR", PSN_TRANSLATEACCELERATOR),
-    xlb_const("PSN_WIZBACK", PSN_WIZBACK),
-    xlb_const("PSN_WIZFINISH", PSN_WIZFINISH),
-    xlb_const("PSN_WIZNEXT", PSN_WIZNEXT),
-    xlb_const("ID_PSREBOOTSYSTEM", ID_PSREBOOTSYSTEM),
-    xlb_const("ID_PSRESTARTWINDOWS", ID_PSRESTARTWINDOWS),
+        xlb_const("PBM_DELTAPOS", PBM_DELTAPOS),
+        xlb_const("PBM_GETBARCOLOR", PBM_GETBARCOLOR),
+        xlb_const("PBM_GETBKCOLOR", PBM_GETBKCOLOR),
+        xlb_const("PBM_GETPOS", PBM_GETPOS),
+        xlb_const("PBM_GETRANGE", PBM_GETRANGE),
+        xlb_const("PBM_GETSTATE", PBM_GETSTATE),
+        xlb_const("PBM_GETSTEP", PBM_GETSTEP),
+        xlb_const("PBM_SETBARCOLOR", PBM_SETBARCOLOR),
+        xlb_const("PBM_SETBKCOLOR", PBM_SETBKCOLOR),
+        xlb_const("PBM_SETMARQUEE", PBM_SETMARQUEE),
+        xlb_const("PBM_SETPOS", PBM_SETPOS),
+        xlb_const("PBM_SETRANGE", PBM_SETRANGE),
+        xlb_const("PBM_SETRANGE32", PBM_SETRANGE32),
+        xlb_const("PBM_SETSTATE", PBM_SETSTATE),
+        xlb_const("PBM_SETSTEP", PBM_SETSTEP),
+        xlb_const("PBM_STEPIT", PBM_STEPIT),
+        xlb_const("PBS_MARQUEE", PBS_MARQUEE),
+        xlb_const("PBS_SMOOTH", PBS_SMOOTH),
+        xlb_const("PBS_SMOOTHREVERSE", PBS_SMOOTHREVERSE),
+        xlb_const("PBS_VERTICAL", PBS_VERTICAL),
 
-    xlb_class<xlb_cbf<LPFNADDPROPSHEETPAGE>>("LPFNADDPROPSHEETPAGE").constructor<xlb_luafunc>(),
-    xlb_f("CreatePropertySheetPage", CreatePropertySheetPage),
-    xlb_f("DestroyPropertySheetPage", DestroyPropertySheetPage),
-    xlb_f("PropertySheet", PropertySheet),
-    xlb_class<xlb_cbf<LPFNPSPCALLBACKA>>("LPFNPSPCALLBACKA").constructor<xlb_luafunc>(),
-    xlb_class<xlb_cbf<PFNPROPSHEETCALLBACK>>("PFNPROPSHEETCALLBACK").constructor<xlb_luafunc>(),
+        // Property Sheet
+        xlb_const("PSM_ADDPAGE", PSM_ADDPAGE),
+        xlb_const("PSM_APPLY", PSM_APPLY),
+        xlb_const("PSM_CANCELTOCLOSE", PSM_CANCELTOCLOSE),
+        xlb_const("PSM_CHANGED", PSM_CHANGED),
+        xlb_const("PSM_ENABLEWIZBUTTONS", PSM_ENABLEWIZBUTTONS),
+        xlb_const("PSM_GETCURRENTPAGEHWND", PSM_GETCURRENTPAGEHWND),
+        xlb_const("PSM_GETRESULT", PSM_GETRESULT),
+        xlb_const("PSM_GETTABCONTROL", PSM_GETTABCONTROL),
+        xlb_const("PSM_HWNDTOINDEX", PSM_HWNDTOINDEX),
+        xlb_const("PSM_IDTOINDEX", PSM_IDTOINDEX),
+        xlb_const("PSM_INDEXTOHWND", PSM_INDEXTOHWND),
+        xlb_const("PSM_INDEXTOID", PSM_INDEXTOID),
+        xlb_const("PSM_INDEXTOPAGE", PSM_INDEXTOPAGE),
+        xlb_const("PSM_INSERTPAGE", PSM_INSERTPAGE),
+        xlb_const("PSM_ISDIALOGMESSAGE", PSM_ISDIALOGMESSAGE),
+        xlb_const("PSM_PAGETOINDEX", PSM_PAGETOINDEX),
+        xlb_const("PSM_PRESSBUTTON", PSM_PRESSBUTTON),
+        xlb_const("PSM_QUERYSIBLINGS", PSM_QUERYSIBLINGS),
+        xlb_const("PSM_REBOOTSYSTEM", PSM_REBOOTSYSTEM),
+        xlb_const("PSM_RECALCPAGESIZES", PSM_RECALCPAGESIZES),
+        xlb_const("PSM_REMOVEPAGE", PSM_REMOVEPAGE),
+        xlb_const("PSM_RESTARTWINDOWS", PSM_RESTARTWINDOWS),
+        xlb_const("PSM_SETBUTTONTEXT", PSM_SETBUTTONTEXT),
+        xlb_const("PSM_SETCURSEL", PSM_SETCURSEL),
+        xlb_const("PSM_SETCURSELID", PSM_SETCURSELID),
+        xlb_const("PSM_SETFINISHTEXT", PSM_SETFINISHTEXT),
+        // xlb_const("PSM_SETHEADERBITMAP", PSM_SETHEADERBITMAP), // not
+        // implemented xlb_const("PSM_SETHEADERBITMAPRESOURCE",
+        // PSM_SETHEADERBITMAPRESOURCE), // not implemented
+        xlb_const("PSM_SETHEADERSUBTITLE", PSM_SETHEADERSUBTITLE),
+        xlb_const("PSM_SETHEADERTITLE", PSM_SETHEADERTITLE),
+        xlb_const("PSM_SETNEXTTEXT", PSM_SETNEXTTEXT),
+        xlb_const("PSM_SETTITLE", PSM_SETTITLE),
+        xlb_const("PSM_SETWIZBUTTONS", PSM_SETWIZBUTTONS),
+        xlb_const("PSM_SHOWWIZBUTTONS", PSM_SHOWWIZBUTTONS),
+        xlb_const("PSM_UNCHANGED", PSM_UNCHANGED),
+        xlb_const("PSN_APPLY", PSN_APPLY),
+        xlb_const("PSN_GETOBJECT", PSN_GETOBJECT),
+        xlb_const("PSN_HELP", PSN_HELP),
+        xlb_const("PSN_KILLACTIVE", PSN_KILLACTIVE),
+        xlb_const("PSN_QUERYCANCEL", PSN_QUERYCANCEL),
+        xlb_const("PSN_QUERYINITIALFOCUS", PSN_QUERYINITIALFOCUS),
+        xlb_const("PSN_RESET", PSN_RESET),
+        xlb_const("PSN_SETACTIVE", PSN_SETACTIVE),
+        xlb_const("PSN_TRANSLATEACCELERATOR", PSN_TRANSLATEACCELERATOR),
+        xlb_const("PSN_WIZBACK", PSN_WIZBACK),
+        xlb_const("PSN_WIZFINISH", PSN_WIZFINISH),
+        xlb_const("PSN_WIZNEXT", PSN_WIZNEXT),
+        xlb_const("ID_PSREBOOTSYSTEM", ID_PSREBOOTSYSTEM),
+        xlb_const("ID_PSRESTARTWINDOWS", ID_PSRESTARTWINDOWS),
 
-    xlb_class<PROPSHEETHEADERA_V2>("PROPSHEETHEADERA_V2") .constructor<>() .destructor()
-        .property("hbmWatermark", &PROPSHEETHEADERA_V2::hbmWatermark)
-        .property("pszbmWatermark", &PROPSHEETHEADERA_V2::pszbmWatermark)
-        .property("hbmHeader", &PROPSHEETHEADERA_V2::hbmHeader)
-        .property("pszbmHeader", &PROPSHEETHEADERA_V2::pszbmHeader)
-        ,
+        xlb_class<xlb_cbf<LPFNADDPROPSHEETPAGE>>("LPFNADDPROPSHEETPAGE")
+            .constructor<xlb_luafunc>(),
+        xlb_f("CreatePropertySheetPage", CreatePropertySheetPage),
+        xlb_f("DestroyPropertySheetPage", DestroyPropertySheetPage),
+        xlb_f("PropertySheet", PropertySheet),
+        xlb_class<xlb_cbf<LPFNPSPCALLBACKA>>("LPFNPSPCALLBACKA")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNPROPSHEETCALLBACK>>("PFNPROPSHEETCALLBACK")
+            .constructor<xlb_luafunc>(),
 
-    xlb_class<PROPSHEETPAGEA_V2>("PROPSHEETPAGEA_V2") .constructor<>() .destructor()
-        .property("pszHeaderTitle", &PROPSHEETPAGEA_V2::pszHeaderTitle)
-        .property("pszHeaderSubTitle", &PROPSHEETPAGEA_V2::pszHeaderSubTitle)
-        ,
+        xlb_class<PROPSHEETHEADERA_V2>("PROPSHEETHEADERA_V2")
+            .constructor<>()
+            .destructor()
+            .property("hbmWatermark", &PROPSHEETHEADERA_V2::hbmWatermark)
+            .property("pszbmWatermark", &PROPSHEETHEADERA_V2::pszbmWatermark)
+            .property("hbmHeader", &PROPSHEETHEADERA_V2::hbmHeader)
+            .property("pszbmHeader", &PROPSHEETHEADERA_V2::pszbmHeader),
 
-    xlb_class<PSHNOTIFY>("PSHNOTIFY") .constructor<>() .destructor()
-        .property("hdr", &PSHNOTIFY::hdr)
-        .property("lParam", &PSHNOTIFY::lParam)
-        ,
+        xlb_class<PROPSHEETPAGEA_V2>("PROPSHEETPAGEA_V2")
+            .constructor<>()
+            .destructor()
+            .property("pszHeaderTitle", &PROPSHEETPAGEA_V2::pszHeaderTitle)
+            .property("pszHeaderSubTitle",
+                      &PROPSHEETPAGEA_V2::pszHeaderSubTitle),
 
-    // Rebar
-    xlb_class<NMRBAUTOSIZE>("NMRBAUTOSIZE") .constructor<>() .destructor()
-        .property("hdr", &NMRBAUTOSIZE::hdr)
-        .property("fChanged", &NMRBAUTOSIZE::fChanged)
-        .property("rcTarget", &NMRBAUTOSIZE::rcTarget)
-        .property("rcActual", &NMRBAUTOSIZE::rcActual)
-        ,
+        xlb_class<PSHNOTIFY>("PSHNOTIFY")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &PSHNOTIFY::hdr)
+            .property("lParam", &PSHNOTIFY::lParam),
 
-    xlb_class<NMREBAR>("NMREBAR") .constructor<>() .destructor()
-        .property("hdr", &NMREBAR::hdr)
-        .property("dwMask", &NMREBAR::dwMask)
-        .property("uBand", &NMREBAR::uBand)
-        .property("fStyle", &NMREBAR::fStyle)
-        .property("wID", &NMREBAR::wID)
-        .property("lParam", &NMREBAR::lParam)
-        ,
+        // Rebar
+        xlb_class<NMRBAUTOSIZE>("NMRBAUTOSIZE")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMRBAUTOSIZE::hdr)
+            .property("fChanged", &NMRBAUTOSIZE::fChanged)
+            .property("rcTarget", &NMRBAUTOSIZE::rcTarget)
+            .property("rcActual", &NMRBAUTOSIZE::rcActual),
 
-    xlb_class<NMREBARAUTOBREAK>("NMREBARAUTOBREAK") .constructor<>() .destructor()
-        .property("hdr", &NMREBARAUTOBREAK::hdr)
-        .property("uBand", &NMREBARAUTOBREAK::uBand)
-        .property("wID", &NMREBARAUTOBREAK::wID)
-        .property("lParam", &NMREBARAUTOBREAK::lParam)
-        .property("uMsg", &NMREBARAUTOBREAK::uMsg)
-        .property("fStyleCurrent", &NMREBARAUTOBREAK::fStyleCurrent)
-        .property("fAutoBreak", &NMREBARAUTOBREAK::fAutoBreak)
-        ,
+        xlb_class<NMREBAR>("NMREBAR")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMREBAR::hdr)
+            .property("dwMask", &NMREBAR::dwMask)
+            .property("uBand", &NMREBAR::uBand)
+            .property("fStyle", &NMREBAR::fStyle)
+            .property("wID", &NMREBAR::wID)
+            .property("lParam", &NMREBAR::lParam),
 
-    xlb_class<NMREBARCHEVRON>("NMREBARCHEVRON") .constructor<>() .destructor()
-        .property("hdr", &NMREBARCHEVRON::hdr)
-        .property("uBand", &NMREBARCHEVRON::uBand)
-        .property("wID", &NMREBARCHEVRON::wID)
-        .property("lParam", &NMREBARCHEVRON::lParam)
-        .property("rc", &NMREBARCHEVRON::rc)
-        .property("lParamNM", &NMREBARCHEVRON::lParamNM)
-        ,
+        xlb_class<NMREBARAUTOBREAK>("NMREBARAUTOBREAK")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMREBARAUTOBREAK::hdr)
+            .property("uBand", &NMREBARAUTOBREAK::uBand)
+            .property("wID", &NMREBARAUTOBREAK::wID)
+            .property("lParam", &NMREBARAUTOBREAK::lParam)
+            .property("uMsg", &NMREBARAUTOBREAK::uMsg)
+            .property("fStyleCurrent", &NMREBARAUTOBREAK::fStyleCurrent)
+            .property("fAutoBreak", &NMREBARAUTOBREAK::fAutoBreak),
 
-    xlb_class<NMREBARCHILDSIZE>("NMREBARCHILDSIZE") .constructor<>() .destructor()
-        .property("hdr", &NMREBARCHILDSIZE::hdr)
-        .property("uBand", &NMREBARCHILDSIZE::uBand)
-        .property("wID", &NMREBARCHILDSIZE::wID)
-        .property("rcChild", &NMREBARCHILDSIZE::rcChild)
-        .property("rcBand", &NMREBARCHILDSIZE::rcBand)
-        ,
-    xlb_class<NMREBARSPLITTER>("NMREBARSPLITTER") .constructor<>() .destructor()
-        .property("hdr", &NMREBARSPLITTER::hdr)
-        .property("rcSizing", &NMREBARSPLITTER::rcSizing)
-        ,
-    xlb_class<RBHITTESTINFO>("RBHITTESTINFO") .constructor<>() .destructor()
-        .property("pt", &RBHITTESTINFO::pt)
-        .property("flags", &RBHITTESTINFO::flags)
-        .property("iBand", &RBHITTESTINFO::iBand)
-        ,
-    xlb_class<REBARBANDINFOA>("REBARBANDINFOA") .constructor<>() .destructor()
-        .property("cbSize", &REBARBANDINFOA::cbSize)
-        .property("fMask", &REBARBANDINFOA::fMask)
-        .property("fStyle", &REBARBANDINFOA::fStyle)
-        .property("clrFore", &REBARBANDINFOA::clrFore)
-        .property("clrBack", &REBARBANDINFOA::clrBack)
-        .property("lpText", &REBARBANDINFOA::lpText)
-        .property("cch", &REBARBANDINFOA::cch)
-        .property("iImage", &REBARBANDINFOA::iImage)
-        .property("hwndChild", &REBARBANDINFOA::hwndChild)
-        .property("cxMinChild", &REBARBANDINFOA::cxMinChild)
-        .property("cyMinChild", &REBARBANDINFOA::cyMinChild)
-        .property("cx", &REBARBANDINFOA::cx)
-        .property("hbmBack", &REBARBANDINFOA::hbmBack)
-        .property("wID", &REBARBANDINFOA::wID)
-        .property("cyChild", &REBARBANDINFOA::cyChild)
-        .property("cyMaxChild", &REBARBANDINFOA::cyMaxChild)
-        .property("cyIntegral", &REBARBANDINFOA::cyIntegral)
-        .property("cxIdeal", &REBARBANDINFOA::cxIdeal)
-        .property("lParam", &REBARBANDINFOA::lParam)
-        .property("cxHeader", &REBARBANDINFOA::cxHeader)
-        .property("rcChevronLocation", &REBARBANDINFOA::rcChevronLocation)
-        .property("uChevronState", &REBARBANDINFOA::uChevronState)
-        ,
-    xlb_class<REBARINFO>("REBARINFO") .constructor<>() .destructor()
-        .property("cbSize", &REBARINFO::cbSize)
-        .property("fMask", &REBARINFO::fMask)
-        .property("himl", &REBARINFO::himl)
-        .property("himl", &REBARINFO::himl)
-        ,
+        xlb_class<NMREBARCHEVRON>("NMREBARCHEVRON")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMREBARCHEVRON::hdr)
+            .property("uBand", &NMREBARCHEVRON::uBand)
+            .property("wID", &NMREBARCHEVRON::wID)
+            .property("lParam", &NMREBARCHEVRON::lParam)
+            .property("rc", &NMREBARCHEVRON::rc)
+            .property("lParamNM", &NMREBARCHEVRON::lParamNM),
+
+        xlb_class<NMREBARCHILDSIZE>("NMREBARCHILDSIZE")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMREBARCHILDSIZE::hdr)
+            .property("uBand", &NMREBARCHILDSIZE::uBand)
+            .property("wID", &NMREBARCHILDSIZE::wID)
+            .property("rcChild", &NMREBARCHILDSIZE::rcChild)
+            .property("rcBand", &NMREBARCHILDSIZE::rcBand),
+        xlb_class<NMREBARSPLITTER>("NMREBARSPLITTER")
+            .constructor<>()
+            .destructor()
+            .property("hdr", &NMREBARSPLITTER::hdr)
+            .property("rcSizing", &NMREBARSPLITTER::rcSizing),
+        xlb_class<RBHITTESTINFO>("RBHITTESTINFO")
+            .constructor<>()
+            .destructor()
+            .property("pt", &RBHITTESTINFO::pt)
+            .property("flags", &RBHITTESTINFO::flags)
+            .property("iBand", &RBHITTESTINFO::iBand),
+        xlb_class<REBARBANDINFOA>("REBARBANDINFOA")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &REBARBANDINFOA::cbSize)
+            .property("fMask", &REBARBANDINFOA::fMask)
+            .property("fStyle", &REBARBANDINFOA::fStyle)
+            .property("clrFore", &REBARBANDINFOA::clrFore)
+            .property("clrBack", &REBARBANDINFOA::clrBack)
+            .property("lpText", &REBARBANDINFOA::lpText)
+            .property("cch", &REBARBANDINFOA::cch)
+            .property("iImage", &REBARBANDINFOA::iImage)
+            .property("hwndChild", &REBARBANDINFOA::hwndChild)
+            .property("cxMinChild", &REBARBANDINFOA::cxMinChild)
+            .property("cyMinChild", &REBARBANDINFOA::cyMinChild)
+            .property("cx", &REBARBANDINFOA::cx)
+            .property("hbmBack", &REBARBANDINFOA::hbmBack)
+            .property("wID", &REBARBANDINFOA::wID)
+            .property("cyChild", &REBARBANDINFOA::cyChild)
+            .property("cyMaxChild", &REBARBANDINFOA::cyMaxChild)
+            .property("cyIntegral", &REBARBANDINFOA::cyIntegral)
+            .property("cxIdeal", &REBARBANDINFOA::cxIdeal)
+            .property("lParam", &REBARBANDINFOA::lParam)
+            .property("cxHeader", &REBARBANDINFOA::cxHeader)
+            .property("rcChevronLocation", &REBARBANDINFOA::rcChevronLocation)
+            .property("uChevronState", &REBARBANDINFOA::uChevronState),
+        xlb_class<REBARINFO>("REBARINFO")
+            .constructor<>()
+            .destructor()
+            .property("cbSize", &REBARINFO::cbSize)
+            .property("fMask", &REBARINFO::fMask)
+            .property("himl", &REBARINFO::himl)
+            .property("himl", &REBARINFO::himl),
 
         xlb_const("RBIM_IMAGELIST", RBIM_IMAGELIST),
         xlb_const("RB_BEGINDRAG", RB_BEGINDRAG),
@@ -2211,12 +3173,15 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("RBS_VERTICALGRIPPER", RBS_VERTICALGRIPPER),
 
         // Rich Edit
-    xlb_class<BIDIOPTIONS>("BIDIOPTIONS") .constructor<>() .destructor()
+        xlb_class<BIDIOPTIONS>("BIDIOPTIONS")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &BIDIOPTIONS::cbSize)
             .property("wMask", &BIDIOPTIONS::wMask)
-            .property("wEffects", &BIDIOPTIONS::wEffects)
-            ,
-    xlb_class<CHARFORMATA>("CHARFORMATA") .constructor<>() .destructor()
+            .property("wEffects", &BIDIOPTIONS::wEffects),
+        xlb_class<CHARFORMATA>("CHARFORMATA")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &CHARFORMATA::cbSize)
             .property("dwMask", &CHARFORMATA::dwMask)
             .property("dwEffects", &CHARFORMATA::dwEffects)
@@ -2225,9 +3190,10 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("crTextColor", &CHARFORMATA::crTextColor)
             .property("bCharSet", &CHARFORMATA::bCharSet)
             .property("bPitchAndFamily", &CHARFORMATA::bPitchAndFamily)
-            .property("szFaceName", &CHARFORMATA::szFaceName)
-            ,
-    xlb_class<CHARFORMAT2A>("CHARFORMAT2A") .constructor<>() .destructor()
+            .property("szFaceName", &CHARFORMATA::szFaceName),
+        xlb_class<CHARFORMAT2A>("CHARFORMAT2A")
+            .constructor<>()
+            .destructor()
             .property("wWeight", &CHARFORMAT2A::wWeight)
             .property("sSpacing", &CHARFORMAT2A::sSpacing)
             .property("crBackColor", &CHARFORMAT2A::crBackColor)
@@ -2240,117 +3206,141 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("bUnderlineType", &CHARFORMAT2A::bUnderlineType)
             .property("bAnimation", &CHARFORMAT2A::bAnimation)
             .property("bRevAuthor", &CHARFORMAT2A::bRevAuthor)
-            .property("bUnderlineColor", &CHARFORMAT2A::bUnderlineColor)
-            ,
-    xlb_class<CHARRANGE>("CHARRANGE") .constructor<>() .destructor()
+            .property("bUnderlineColor", &CHARFORMAT2A::bUnderlineColor),
+        xlb_class<CHARRANGE>("CHARRANGE")
+            .constructor<>()
+            .destructor()
             .property("cpMin", &CHARRANGE::cpMin)
-            .property("cpMax", &CHARRANGE::cpMax)
-            ,
-    xlb_class<COMPCOLOR>("COMPCOLOR") .constructor<>() .destructor()
+            .property("cpMax", &CHARRANGE::cpMax),
+        xlb_class<COMPCOLOR>("COMPCOLOR")
+            .constructor<>()
+            .destructor()
             .property("crText", &COMPCOLOR::crText)
             .property("crBackground", &COMPCOLOR::crBackground)
-            .property("dwEffects", &COMPCOLOR::dwEffects)
-            ,
-    xlb_class<EDITSTREAM>("EDITSTREAM") .constructor<>() .destructor()
+            .property("dwEffects", &COMPCOLOR::dwEffects),
+        xlb_class<EDITSTREAM>("EDITSTREAM")
+            .constructor<>()
+            .destructor()
             .property("dwCookie", &EDITSTREAM::dwCookie)
             .property("dwError", &EDITSTREAM::dwError)
-            .property("pfnCallback", &EDITSTREAM::pfnCallback)
-            ,
-    xlb_class<xlb_cbf<EDITSTREAMCALLBACK>>("EDITSTREAMCALLBACK").constructor<xlb_luafunc>(),
-    xlb_class<ENCORRECTTEXT>("ENCORRECTTEXT") .constructor<>() .destructor()
+            .property("pfnCallback", &EDITSTREAM::pfnCallback),
+        xlb_class<xlb_cbf<EDITSTREAMCALLBACK>>("EDITSTREAMCALLBACK")
+            .constructor<xlb_luafunc>(),
+        xlb_class<ENCORRECTTEXT>("ENCORRECTTEXT")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &ENCORRECTTEXT::nmhdr)
             .property("chrg", &ENCORRECTTEXT::chrg)
-            .property("seltyp", &ENCORRECTTEXT::seltyp)
-            ,
-    xlb_class<ENDROPFILES>("ENDROPFILES") .constructor<>() .destructor()
+            .property("seltyp", &ENCORRECTTEXT::seltyp),
+        xlb_class<ENDROPFILES>("ENDROPFILES")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &ENDROPFILES::nmhdr)
             .property("hDrop", &ENDROPFILES::hDrop)
             .property("cp", &ENDROPFILES::cp)
-            .property("fProtected", &ENDROPFILES::fProtected)
-            ,
-    xlb_class<ENLINK>("ENLINK") .constructor<>() .destructor()
+            .property("fProtected", &ENDROPFILES::fProtected),
+        xlb_class<ENLINK>("ENLINK")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &ENLINK::nmhdr)
             .property("msg", &ENLINK::msg)
             .property("wParam", &ENLINK::wParam)
             .property("lParam", &ENLINK::lParam)
-            .property("chrg", &ENLINK::chrg)
-            ,
-    xlb_class<ENLOWFIRTF>("ENLOWFIRTF") .constructor<>() .destructor()
+            .property("chrg", &ENLINK::chrg),
+        xlb_class<ENLOWFIRTF>("ENLOWFIRTF")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &ENLOWFIRTF::nmhdr)
-            .property("szControl", &ENLOWFIRTF::szControl)
-            ,
-    xlb_class<ENOLEOPFAILED>("ENOLEOPFAILED") .constructor<>() .destructor()
+            .property("szControl", &ENLOWFIRTF::szControl),
+        xlb_class<ENOLEOPFAILED>("ENOLEOPFAILED")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &ENOLEOPFAILED::nmhdr)
             .property("iob", &ENOLEOPFAILED::iob)
             .property("lOper", &ENOLEOPFAILED::lOper)
-            .property("hr", &ENOLEOPFAILED::hr)
-            ,
-    xlb_class<ENPROTECTED>("ENPROTECTED") .constructor<>() .destructor()
+            .property("hr", &ENOLEOPFAILED::hr),
+        xlb_class<ENPROTECTED>("ENPROTECTED")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &ENPROTECTED::nmhdr)
             .property("msg", &ENPROTECTED::msg)
             .property("wParam", &ENPROTECTED::wParam)
             .property("lParam", &ENPROTECTED::lParam)
-            .property("chrg", &ENPROTECTED::chrg)
-            ,
-    xlb_class<ENSAVECLIPBOARD>("ENSAVECLIPBOARD") .constructor<>() .destructor()
+            .property("chrg", &ENPROTECTED::chrg),
+        xlb_class<ENSAVECLIPBOARD>("ENSAVECLIPBOARD")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &ENSAVECLIPBOARD::nmhdr)
             .property("cObjectCount", &ENSAVECLIPBOARD::cObjectCount)
-            .property("cch", &ENSAVECLIPBOARD::cch)
-            ,
-    xlb_class<FINDTEXTA>("FINDTEXTA") .constructor<>() .destructor()
+            .property("cch", &ENSAVECLIPBOARD::cch),
+        xlb_class<FINDTEXTA>("FINDTEXTA")
+            .constructor<>()
+            .destructor()
             .property("chrg", &FINDTEXTA::chrg)
-            .property("lpstrText", &FINDTEXTA::lpstrText)
-            ,
-    xlb_class<FINDTEXTEXA>("FINDTEXTEXA") .constructor<>() .destructor()
+            .property("lpstrText", &FINDTEXTA::lpstrText),
+        xlb_class<FINDTEXTEXA>("FINDTEXTEXA")
+            .constructor<>()
+            .destructor()
             .property("chrg", &FINDTEXTEXA::chrg)
             .property("lpstrText", &FINDTEXTEXA::lpstrText)
-            .property("chrgText", &FINDTEXTEXA::chrgText)
-            ,
-    xlb_class<FORMATRANGE>("FORMATRANGE") .constructor<>() .destructor()
+            .property("chrgText", &FINDTEXTEXA::chrgText),
+        xlb_class<FORMATRANGE>("FORMATRANGE")
+            .constructor<>()
+            .destructor()
             .property("hdcTarget", &FORMATRANGE::hdcTarget)
             .property("hdc", &FORMATRANGE::hdc)
             .property("rc", &FORMATRANGE::rc)
             .property("rcPage", &FORMATRANGE::rcPage)
-            .property("chrg", &FORMATRANGE::chrg)
-            ,
-    xlb_class<GETTEXTEX>("GETTEXTEX") .constructor<>() .destructor()
+            .property("chrg", &FORMATRANGE::chrg),
+        xlb_class<GETTEXTEX>("GETTEXTEX")
+            .constructor<>()
+            .destructor()
             .property("cb", &GETTEXTEX::cb)
             .property("flags", &GETTEXTEX::flags)
             .property("codepage", &GETTEXTEX::codepage)
             .property("lpDefaultChar", &GETTEXTEX::lpDefaultChar)
-            .property("lpUsedDefChar", &GETTEXTEX::lpUsedDefChar)
-            ,
-    xlb_class<GETTEXTLENGTHEX>("GETTEXTLENGTHEX") .constructor<>() .destructor()
+            .property("lpUsedDefChar", &GETTEXTEX::lpUsedDefChar),
+        xlb_class<GETTEXTLENGTHEX>("GETTEXTLENGTHEX")
+            .constructor<>()
+            .destructor()
             .property("flags", &GETTEXTLENGTHEX::flags)
-            .property("codepage", &GETTEXTLENGTHEX::codepage)
-            ,
-    xlb_class<HYPHENATEINFO>("HYPHENATEINFO") .constructor<>() .destructor()
+            .property("codepage", &GETTEXTLENGTHEX::codepage),
+        xlb_class<HYPHENATEINFO>("HYPHENATEINFO")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &HYPHENATEINFO::cbSize)
             .property("dxHyphenateZone", &HYPHENATEINFO::dxHyphenateZone)
-            .property("pfnHyphenate", &HYPHENATEINFO::pfnHyphenate)
-            ,
-    xlb_class<xlb_cbf<decltype(HYPHENATEINFO::pfnHyphenate)>>("HyphenateProc").constructor<xlb_luafunc>(),
-    xlb_class<HYPHRESULT>("HYPHRESULT") .constructor<>() .destructor()
+            .property("pfnHyphenate", &HYPHENATEINFO::pfnHyphenate),
+        xlb_class<xlb_cbf<decltype(HYPHENATEINFO::pfnHyphenate)>>(
+            "HyphenateProc")
+            .constructor<xlb_luafunc>(),
+        xlb_class<HYPHRESULT>("HYPHRESULT")
+            .constructor<>()
+            .destructor()
             .property("khyph", &HYPHRESULT::khyph)
             .property("ichHyph", &HYPHRESULT::ichHyph)
-            .property("chHyph", &HYPHRESULT::chHyph)
-            ,
-    xlb_class<IMECOMPTEXT>("IMECOMPTEXT") .constructor<>() .destructor()
+            .property("chHyph", &HYPHRESULT::chHyph),
+        xlb_class<IMECOMPTEXT>("IMECOMPTEXT")
+            .constructor<>()
+            .destructor()
             .property("cb", &IMECOMPTEXT::cb)
-            .property("flags", &IMECOMPTEXT::flags)
-            ,
-    xlb_class<MSGFILTER>("MSGFILTER") .constructor<>() .destructor()
+            .property("flags", &IMECOMPTEXT::flags),
+        xlb_class<MSGFILTER>("MSGFILTER")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &MSGFILTER::nmhdr)
             .property("msg", &MSGFILTER::msg)
             .property("wParam", &MSGFILTER::wParam)
-            .property("lParam", &MSGFILTER::lParam)
-            ,
-    xlb_class<OBJECTPOSITIONS>("OBJECTPOSITIONS") .constructor<>() .destructor()
+            .property("lParam", &MSGFILTER::lParam),
+        xlb_class<OBJECTPOSITIONS>("OBJECTPOSITIONS")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &OBJECTPOSITIONS::nmhdr)
             .property("cObjectCount", &OBJECTPOSITIONS::cObjectCount)
-            .property("pcpPositions", &OBJECTPOSITIONS::pcpPositions)
-            ,
-    xlb_class<PARAFORMAT>("PARAFORMAT") .constructor<>() .destructor()
+            .property("pcpPositions", &OBJECTPOSITIONS::pcpPositions),
+        xlb_class<PARAFORMAT>("PARAFORMAT")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &PARAFORMAT::cbSize)
             .property("dwMask", &PARAFORMAT::dwMask)
             .property("wNumbering", &PARAFORMAT::wNumbering)
@@ -2361,9 +3351,10 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("dxOffset", &PARAFORMAT::dxOffset)
             .property("wAlignment", &PARAFORMAT::wAlignment)
             .property("cTabCount", &PARAFORMAT::cTabCount)
-            .property("rgxTabs", &PARAFORMAT::rgxTabs)
-            ,
-    xlb_class<PARAFORMAT2>("PARAFORMAT2") .constructor<>() .destructor()
+            .property("rgxTabs", &PARAFORMAT::rgxTabs),
+        xlb_class<PARAFORMAT2>("PARAFORMAT2")
+            .constructor<>()
+            .destructor()
             .property("dySpaceBefore", &PARAFORMAT2::dySpaceBefore)
             .property("dySpaceAfter", &PARAFORMAT2::dySpaceAfter)
             .property("dyLineSpacing", &PARAFORMAT2::dyLineSpacing)
@@ -2377,13 +3368,15 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("wNumberingTab", &PARAFORMAT2::wNumberingTab)
             .property("wBorderSpace", &PARAFORMAT2::wBorderSpace)
             .property("wBorderWidth", &PARAFORMAT2::wBorderWidth)
-            .property("wBorders", &PARAFORMAT2::wBorders)
-            ,
-    xlb_class<PUNCTUATION>("PUNCTUATION") .constructor<>() .destructor()
+            .property("wBorders", &PARAFORMAT2::wBorders),
+        xlb_class<PUNCTUATION>("PUNCTUATION")
+            .constructor<>()
+            .destructor()
             .property("iSize", &PUNCTUATION::iSize)
-            .property("szPunctuation", &PUNCTUATION::szPunctuation)
-            ,
-    xlb_class<REOBJECT>("REOBJECT") .constructor<>() .destructor()
+            .property("szPunctuation", &PUNCTUATION::szPunctuation),
+        xlb_class<REOBJECT>("REOBJECT")
+            .constructor<>()
+            .destructor()
             .property("cbStruct", &REOBJECT::cbStruct)
             .property("cp", &REOBJECT::cp)
             .property("clsid", &REOBJECT::clsid)
@@ -2393,32 +3386,35 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("sizel", &REOBJECT::sizel)
             .property("dvaspect", &REOBJECT::dvaspect)
             .property("dwFlags", &REOBJECT::dwFlags)
-            .property("dwUser", &REOBJECT::dwUser)
-            ,
-    xlb_class<REPASTESPECIAL>("REPASTESPECIAL") .constructor<>() .destructor()
+            .property("dwUser", &REOBJECT::dwUser),
+        xlb_class<REPASTESPECIAL>("REPASTESPECIAL")
+            .constructor<>()
+            .destructor()
             .property("dwAspect", &REPASTESPECIAL::dwAspect)
-            .property("dwParam", &REPASTESPECIAL::dwParam)
-            ,
-    xlb_class<REQRESIZE>("REQRESIZE") .constructor<>() .destructor()
+            .property("dwParam", &REPASTESPECIAL::dwParam),
+        xlb_class<REQRESIZE>("REQRESIZE")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &REQRESIZE::nmhdr)
-            .property("rc", &REQRESIZE::rc)
-            ,
-    xlb_class<SELCHANGE>("SELCHANGE") .constructor<>() .destructor()
+            .property("rc", &REQRESIZE::rc),
+        xlb_class<SELCHANGE>("SELCHANGE")
+            .constructor<>()
+            .destructor()
             .property("nmhdr", &SELCHANGE::nmhdr)
             .property("chrg", &SELCHANGE::chrg)
-            .property("seltyp", &SELCHANGE::seltyp)
-            ,
-    xlb_class<SETTEXTEX>("SETTEXTEX") .constructor<>() .destructor()
+            .property("seltyp", &SELCHANGE::seltyp),
+        xlb_class<SETTEXTEX>("SETTEXTEX")
+            .constructor<>()
+            .destructor()
             .property("flags", &SETTEXTEX::flags)
-            .property("codepage", &SETTEXTEX::codepage)
-            ,
-    xlb_class<TEXTRANGEA>("TEXTRANGEA") .constructor<>() .destructor()
+            .property("codepage", &SETTEXTEX::codepage),
+        xlb_class<TEXTRANGEA>("TEXTRANGEA")
+            .constructor<>()
+            .destructor()
             .property("chrg", &TEXTRANGEA::chrg)
-            .property("lpstrText", &TEXTRANGEA::lpstrText)
-            ,
+            .property("lpstrText", &TEXTRANGEA::lpstrText),
 
-        xlb_const("SEL_TEXT", SEL_TEXT),
-        xlb_const("SEL_OBJECT", SEL_OBJECT),
+        xlb_const("SEL_TEXT", SEL_TEXT), xlb_const("SEL_OBJECT", SEL_OBJECT),
         xlb_const("SEL_MULTICHAR", SEL_MULTICHAR),
         xlb_const("SEL_MULTIOBJECT", SEL_MULTIOBJECT),
         xlb_const("EM_AUTOURLDETECT", EM_AUTOURLDETECT),
@@ -2511,8 +3507,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("EN_CORRECTTEXT", EN_CORRECTTEXT),
         xlb_const("EN_DRAGDROPDONE", EN_DRAGDROPDONE),
         xlb_const("EN_DROPFILES", EN_DROPFILES),
-        xlb_const("EN_IMECHANGE", EN_IMECHANGE),
-        xlb_const("EN_LINK", EN_LINK),
+        xlb_const("EN_IMECHANGE", EN_IMECHANGE), xlb_const("EN_LINK", EN_LINK),
         xlb_const("EN_LOWFIRTF", EN_LOWFIRTF),
         xlb_const("EN_MSGFILTER", EN_MSGFILTER),
         xlb_const("EN_OBJECTPOSITIONS", EN_OBJECTPOSITIONS),
@@ -2528,19 +3523,16 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("ES_NOOLEDRAGDROP", ES_NOOLEDRAGDROP),
         xlb_const("ES_SAVESEL", ES_SAVESEL),
         xlb_const("ES_SELECTIONBAR", ES_SELECTIONBAR),
-        xlb_const("ES_SELFIME", ES_SELFIME),
-        xlb_const("ES_SUNKEN", ES_SUNKEN),
+        xlb_const("ES_SELFIME", ES_SELFIME), xlb_const("ES_SUNKEN", ES_SUNKEN),
         xlb_const("ES_VERTICAL", ES_VERTICAL),
         xlb_const("ES_AUTOHSCROLL", ES_AUTOHSCROLL),
         xlb_const("ES_AUTOVSCROLL", ES_AUTOVSCROLL),
-        xlb_const("ES_CENTER", ES_CENTER),
-        xlb_const("ES_LEFT", ES_LEFT),
+        xlb_const("ES_CENTER", ES_CENTER), xlb_const("ES_LEFT", ES_LEFT),
         xlb_const("ES_MULTILINE", ES_MULTILINE),
         xlb_const("ES_NOHIDESEL", ES_NOHIDESEL),
         xlb_const("ES_NUMBER", ES_NUMBER),
         xlb_const("ES_PASSWORD", ES_PASSWORD),
-        xlb_const("ES_READONLY", ES_READONLY),
-        xlb_const("ES_RIGHT", ES_RIGHT),
+        xlb_const("ES_READONLY", ES_READONLY), xlb_const("ES_RIGHT", ES_RIGHT),
         xlb_const("ES_WANTRETURN", ES_WANTRETURN),
         xlb_const("ENM_CHANGE", ENM_CHANGE),
         xlb_const("ENM_CLIPFORMAT", ENM_CLIPFORMAT),
@@ -2585,33 +3577,34 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_f("GetScrollBarInfo", GetScrollBarInfo),
         xlb_f("GetScrollInfo", GetScrollInfo),
         xlb_f("GetScrollPos", GetScrollPos),
-        xlb_f("GetScrollRange", GetScrollRange),
-        xlb_f("ScrollDC", ScrollDC),
+        xlb_f("GetScrollRange", GetScrollRange), xlb_f("ScrollDC", ScrollDC),
         xlb_f("ScrollWindow", ScrollWindow),
         xlb_f("ScrollWindowEx", ScrollWindowEx),
         xlb_f("SetScrollInfo", SetScrollInfo),
         xlb_f("SetScrollPos", SetScrollPos),
         xlb_f("SetScrollRange", SetScrollRange),
         xlb_f("ShowScrollBar", ShowScrollBar),
-        
-        xlb_class<SCROLLBARINFO>("SCROLLBARINFO") .constructor<>() .destructor()
+
+        xlb_class<SCROLLBARINFO>("SCROLLBARINFO")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &SCROLLBARINFO::cbSize)
             .property("rcScrollBar", &SCROLLBARINFO::rcScrollBar)
             .property("dxyLineButton", &SCROLLBARINFO::dxyLineButton)
             .property("xyThumbTop", &SCROLLBARINFO::xyThumbTop)
             .property("xyThumbBottom", &SCROLLBARINFO::xyThumbBottom)
             .property("reserved", &SCROLLBARINFO::reserved)
-            .property("rgstate", &SCROLLBARINFO::rgstate)
-            ,
-        xlb_class<SCROLLINFO>("SCROLLINFO") .constructor<>() .destructor()
+            .property("rgstate", &SCROLLBARINFO::rgstate),
+        xlb_class<SCROLLINFO>("SCROLLINFO")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &SCROLLINFO::cbSize)
             .property("fMask", &SCROLLINFO::fMask)
             .property("nMin", &SCROLLINFO::nMin)
             .property("nMax", &SCROLLINFO::nMax)
             .property("nPage", &SCROLLINFO::nPage)
             .property("nPos", &SCROLLINFO::nPos)
-            .property("nTrackPos", &SCROLLINFO::nTrackPos)
-            ,
+            .property("nTrackPos", &SCROLLINFO::nTrackPos),
 
         xlb_const("SBM_ENABLE_ARROWS", SBM_ENABLE_ARROWS),
         xlb_const("SBM_GETPOS", SBM_GETPOS),
@@ -2641,8 +3634,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("STATE_SYSTEM_UNAVAILABLE", STATE_SYSTEM_UNAVAILABLE),
         xlb_const("SIF_ALL", SIF_ALL),
         xlb_const("SIF_DISABLENOSCROLL", SIF_DISABLENOSCROLL),
-        xlb_const("SIF_PAGE", SIF_PAGE),
-        xlb_const("SIF_POS", SIF_POS),
+        xlb_const("SIF_PAGE", SIF_PAGE), xlb_const("SIF_POS", SIF_POS),
         xlb_const("SIF_RANGE", SIF_RANGE),
         xlb_const("SIF_TRACKPOS", SIF_TRACKPOS),
 
@@ -2659,8 +3651,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
 
         // Status Bar
         xlb_f("CreateStatusWindow", CreateStatusWindow),
-        xlb_f("DrawStatusText", DrawStatusText),
-        xlb_f("MenuHelp", MenuHelp),
+        xlb_f("DrawStatusText", DrawStatusText), xlb_f("MenuHelp", MenuHelp),
 
         xlb_const("SB_GETBORDERS", SB_GETBORDERS),
         xlb_const("SB_GETICON", SB_GETICON),
@@ -2678,10 +3669,8 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("SB_SETTEXT", SB_SETTEXT),
         xlb_const("SB_SETTIPTEXT", SB_SETTIPTEXT),
         xlb_const("SB_SETUNICODEFORMAT", SB_SETUNICODEFORMAT),
-        xlb_const("SB_SIMPLE", SB_SIMPLE),
-        xlb_const("NM_CLICK", NM_CLICK),
-        xlb_const("NM_DBLCLK", NM_DBLCLK),
-        xlb_const("NM_RCLICK", NM_RCLICK),
+        xlb_const("SB_SIMPLE", SB_SIMPLE), xlb_const("NM_CLICK", NM_CLICK),
+        xlb_const("NM_DBLCLK", NM_DBLCLK), xlb_const("NM_RCLICK", NM_RCLICK),
         xlb_const("NM_RDBLCLK", NM_RDBLCLK),
         xlb_const("SBN_SIMPLEMODECHANGE", SBN_SIMPLEMODECHANGE),
         xlb_const("SBARS_SIZEGRIP", SBARS_SIZEGRIP),
@@ -2689,22 +3678,25 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("SBARS_TOOLTIPS", SBARS_TOOLTIPS),
 
         // SysLink
-        xlb_class<NMLINK>("NMLINK") .constructor<>() .destructor()
+        xlb_class<NMLINK>("NMLINK")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMLINK::hdr)
-            .property("item", &NMLINK::item)
-            ,
-        xlb_class<LITEM>("LITEM") .constructor<>() .destructor()
+            .property("item", &NMLINK::item),
+        xlb_class<LITEM>("LITEM")
+            .constructor<>()
+            .destructor()
             .property("mask", &LITEM::mask)
             .property("iLink", &LITEM::iLink)
             .property("state", &LITEM::state)
             .property("stateMask", &LITEM::stateMask)
             .property("szID", &LITEM::szID)
-            .property("szUrl", &LITEM::szUrl)
-            ,
-        xlb_class<LHITTESTINFO>("LHITTESTINFO") .constructor<>() .destructor()
+            .property("szUrl", &LITEM::szUrl),
+        xlb_class<LHITTESTINFO>("LHITTESTINFO")
+            .constructor<>()
+            .destructor()
             .property("pt", &LHITTESTINFO::pt)
-            .property("item", &LHITTESTINFO::item)
-            ,
+            .property("item", &LHITTESTINFO::item),
 
         xlb_const("LM_GETIDEALHEIGHT", LM_GETIDEALHEIGHT),
         xlb_const("LM_GETIDEALSIZE", LM_GETIDEALSIZE),
@@ -2712,73 +3704,158 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("LM_HITTEST", LM_HITTEST),
         xlb_const("LM_SETITEM", LM_SETITEM),
         xlb_const("LIF_ITEMINDEX", LIF_ITEMINDEX),
-        xlb_const("LIF_STATE", LIF_STATE),
-        xlb_const("LIF_ITEMID", LIF_ITEMID),
-        xlb_const("LIF_URL", LIF_URL),
-        xlb_const("LIS_ENABLED", LIS_ENABLED),
+        xlb_const("LIF_STATE", LIF_STATE), xlb_const("LIF_ITEMID", LIF_ITEMID),
+        xlb_const("LIF_URL", LIF_URL), xlb_const("LIS_ENABLED", LIS_ENABLED),
         xlb_const("LIS_FOCUSED", LIS_FOCUSED),
         xlb_const("LIS_VISITED", LIS_VISITED),
         xlb_const("LIS_HOTTRACK", LIS_HOTTRACK),
         xlb_const("LIS_DEFAULTCOLORS", LIS_DEFAULTCOLORS),
 
         // Tab
-        xlb_class<TCITEMHEADERA>("TCITEMHEADERA") .constructor<>() .destructor()
+        xlb_class<TCITEMHEADERA>("TCITEMHEADERA")
+            .constructor<>()
+            .destructor()
             .property("mask", &TCITEMHEADERA::mask)
             .property("lpReserved1", &TCITEMHEADERA::lpReserved1)
             .property("lpReserved2", &TCITEMHEADERA::lpReserved2)
             .property("pszText", &TCITEMHEADERA::pszText)
             .property("cchTextMax", &TCITEMHEADERA::cchTextMax)
-            .property("iImage", &TCITEMHEADERA::iImage)
-            ,
+            .property("iImage", &TCITEMHEADERA::iImage),
 
-        xlb_class<TCITEMA>("TCITEMA") .constructor<>() .destructor()
+        xlb_class<TCITEMA>("TCITEMA")
+            .constructor<>()
+            .destructor()
             .property("mask", &TCITEMA::mask)
             .property("dwState", &TCITEMA::dwState)
             .property("dwStateMask", &TCITEMA::dwStateMask)
             .property("pszText", &TCITEMA::pszText)
             .property("cchTextMax", &TCITEMA::cchTextMax)
             .property("iImage", &TCITEMA::iImage)
-            .property("lParam", &TCITEMA::lParam)
-            ,
-        xlb_class<TCHITTESTINFO>("TCHITTESTINFO") .constructor<>() .destructor()
+            .property("lParam", &TCITEMA::lParam),
+        xlb_class<TCHITTESTINFO>("TCHITTESTINFO")
+            .constructor<>()
+            .destructor()
             .property("pt", &TCHITTESTINFO::pt)
-            .property("flags", &TCHITTESTINFO::flags)
-            ,
-        xlb_class<NMTCKEYDOWN>("NMTCKEYDOWN") .constructor<>() .destructor()
+            .property("flags", &TCHITTESTINFO::flags),
+        xlb_class<NMTCKEYDOWN>("NMTCKEYDOWN")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTCKEYDOWN::hdr)
             .property("wVKey", &NMTCKEYDOWN::wVKey)
-            .property("flags", &NMTCKEYDOWN::flags)
-            ,
+            .property("flags", &NMTCKEYDOWN::flags),
 
-        xlb_f("TabCtrl_AdjustRect", [](HWND hwnd, BOOL bLarger, RECT* prc)->auto { return TabCtrl_AdjustRect(hwnd, bLarger, prc); }),
-        xlb_f("TabCtrl_DeleteAllItems", [](HWND hwnd)->auto { return TabCtrl_DeleteAllItems(hwnd); }),
-        xlb_f("TabCtrl_DeleteItem", [](HWND hwnd, int i)->auto { return TabCtrl_DeleteItem(hwnd, i); }),
-        xlb_f("TabCtrl_DeselectAll", [](HWND hwnd, BOOL fExcludeFocus)->auto { return TabCtrl_DeselectAll(hwnd, fExcludeFocus); }),
-        xlb_f("TabCtrl_GetCurFocus", [](HWND hwnd)->auto { return TabCtrl_GetCurFocus(hwnd); }),
-        xlb_f("TabCtrl_GetCurSel", [](HWND hwnd)->auto { return TabCtrl_GetCurSel(hwnd); }),
-        xlb_f("TabCtrl_GetExtendedStyle", [](HWND hwnd)->auto { return TabCtrl_GetExtendedStyle(hwnd); }),
-        xlb_f("TabCtrl_GetImageList", [](HWND hwnd)->auto { return TabCtrl_GetImageList(hwnd); }),
-        xlb_f("TabCtrl_GetItem", [](HWND hwnd, int iItem, LPTCITEM pitem)->auto { return TabCtrl_GetItem(hwnd, iItem, pitem); }),
-        xlb_f("TabCtrl_GetItemCount", [](HWND hwnd)->auto { return TabCtrl_GetItemCount(hwnd); }),
-        xlb_f("TabCtrl_GetItemRect", [](HWND hwnd, int i, RECT* prc)->auto { return TabCtrl_GetItemRect(hwnd, i, prc); }),
-        xlb_f("TabCtrl_GetRowCount", [](HWND hwnd)->auto { return TabCtrl_GetRowCount(hwnd); }),
-        xlb_f("TabCtrl_GetToolTips", [](HWND hwnd)->auto { return TabCtrl_GetToolTips(hwnd); }),
-        xlb_f("TabCtrl_GetUnicodeFormat", [](HWND hwnd)->auto { return TabCtrl_GetUnicodeFormat(hwnd); }),
-        xlb_f("TabCtrl_HighlightItem", [](HWND hwnd, INT i, WORD fHighlight)->auto { return TabCtrl_HighlightItem(hwnd, i, fHighlight); }),
-        xlb_f("TabCtrl_HitTest", [](HWND hwnd, LPTCHITTESTINFO pinfo)->auto { return TabCtrl_HitTest(hwnd, pinfo); }),
-        xlb_f("TabCtrl_InsertItem", [](HWND hwnd, int iItem, const LPTCITEM pitem)->auto { return TabCtrl_InsertItem(hwnd, iItem, pitem); }),
-        xlb_f("TabCtrl_RemoveImage", [](HWND hwnd, int i)->auto { return TabCtrl_RemoveImage(hwnd, i); }),
-        xlb_f("TabCtrl_SetCurFocus", [](HWND hwnd, int i)->auto { return TabCtrl_SetCurFocus(hwnd, i); }),
-        xlb_f("TabCtrl_SetCurSel", [](HWND hwnd, int i)->auto { return TabCtrl_SetCurSel(hwnd, i); }),
-        xlb_f("TabCtrl_SetExtendedStyle", [](HWND hwnd, DWORD dw)->auto { return TabCtrl_SetExtendedStyle(hwnd, dw); }),
-        xlb_f("TabCtrl_SetImageList", [](HWND hwnd, HIMAGELIST himl)->auto { return TabCtrl_SetImageList(hwnd, himl); }),
-        xlb_f("TabCtrl_SetItem", [](HWND hwnd, int iItem, LPTCITEM pitem)->auto { return TabCtrl_SetItem(hwnd, iItem, pitem); }),
-        xlb_f("TabCtrl_SetItemExtra", [](HWND hwnd, int cb)->auto { return TabCtrl_SetItemExtra(hwnd, cb); }),
-        xlb_f("TabCtrl_SetItemSize", [](HWND hwnd, int x, int y)->auto { return TabCtrl_SetItemSize(hwnd, x, y); }),
-        xlb_f("TabCtrl_SetMinTabWidth", [](HWND hwnd, int x)->auto { return TabCtrl_SetMinTabWidth(hwnd, x); }),
-        xlb_f("TabCtrl_SetPadding", [](HWND hwnd, int cx, int cy)->auto { return TabCtrl_SetPadding(hwnd, cx, cy); }),
-        xlb_f("TabCtrl_SetToolTips", [](HWND hwnd, HWND hwndTT)->auto { return TabCtrl_SetToolTips(hwnd, hwndTT); }),
-        xlb_f("TabCtrl_SetUnicodeFormat", [](HWND hwnd, BOOL fUnicode)->auto { return TabCtrl_SetUnicodeFormat(hwnd, fUnicode); }),
+        xlb_f(
+            "TabCtrl_AdjustRect",
+            [](HWND hwnd, BOOL bLarger, RECT * prc) -> auto {
+              return TabCtrl_AdjustRect(hwnd, bLarger, prc);
+            }),
+        xlb_f(
+            "TabCtrl_DeleteAllItems",
+            [](HWND hwnd) -> auto { return TabCtrl_DeleteAllItems(hwnd); }),
+        xlb_f(
+            "TabCtrl_DeleteItem", [](HWND hwnd, int i) -> auto {
+              return TabCtrl_DeleteItem(hwnd, i);
+            }),
+        xlb_f(
+            "TabCtrl_DeselectAll", [](HWND hwnd, BOOL fExcludeFocus) -> auto {
+              return TabCtrl_DeselectAll(hwnd, fExcludeFocus);
+            }),
+        xlb_f(
+            "TabCtrl_GetCurFocus",
+            [](HWND hwnd) -> auto { return TabCtrl_GetCurFocus(hwnd); }),
+        xlb_f(
+            "TabCtrl_GetCurSel",
+            [](HWND hwnd) -> auto { return TabCtrl_GetCurSel(hwnd); }),
+        xlb_f(
+            "TabCtrl_GetExtendedStyle",
+            [](HWND hwnd) -> auto { return TabCtrl_GetExtendedStyle(hwnd); }),
+        xlb_f(
+            "TabCtrl_GetImageList",
+            [](HWND hwnd) -> auto { return TabCtrl_GetImageList(hwnd); }),
+        xlb_f(
+            "TabCtrl_GetItem",
+            [](HWND hwnd, int iItem, LPTCITEM pitem) -> auto {
+              return TabCtrl_GetItem(hwnd, iItem, pitem);
+            }),
+        xlb_f(
+            "TabCtrl_GetItemCount",
+            [](HWND hwnd) -> auto { return TabCtrl_GetItemCount(hwnd); }),
+        xlb_f(
+            "TabCtrl_GetItemRect", [](HWND hwnd, int i, RECT *prc) -> auto {
+              return TabCtrl_GetItemRect(hwnd, i, prc);
+            }),
+        xlb_f(
+            "TabCtrl_GetRowCount",
+            [](HWND hwnd) -> auto { return TabCtrl_GetRowCount(hwnd); }),
+        xlb_f(
+            "TabCtrl_GetToolTips",
+            [](HWND hwnd) -> auto { return TabCtrl_GetToolTips(hwnd); }),
+        xlb_f(
+            "TabCtrl_GetUnicodeFormat",
+            [](HWND hwnd) -> auto { return TabCtrl_GetUnicodeFormat(hwnd); }),
+        xlb_f(
+            "TabCtrl_HighlightItem",
+            [](HWND hwnd, INT i, WORD fHighlight) -> auto {
+              return TabCtrl_HighlightItem(hwnd, i, fHighlight);
+            }),
+        xlb_f(
+            "TabCtrl_HitTest", [](HWND hwnd, LPTCHITTESTINFO pinfo) -> auto {
+              return TabCtrl_HitTest(hwnd, pinfo);
+            }),
+        xlb_f(
+            "TabCtrl_InsertItem",
+            [](HWND hwnd, int iItem, const LPTCITEM pitem) -> auto {
+              return TabCtrl_InsertItem(hwnd, iItem, pitem);
+            }),
+        xlb_f(
+            "TabCtrl_RemoveImage", [](HWND hwnd, int i) -> auto {
+              return TabCtrl_RemoveImage(hwnd, i);
+            }),
+        xlb_f(
+            "TabCtrl_SetCurFocus", [](HWND hwnd, int i) -> auto {
+              return TabCtrl_SetCurFocus(hwnd, i);
+            }),
+        xlb_f(
+            "TabCtrl_SetCurSel", [](HWND hwnd, int i) -> auto {
+              return TabCtrl_SetCurSel(hwnd, i);
+            }),
+        xlb_f(
+            "TabCtrl_SetExtendedStyle", [](HWND hwnd, DWORD dw) -> auto {
+              return TabCtrl_SetExtendedStyle(hwnd, dw);
+            }),
+        xlb_f(
+            "TabCtrl_SetImageList", [](HWND hwnd, HIMAGELIST himl) -> auto {
+              return TabCtrl_SetImageList(hwnd, himl);
+            }),
+        xlb_f(
+            "TabCtrl_SetItem",
+            [](HWND hwnd, int iItem, LPTCITEM pitem) -> auto {
+              return TabCtrl_SetItem(hwnd, iItem, pitem);
+            }),
+        xlb_f(
+            "TabCtrl_SetItemExtra", [](HWND hwnd, int cb) -> auto {
+              return TabCtrl_SetItemExtra(hwnd, cb);
+            }),
+        xlb_f(
+            "TabCtrl_SetItemSize", [](HWND hwnd, int x, int y) -> auto {
+              return TabCtrl_SetItemSize(hwnd, x, y);
+            }),
+        xlb_f(
+            "TabCtrl_SetMinTabWidth", [](HWND hwnd, int x) -> auto {
+              return TabCtrl_SetMinTabWidth(hwnd, x);
+            }),
+        xlb_f(
+            "TabCtrl_SetPadding", [](HWND hwnd, int cx, int cy) -> auto {
+              return TabCtrl_SetPadding(hwnd, cx, cy);
+            }),
+        xlb_f(
+            "TabCtrl_SetToolTips", [](HWND hwnd, HWND hwndTT) -> auto {
+              return TabCtrl_SetToolTips(hwnd, hwndTT);
+            }),
+        xlb_f(
+            "TabCtrl_SetUnicodeFormat", [](HWND hwnd, BOOL fUnicode) -> auto {
+              return TabCtrl_SetUnicodeFormat(hwnd, fUnicode);
+            }),
 
         xlb_const("TCM_ADJUSTRECT", TCM_ADJUSTRECT),
         xlb_const("TCM_DELETEALLITEMS", TCM_DELETEALLITEMS),
@@ -2809,10 +3886,8 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TCM_SETPADDING", TCM_SETPADDING),
         xlb_const("TCM_SETTOOLTIPS", TCM_SETTOOLTIPS),
         xlb_const("TCM_SETUNICODEFORMAT", TCM_SETUNICODEFORMAT),
-        xlb_const("NM_CLICK", NM_CLICK),
-        xlb_const("NM_DBLCLK", NM_DBLCLK),
-        xlb_const("NM_RCLICK", NM_RCLICK),
-        xlb_const("NM_RDBLCLK", NM_RDBLCLK),
+        xlb_const("NM_CLICK", NM_CLICK), xlb_const("NM_DBLCLK", NM_DBLCLK),
+        xlb_const("NM_RCLICK", NM_RCLICK), xlb_const("NM_RDBLCLK", NM_RDBLCLK),
         xlb_const("NM_RELEASEDCAPTURE", NM_RELEASEDCAPTURE),
         xlb_const("TCN_FOCUSCHANGE", TCN_FOCUSCHANGE),
         xlb_const("TCN_GETOBJECT", TCN_GETOBJECT),
@@ -2844,13 +3919,15 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TCS_EX_FLATSEPARATORS", TCS_EX_FLATSEPARATORS),
         xlb_const("TCS_EX_REGISTERDROP", TCS_EX_REGISTERDROP),
 
-
         // Task Dialog
         xlb_f("TaskDialog", TaskDialog),
         xlb_f("TaskDialogIndirect", TaskDialogIndirect),
-        xlb_class<xlb_cbf<PFTASKDIALOGCALLBACK>>("PFTASKDIALOGCALLBACK").constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFTASKDIALOGCALLBACK>>("PFTASKDIALOGCALLBACK")
+            .constructor<xlb_luafunc>(),
 
-        xlb_class<TASKDIALOGCONFIG>("TASKDIALOGCONFIG") .constructor<>() .destructor()
+        xlb_class<TASKDIALOGCONFIG>("TASKDIALOGCONFIG")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &TASKDIALOGCONFIG::cbSize)
             .property("hwndParent", &TASKDIALOGCONFIG::hwndParent)
             .property("hInstance", &TASKDIALOGCONFIG::hInstance)
@@ -2859,29 +3936,35 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("pszWindowTitle", &TASKDIALOGCONFIG::pszWindowTitle)
             .property("hMainIcon", &TASKDIALOGCONFIG::hMainIcon)
             .property("pszMainIcon", &TASKDIALOGCONFIG::pszMainIcon)
-            .property("pszMainInstruction", &TASKDIALOGCONFIG::pszMainInstruction)
+            .property("pszMainInstruction",
+                      &TASKDIALOGCONFIG::pszMainInstruction)
             .property("pszContent", &TASKDIALOGCONFIG::pszContent)
             .property("cButtons", &TASKDIALOGCONFIG::cButtons)
             .property("pButtons", &TASKDIALOGCONFIG::pButtons)
             .property("nDefaultButton", &TASKDIALOGCONFIG::nDefaultButton)
             .property("cRadioButtons", &TASKDIALOGCONFIG::cRadioButtons)
             .property("pRadioButtons", &TASKDIALOGCONFIG::pRadioButtons)
-            .property("nDefaultRadioButton", &TASKDIALOGCONFIG::nDefaultRadioButton)
-            .property("pszVerificationText", &TASKDIALOGCONFIG::pszVerificationText)
-            .property("pszExpandedInformation", &TASKDIALOGCONFIG::pszExpandedInformation)
-            .property("pszExpandedControlText", &TASKDIALOGCONFIG::pszExpandedControlText)
-            .property("pszCollapsedControlText", &TASKDIALOGCONFIG::pszCollapsedControlText)
+            .property("nDefaultRadioButton",
+                      &TASKDIALOGCONFIG::nDefaultRadioButton)
+            .property("pszVerificationText",
+                      &TASKDIALOGCONFIG::pszVerificationText)
+            .property("pszExpandedInformation",
+                      &TASKDIALOGCONFIG::pszExpandedInformation)
+            .property("pszExpandedControlText",
+                      &TASKDIALOGCONFIG::pszExpandedControlText)
+            .property("pszCollapsedControlText",
+                      &TASKDIALOGCONFIG::pszCollapsedControlText)
             .property("hFooterIcon", &TASKDIALOGCONFIG::hFooterIcon)
             .property("pszFooterIcon", &TASKDIALOGCONFIG::pszFooterIcon)
             .property("pszFooter", &TASKDIALOGCONFIG::pszFooter)
             .property("pfCallback", &TASKDIALOGCONFIG::pfCallback)
             .property("lpCallbackData", &TASKDIALOGCONFIG::lpCallbackData)
-            .property("cxWidth", &TASKDIALOGCONFIG::cxWidth)
-            ,
-        xlb_class<TASKDIALOG_BUTTON>("TASKDIALOG_BUTTON") .constructor<>() .destructor()
+            .property("cxWidth", &TASKDIALOGCONFIG::cxWidth),
+        xlb_class<TASKDIALOG_BUTTON>("TASKDIALOG_BUTTON")
+            .constructor<>()
+            .destructor()
             .property("nButtonID", &TASKDIALOG_BUTTON::nButtonID)
-            .property("pszButtonText", &TASKDIALOG_BUTTON::pszButtonText)
-            ,
+            .property("pszButtonText", &TASKDIALOG_BUTTON::pszButtonText),
 
         xlb_const("TDM_CLICK_BUTTON", TDM_CLICK_BUTTON),
         xlb_const("TDM_CLICK_RADIO_BUTTON", TDM_CLICK_RADIO_BUTTON),
@@ -2889,7 +3972,8 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TDM_ENABLE_BUTTON", TDM_ENABLE_BUTTON),
         xlb_const("TDM_ENABLE_RADIO_BUTTON", TDM_ENABLE_RADIO_BUTTON),
         xlb_const("TDM_NAVIGATE_PAGE", TDM_NAVIGATE_PAGE),
-        xlb_const("TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE", TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE),
+        xlb_const("TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE",
+                  TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE),
         xlb_const("TDM_SET_ELEMENT_TEXT", TDM_SET_ELEMENT_TEXT),
         xlb_const("TDM_SET_MARQUEE_PROGRESS_BAR", TDM_SET_MARQUEE_PROGRESS_BAR),
         xlb_const("TDM_SET_PROGRESS_BAR_MARQUEE", TDM_SET_PROGRESS_BAR_MARQUEE),
@@ -2912,16 +3996,21 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TDF_ENABLE_HYPERLINKS", TDF_ENABLE_HYPERLINKS),
         xlb_const("TDF_USE_HICON_MAIN", TDF_USE_HICON_MAIN),
         xlb_const("TDF_USE_HICON_FOOTER", TDF_USE_HICON_FOOTER),
-        xlb_const("TDF_ALLOW_DIALOG_CANCELLATION", TDF_ALLOW_DIALOG_CANCELLATION),
+        xlb_const("TDF_ALLOW_DIALOG_CANCELLATION",
+                  TDF_ALLOW_DIALOG_CANCELLATION),
         xlb_const("TDF_USE_COMMAND_LINKS", TDF_USE_COMMAND_LINKS),
-        xlb_const("TDF_USE_COMMAND_LINKS_NO_ICON", TDF_USE_COMMAND_LINKS_NO_ICON),
+        xlb_const("TDF_USE_COMMAND_LINKS_NO_ICON",
+                  TDF_USE_COMMAND_LINKS_NO_ICON),
         xlb_const("TDF_EXPAND_FOOTER_AREA", TDF_EXPAND_FOOTER_AREA),
         xlb_const("TDF_EXPANDED_BY_DEFAULT", TDF_EXPANDED_BY_DEFAULT),
-        xlb_const("TDF_VERIFICATION_FLAG_CHECKED", TDF_VERIFICATION_FLAG_CHECKED),
+        xlb_const("TDF_VERIFICATION_FLAG_CHECKED",
+                  TDF_VERIFICATION_FLAG_CHECKED),
         xlb_const("TDF_SHOW_PROGRESS_BAR", TDF_SHOW_PROGRESS_BAR),
-        xlb_const("TDF_SHOW_MARQUEE_PROGRESS_BAR", TDF_SHOW_MARQUEE_PROGRESS_BAR),
+        xlb_const("TDF_SHOW_MARQUEE_PROGRESS_BAR",
+                  TDF_SHOW_MARQUEE_PROGRESS_BAR),
         xlb_const("TDF_CALLBACK_TIMER", TDF_CALLBACK_TIMER),
-        xlb_const("TDF_POSITION_RELATIVE_TO_WINDOW", TDF_POSITION_RELATIVE_TO_WINDOW),
+        xlb_const("TDF_POSITION_RELATIVE_TO_WINDOW",
+                  TDF_POSITION_RELATIVE_TO_WINDOW),
         xlb_const("TDF_RTL_LAYOUT", TDF_RTL_LAYOUT),
         xlb_const("TDF_NO_DEFAULT_RADIO_BUTTON", TDF_NO_DEFAULT_RADIO_BUTTON),
         xlb_const("TDF_CAN_BE_MINIMIZED", TDF_CAN_BE_MINIMIZED),
@@ -2933,16 +4022,13 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TDCBF_CANCEL_BUTTON", TDCBF_CANCEL_BUTTON),
         xlb_const("TDCBF_RETRY_BUTTON", TDCBF_RETRY_BUTTON),
         xlb_const("TDCBF_CLOSE_BUTTON", TDCBF_CLOSE_BUTTON),
-        //xlb_const("TD_ERROR_ICON", TD_ERROR_ICON), // FIXME: crash
-        //xlb_const("TD_WARNING_ICON", TD_WARNING_ICON),
-        //xlb_const("TD_INFORMATION_ICON", TD_INFORMATION_ICON),
-        //xlb_const("TD_SHIELD_ICON", TD_SHIELD_ICON),
-        xlb_const("IDCANCEL", IDCANCEL),
-        xlb_const("IDNO", IDNO),
-        xlb_const("IDOK", IDOK),
-        xlb_const("IDRETRY", IDRETRY),
-        xlb_const("IDYES", IDYES),
-        xlb_const("IDCLOSE", IDCLOSE),
+        // xlb_const("TD_ERROR_ICON", TD_ERROR_ICON), // FIXME: crash
+        // xlb_const("TD_WARNING_ICON", TD_WARNING_ICON),
+        // xlb_const("TD_INFORMATION_ICON", TD_INFORMATION_ICON),
+        // xlb_const("TD_SHIELD_ICON", TD_SHIELD_ICON),
+        xlb_const("IDCANCEL", IDCANCEL), xlb_const("IDNO", IDNO),
+        xlb_const("IDOK", IDOK), xlb_const("IDRETRY", IDRETRY),
+        xlb_const("IDYES", IDYES), xlb_const("IDCLOSE", IDCLOSE),
 
         // Toolbar
         xlb_f("CreateMappedBitmap", CreateMappedBitmap),
@@ -3041,15 +4127,13 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TB_SETTOOLTIPS", TB_SETTOOLTIPS),
         xlb_const("TB_SETUNICODEFORMAT", TB_SETUNICODEFORMAT),
         xlb_const("TB_SETWINDOWTHEME", TB_SETWINDOWTHEME),
-        //xlb_const("TB_TRANSLATEACCELERATOR", TB_TRANSLATEACCELERATOR), // not implemented
-        
-        xlb_const("NM_CHAR", NM_CHAR),
-        xlb_const("NM_CLICK", NM_CLICK),
+        // xlb_const("TB_TRANSLATEACCELERATOR", TB_TRANSLATEACCELERATOR), // not
+        // implemented
+
+        xlb_const("NM_CHAR", NM_CHAR), xlb_const("NM_CLICK", NM_CLICK),
         xlb_const("NM_CUSTOMDRAW", NM_CUSTOMDRAW),
-        xlb_const("NM_DBLCLK", NM_DBLCLK),
-        xlb_const("NM_KEYDOWN", NM_KEYDOWN),
-        xlb_const("NM_LDOWN", NM_LDOWN),
-        xlb_const("NM_RCLICK", NM_RCLICK),
+        xlb_const("NM_DBLCLK", NM_DBLCLK), xlb_const("NM_KEYDOWN", NM_KEYDOWN),
+        xlb_const("NM_LDOWN", NM_LDOWN), xlb_const("NM_RCLICK", NM_RCLICK),
         xlb_const("NM_RDBLCLK", NM_RDBLCLK),
         xlb_const("NM_RELEASEDCAPTURE", NM_RELEASEDCAPTURE),
         xlb_const("NM_TOOLTIPSCREATED", NM_TOOLTIPSCREATED),
@@ -3073,8 +4157,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TBN_QUERYDELETE", TBN_QUERYDELETE),
         xlb_const("TBN_QUERYINSERT", TBN_QUERYINSERT),
         xlb_const("TBN_RESET", TBN_RESET),
-        xlb_const("TBN_RESTORE", TBN_RESTORE),
-        xlb_const("TBN_SAVE", TBN_SAVE),
+        xlb_const("TBN_RESTORE", TBN_RESTORE), xlb_const("TBN_SAVE", TBN_SAVE),
         xlb_const("TBN_TOOLBARCHANGE", TBN_TOOLBARCHANGE),
         xlb_const("TBN_WRAPACCELERATOR", TBN_WRAPACCELERATOR),
         xlb_const("TBN_WRAPHOTITEM", TBN_WRAPHOTITEM),
@@ -3083,21 +4166,17 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("HIST_FAVORITES", HIST_FAVORITES),
         xlb_const("HIST_FORWARD", HIST_FORWARD),
         xlb_const("HIST_VIEWTREE", HIST_VIEWTREE),
-        xlb_const("STD_COPY", STD_COPY),
-        xlb_const("STD_CUT", STD_CUT),
+        xlb_const("STD_COPY", STD_COPY), xlb_const("STD_CUT", STD_CUT),
         xlb_const("STD_DELETE", STD_DELETE),
         xlb_const("STD_FILENEW", STD_FILENEW),
         xlb_const("STD_FILEOPEN", STD_FILEOPEN),
         xlb_const("STD_FILESAVE", STD_FILESAVE),
-        xlb_const("STD_FIND", STD_FIND),
-        xlb_const("STD_HELP", STD_HELP),
-        xlb_const("STD_PASTE", STD_PASTE),
-        xlb_const("STD_PRINT", STD_PRINT),
+        xlb_const("STD_FIND", STD_FIND), xlb_const("STD_HELP", STD_HELP),
+        xlb_const("STD_PASTE", STD_PASTE), xlb_const("STD_PRINT", STD_PRINT),
         xlb_const("STD_PRINTPRE", STD_PRINTPRE),
         xlb_const("STD_PROPERTIES", STD_PROPERTIES),
         xlb_const("STD_REDOW", STD_REDOW),
-        xlb_const("STD_REPLACE", STD_REPLACE),
-        xlb_const("STD_UNDO", STD_UNDO),
+        xlb_const("STD_REPLACE", STD_REPLACE), xlb_const("STD_UNDO", STD_UNDO),
         xlb_const("VIEW_DETAILS", VIEW_DETAILS),
         xlb_const("VIEW_LARGEICONS", VIEW_LARGEICONS),
         xlb_const("VIEW_LIST", VIEW_LIST),
@@ -3111,7 +4190,8 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("VIEW_SORTSIZE", VIEW_SORTSIZE),
         xlb_const("VIEW_SORTTYPE", VIEW_SORTTYPE),
         xlb_const("TBSTYLE_EX_DRAWDDARROWS", TBSTYLE_EX_DRAWDDARROWS),
-        xlb_const("TBSTYLE_EX_HIDECLIPPEDBUTTONS", TBSTYLE_EX_HIDECLIPPEDBUTTONS),
+        xlb_const("TBSTYLE_EX_HIDECLIPPEDBUTTONS",
+                  TBSTYLE_EX_HIDECLIPPEDBUTTONS),
         xlb_const("TBSTYLE_EX_DOUBLEBUFFER", TBSTYLE_EX_DOUBLEBUFFER),
         xlb_const("TBSTYLE_EX_MIXEDBUTTONS", TBSTYLE_EX_MIXEDBUTTONS),
         xlb_const("TBSTYLE_EX_MULTICOLUMN", TBSTYLE_EX_MULTICOLUMN),
@@ -3151,11 +4231,14 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TBSTATE_PRESSED", TBSTATE_PRESSED),
         xlb_const("TBSTATE_WRAP", TBSTATE_WRAP),
 
-        xlb_class<COLORMAP>("COLORMAP") .constructor<>() .destructor()
+        xlb_class<COLORMAP>("COLORMAP")
+            .constructor<>()
+            .destructor()
             .property("from", &COLORMAP::from)
-            .property("to", &COLORMAP::to)
-            ,
-        xlb_class<NMTBCUSTOMDRAW>("NMTBCUSTOMDRAW") .constructor<>() .destructor()
+            .property("to", &COLORMAP::to),
+        xlb_class<NMTBCUSTOMDRAW>("NMTBCUSTOMDRAW")
+            .constructor<>()
+            .destructor()
             .property("nmcd", &NMTBCUSTOMDRAW::nmcd)
             .property("hbrMonoDither", &NMTBCUSTOMDRAW::hbrMonoDither)
             .property("hbrLines", &NMTBCUSTOMDRAW::hbrLines)
@@ -3165,35 +4248,40 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("clrTextHighlight", &NMTBCUSTOMDRAW::clrTextHighlight)
             .property("clrBtnFace", &NMTBCUSTOMDRAW::clrBtnFace)
             .property("clrBtnHighlight", &NMTBCUSTOMDRAW::clrBtnHighlight)
-            .property("clrHighlightHotTrack", &NMTBCUSTOMDRAW::clrHighlightHotTrack)
+            .property("clrHighlightHotTrack",
+                      &NMTBCUSTOMDRAW::clrHighlightHotTrack)
             .property("rcText", &NMTBCUSTOMDRAW::rcText)
             .property("nStringBkMode", &NMTBCUSTOMDRAW::nStringBkMode)
             .property("nHLStringBkMode", &NMTBCUSTOMDRAW::nHLStringBkMode)
-            .property("iListGap", &NMTBCUSTOMDRAW::iListGap)
-            ,
-        xlb_class<NMTBDISPINFOA>("NMTBDISPINFOA") .constructor<>() .destructor()
+            .property("iListGap", &NMTBCUSTOMDRAW::iListGap),
+        xlb_class<NMTBDISPINFOA>("NMTBDISPINFOA")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTBDISPINFOA::hdr)
             .property("dwMask", &NMTBDISPINFOA::dwMask)
             .property("idCommand", &NMTBDISPINFOA::idCommand)
             .property("lParam", &NMTBDISPINFOA::lParam)
             .property("iImage", &NMTBDISPINFOA::iImage)
             .property("pszText", &NMTBDISPINFOA::pszText)
-            .property("cchText", &NMTBDISPINFOA::cchText)
-            ,
-        xlb_class<NMTBGETINFOTIPA>("NMTBGETINFOTIPA") .constructor<>() .destructor()
+            .property("cchText", &NMTBDISPINFOA::cchText),
+        xlb_class<NMTBGETINFOTIPA>("NMTBGETINFOTIPA")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTBGETINFOTIPA::hdr)
             .property("pszText", &NMTBGETINFOTIPA::pszText)
             .property("cchTextMax", &NMTBGETINFOTIPA::cchTextMax)
             .property("iItem", &NMTBGETINFOTIPA::iItem)
-            .property("lParam", &NMTBGETINFOTIPA::lParam)
-            ,
-        xlb_class<NMTBHOTITEM>("NMTBHOTITEM") .constructor<>() .destructor()
+            .property("lParam", &NMTBGETINFOTIPA::lParam),
+        xlb_class<NMTBHOTITEM>("NMTBHOTITEM")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTBHOTITEM::hdr)
             .property("idOld", &NMTBHOTITEM::idOld)
             .property("idNew", &NMTBHOTITEM::idNew)
-            .property("dwFlags", &NMTBHOTITEM::dwFlags)
-            ,
-        xlb_class<NMTBRESTORE>("NMTBRESTORE") .constructor<>() .destructor()
+            .property("dwFlags", &NMTBHOTITEM::dwFlags),
+        xlb_class<NMTBRESTORE>("NMTBRESTORE")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTBRESTORE::hdr)
             .property("pData", &NMTBRESTORE::pData)
             .property("pCurrent", &NMTBRESTORE::pCurrent)
@@ -3201,39 +4289,44 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("iItem", &NMTBRESTORE::iItem)
             .property("cButtons", &NMTBRESTORE::cButtons)
             .property("cbBytesPerRecord", &NMTBRESTORE::cbBytesPerRecord)
-            .property("tbButton", &NMTBRESTORE::tbButton)
-            ,
-        xlb_class<NMTBSAVE>("NMTBSAVE") .constructor<>() .destructor()
+            .property("tbButton", &NMTBRESTORE::tbButton),
+        xlb_class<NMTBSAVE>("NMTBSAVE")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTBSAVE::hdr)
             .property("pData", &NMTBSAVE::pData)
             .property("pCurrent", &NMTBSAVE::pCurrent)
             .property("cbData", &NMTBSAVE::cbData)
             .property("iItem", &NMTBSAVE::iItem)
             .property("cButtons", &NMTBSAVE::cButtons)
-            .property("tbButton", &NMTBSAVE::tbButton)
-            ,
-        xlb_class<NMTOOLBARA>("NMTOOLBARA") .constructor<>() .destructor()
+            .property("tbButton", &NMTBSAVE::tbButton),
+        xlb_class<NMTOOLBARA>("NMTOOLBARA")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTOOLBARA::hdr)
             .property("iItem", &NMTOOLBARA::iItem)
             .property("tbButton", &NMTOOLBARA::tbButton)
             .property("cchText", &NMTOOLBARA::cchText)
             .property("pszText", &NMTOOLBARA::pszText)
-            .property("rcButton", &NMTOOLBARA::rcButton)
-            ,
-        xlb_class<TBADDBITMAP>("TBADDBITMAP") .constructor<>() .destructor()
+            .property("rcButton", &NMTOOLBARA::rcButton),
+        xlb_class<TBADDBITMAP>("TBADDBITMAP")
+            .constructor<>()
+            .destructor()
             .property("hInst", &TBADDBITMAP::hInst)
-            .property("nID", &TBADDBITMAP::nID)
-            ,
-        xlb_class<TBBUTTON>("TBBUTTON") .constructor<>() .destructor()
+            .property("nID", &TBADDBITMAP::nID),
+        xlb_class<TBBUTTON>("TBBUTTON")
+            .constructor<>()
+            .destructor()
             .property("iBitmap", &TBBUTTON::iBitmap)
             .property("idCommand", &TBBUTTON::idCommand)
             .property("fsState", &TBBUTTON::fsState)
             .property("fsStyle", &TBBUTTON::fsStyle)
             .property("bReserved", &TBBUTTON::bReserved)
             .property("dwData", &TBBUTTON::dwData)
-            .property("iString", &TBBUTTON::iString)
-            ,
-        xlb_class<TBBUTTONINFOA>("TBBUTTONINFOA") .constructor<>() .destructor()
+            .property("iString", &TBBUTTON::iString),
+        xlb_class<TBBUTTONINFOA>("TBBUTTONINFOA")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &TBBUTTONINFOA::cbSize)
             .property("dwMask", &TBBUTTONINFOA::dwMask)
             .property("idCommand", &TBBUTTONINFOA::idCommand)
@@ -3243,13 +4336,15 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("cx", &TBBUTTONINFOA::cx)
             .property("lParam", &TBBUTTONINFOA::lParam)
             .property("pszText", &TBBUTTONINFOA::pszText)
-            .property("cchText", &TBBUTTONINFOA::cchText)
-            ,
-        xlb_class<TBINSERTMARK>("TBINSERTMARK") .constructor<>() .destructor()
+            .property("cchText", &TBBUTTONINFOA::cchText),
+        xlb_class<TBINSERTMARK>("TBINSERTMARK")
+            .constructor<>()
+            .destructor()
             .property("iButton", &TBINSERTMARK::iButton)
-            .property("dwFlags", &TBINSERTMARK::dwFlags)
-            ,
-        xlb_class<TBMETRICS>("TBMETRICS") .constructor<>() .destructor()
+            .property("dwFlags", &TBINSERTMARK::dwFlags),
+        xlb_class<TBMETRICS>("TBMETRICS")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &TBMETRICS::cbSize)
             .property("dwMask", &TBMETRICS::dwMask)
             .property("cxPad", &TBMETRICS::cxPad)
@@ -3257,35 +4352,40 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("cxBarPad", &TBMETRICS::cxBarPad)
             .property("cyBarPad", &TBMETRICS::cyBarPad)
             .property("cxButtonSpacing", &TBMETRICS::cxButtonSpacing)
-            .property("cyButtonSpacing", &TBMETRICS::cyButtonSpacing)
-            ,
-        xlb_class<TBREPLACEBITMAP>("TBREPLACEBITMAP") .constructor<>() .destructor()
+            .property("cyButtonSpacing", &TBMETRICS::cyButtonSpacing),
+        xlb_class<TBREPLACEBITMAP>("TBREPLACEBITMAP")
+            .constructor<>()
+            .destructor()
             .property("hInstOld", &TBREPLACEBITMAP::hInstOld)
             .property("nIDOld", &TBREPLACEBITMAP::nIDOld)
             .property("hInstNew", &TBREPLACEBITMAP::hInstNew)
             .property("nIDNew", &TBREPLACEBITMAP::nIDNew)
-            .property("nButtons", &TBREPLACEBITMAP::nButtons)
-            ,
-        xlb_class<TBSAVEPARAMSA>("TBSAVEPARAMSA") .constructor<>() .destructor()
+            .property("nButtons", &TBREPLACEBITMAP::nButtons),
+        xlb_class<TBSAVEPARAMSA>("TBSAVEPARAMSA")
+            .constructor<>()
+            .destructor()
             .property("hkr", &TBSAVEPARAMSA::hkr)
             .property("pszSubKey", &TBSAVEPARAMSA::pszSubKey)
-            .property("pszValueName", &TBSAVEPARAMSA::pszValueName)
-            ,
+            .property("pszValueName", &TBSAVEPARAMSA::pszValueName),
 
         // Tooltip
-        xlb_class<NMTTCUSTOMDRAW>("NMTTCUSTOMDRAW") .constructor<>() .destructor()
+        xlb_class<NMTTCUSTOMDRAW>("NMTTCUSTOMDRAW")
+            .constructor<>()
+            .destructor()
             .property("nmcd", &NMTTCUSTOMDRAW::nmcd)
-            .property("uDrawFlags", &NMTTCUSTOMDRAW::uDrawFlags)
-            ,
-        xlb_class<NMTTDISPINFOA>("NMTTDISPINFOA") .constructor<>() .destructor()
+            .property("uDrawFlags", &NMTTCUSTOMDRAW::uDrawFlags),
+        xlb_class<NMTTDISPINFOA>("NMTTDISPINFOA")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTTDISPINFOA::hdr)
             .property("lpszText", &NMTTDISPINFOA::lpszText)
             .property("szText", &NMTTDISPINFOA::szText)
             .property("hinst", &NMTTDISPINFOA::hinst)
             .property("uFlags", &NMTTDISPINFOA::uFlags)
-            .property("lParam", &NMTTDISPINFOA::lParam)
-            ,
-        xlb_class<TTTOOLINFOA>("TTTOOLINFOA") .constructor<>() .destructor()
+            .property("lParam", &NMTTDISPINFOA::lParam),
+        xlb_class<TTTOOLINFOA>("TTTOOLINFOA")
+            .constructor<>()
+            .destructor()
             .property("cbSize", &TTTOOLINFOA::cbSize)
             .property("uFlags", &TTTOOLINFOA::uFlags)
             .property("hwnd", &TTTOOLINFOA::hwnd)
@@ -3294,19 +4394,20 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("hinst", &TTTOOLINFOA::hinst)
             .property("lpszText", &TTTOOLINFOA::lpszText)
             .property("lParam", &TTTOOLINFOA::lParam)
-            .property("lpReserved", &TTTOOLINFOA::lpReserved)
-            ,
-        xlb_class<TTGETTITLE>("TTGETTITLE") .constructor<>() .destructor()
+            .property("lpReserved", &TTTOOLINFOA::lpReserved),
+        xlb_class<TTGETTITLE>("TTGETTITLE")
+            .constructor<>()
+            .destructor()
             .property("dwSize", &TTGETTITLE::dwSize)
             .property("uTitleBitmap", &TTGETTITLE::uTitleBitmap)
             .property("cch", &TTGETTITLE::cch)
-            .property("pszTitle", &TTGETTITLE::pszTitle)
-            ,
-        xlb_class<TTHITTESTINFOA>("TTHITTESTINFOA") .constructor<>() .destructor()
+            .property("pszTitle", &TTGETTITLE::pszTitle),
+        xlb_class<TTHITTESTINFOA>("TTHITTESTINFOA")
+            .constructor<>()
+            .destructor()
             .property("hwnd", &TTHITTESTINFOA::hwnd)
             .property("pt", &TTHITTESTINFOA::pt)
-            .property("ti", &TTHITTESTINFOA::ti)
-            ,
+            .property("ti", &TTHITTESTINFOA::ti),
 
         xlb_const("TTM_ACTIVATE", TTM_ACTIVATE),
         xlb_const("TTM_ADDTOOL", TTM_ADDTOOL),
@@ -3326,8 +4427,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TTM_GETTOOLINFO", TTM_GETTOOLINFO),
         xlb_const("TTM_HITTEST", TTM_HITTEST),
         xlb_const("TTM_NEWTOOLRECT", TTM_NEWTOOLRECT),
-        xlb_const("TTM_POP", TTM_POP),
-        xlb_const("TTM_POPUP", TTM_POPUP),
+        xlb_const("TTM_POP", TTM_POP), xlb_const("TTM_POPUP", TTM_POPUP),
         xlb_const("TTM_RELAYEVENT", TTM_RELAYEVENT),
         xlb_const("TTM_SETDELAYTIME", TTM_SETDELAYTIME),
         xlb_const("TTM_SETMARGIN", TTM_SETMARGIN),
@@ -3345,8 +4445,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("NM_CUSTOMDRAW", NM_CUSTOMDRAW),
         xlb_const("TTN_GETDISPINFO", TTN_GETDISPINFO),
         xlb_const("TTN_LINKCLICK", TTN_LINKCLICK),
-        xlb_const("TTN_NEEDTEXT", TTN_NEEDTEXT),
-        xlb_const("TTN_POP", TTN_POP),
+        xlb_const("TTN_NEEDTEXT", TTN_NEEDTEXT), xlb_const("TTN_POP", TTN_POP),
         xlb_const("TTN_SHOW", TTN_SHOW),
         xlb_const("TTS_ALWAYSTIP", TTS_ALWAYSTIP),
         xlb_const("TTS_BALLOON", TTS_BALLOON),
@@ -3397,17 +4496,12 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("NM_RELEASEDCAPTURE", NM_RELEASEDCAPTURE),
         xlb_const("TRBN_THUMBPOSCHANGING", TRBN_THUMBPOSCHANGING),
         xlb_const("TBCD_CHANNEL", TBCD_CHANNEL),
-        xlb_const("TBCD_THUMB", TBCD_THUMB),
-        xlb_const("TBCD_TICS", TBCD_TICS),
+        xlb_const("TBCD_THUMB", TBCD_THUMB), xlb_const("TBCD_TICS", TBCD_TICS),
         xlb_const("TBS_AUTOTICKS", TBS_AUTOTICKS),
-        xlb_const("TBS_VERT", TBS_VERT),
-        xlb_const("TBS_HORZ", TBS_HORZ),
-        xlb_const("TBS_TOP", TBS_TOP),
-        xlb_const("TBS_BOTTOM", TBS_BOTTOM),
-        xlb_const("TBS_LEFT", TBS_LEFT),
-        xlb_const("TBS_RIGHT", TBS_RIGHT),
-        xlb_const("TBS_BOTH", TBS_BOTH),
-        xlb_const("TBS_NOTICKS", TBS_NOTICKS),
+        xlb_const("TBS_VERT", TBS_VERT), xlb_const("TBS_HORZ", TBS_HORZ),
+        xlb_const("TBS_TOP", TBS_TOP), xlb_const("TBS_BOTTOM", TBS_BOTTOM),
+        xlb_const("TBS_LEFT", TBS_LEFT), xlb_const("TBS_RIGHT", TBS_RIGHT),
+        xlb_const("TBS_BOTH", TBS_BOTH), xlb_const("TBS_NOTICKS", TBS_NOTICKS),
         xlb_const("TBS_ENABLESELRANGE", TBS_ENABLESELRANGE),
         xlb_const("TBS_FIXEDLENGTH", TBS_FIXEDLENGTH),
         xlb_const("TBS_NOTHUMB", TBS_NOTHUMB),
@@ -3419,154 +4513,381 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
 
         // TreeView
 
-        xlb_f("TreeView_CreateDragImage", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_CreateDragImage(hwnd, hitem); }),
-        xlb_f("TreeView_DeleteAllItems", [](HWND hwnd)->auto { return TreeView_DeleteAllItems(hwnd); }),
-        xlb_f("TreeView_DeleteItem", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_DeleteItem(hwnd, hitem); }),
-        xlb_f("TreeView_EditLabel", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_EditLabel(hwnd, hitem); }),
-        xlb_f("TreeView_EndEditLabelNow", [](HWND hwnd, BOOL fCancel)->auto { return TreeView_EndEditLabelNow(hwnd, fCancel); }),
-        xlb_f("TreeView_EnsureVisible", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_EnsureVisible(hwnd, hitem); }),
-        xlb_f("TreeView_Expand", [](HWND hwnd, HTREEITEM hitem, UINT code)->auto { return TreeView_Expand(hwnd, hitem, code); }),
-        xlb_f("TreeView_GetBkColor", [](HWND hwnd)->auto { return TreeView_GetBkColor(hwnd); }),
-        xlb_f("TreeView_GetCheckState", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_GetCheckState(hwnd, hitem); }),
-        xlb_f("TreeView_GetChild", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_GetChild(hwnd, hitem); }),
-        xlb_f("TreeView_GetCount", [](HWND hwnd)->auto { return TreeView_GetCount(hwnd); }),
-        xlb_f("TreeView_GetDropHilight", [](HWND hwnd)->auto { return TreeView_GetDropHilight(hwnd); }),
-        xlb_f("TreeView_GetEditControl", [](HWND hwnd)->auto { return TreeView_GetEditControl(hwnd); }),
-        xlb_f("TreeView_GetExtendedStyle", [](HWND hwnd)->auto { return TreeView_GetExtendedStyle(hwnd); }),
-        xlb_f("TreeView_GetFirstVisible", [](HWND hwnd)->auto { return TreeView_GetFirstVisible(hwnd); }),
-        xlb_f("TreeView_GetImageList", [](HWND hwnd, INT iImage)->auto { return TreeView_GetImageList(hwnd, iImage); }),
-        xlb_f("TreeView_GetIndent", [](HWND hwnd)->auto { return TreeView_GetIndent(hwnd); }),
-        xlb_f("TreeView_GetInsertMarkColor", [](HWND hwnd)->auto { return TreeView_GetInsertMarkColor(hwnd); }),
-        xlb_f("TreeView_GetISearchString", [](HWND hwnd, LPTSTR lpsz)->auto { return TreeView_GetISearchString(hwnd, lpsz); }),
-        xlb_f("TreeView_GetItem", [](HWND hwnd, LPTVITEM pitem)->auto { return TreeView_GetItem(hwnd, pitem); }),
-        xlb_f("TreeView_GetItemHeight", [](HWND hwnd)->auto { return TreeView_GetItemHeight(hwnd); }),
-        xlb_f("TreeView_GetItemPartRect", [](HWND hwnd, HTREEITEM hitem, RECT* prc, TVITEMPART partid)->auto { TreeView_GetItemPartRect(hwnd, hitem, prc, partid); }),
-        xlb_f("TreeView_GetItemRect", [](HWND hwnd, HTREEITEM hitem, LPRECT prc, BOOL code)->auto { return TreeView_GetItemRect(hwnd, hitem, prc, code); }),
-        xlb_f("TreeView_GetItemState", [](HWND hwnd, HTREEITEM hitem, UINT mask)->auto { return TreeView_GetItemState(hwnd, hitem, mask); }),
-        xlb_f("TreeView_GetLastVisible", [](HWND hwnd)->auto { return TreeView_GetLastVisible(hwnd); }),
-        xlb_f("TreeView_GetLineColor", [](HWND hwnd)->auto { return TreeView_GetLineColor(hwnd); }),
-        xlb_f("TreeView_GetNextItem", [](HWND hwnd, HTREEITEM hitem, UINT code)->auto { return TreeView_GetNextItem(hwnd, hitem, code); }),
-        xlb_f("TreeView_GetNextSelected", [](HWND hwnd, HTREEITEM* hitem)->auto { return TreeView_GetNextSelected(hwnd, hitem); }),
-        xlb_f("TreeView_GetNextSibling", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_GetNextSibling(hwnd, hitem); }),
-        xlb_f("TreeView_GetNextVisible", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_GetNextVisible(hwnd, hitem); }),
-        xlb_f("TreeView_GetParent", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_GetParent(hwnd, hitem); }),
-        xlb_f("TreeView_GetPrevSibling", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_GetPrevSibling(hwnd, hitem); }),
-        xlb_f("TreeView_GetPrevVisible", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_GetPrevVisible(hwnd, hitem); }),
-        xlb_f("TreeView_GetRoot", [](HWND hwnd)->auto { return TreeView_GetRoot(hwnd); }),
-        xlb_f("TreeView_GetScrollTime", [](HWND hwnd)->auto { return TreeView_GetScrollTime(hwnd); }),
-        xlb_f("TreeView_GetSelectedCount", [](HWND hwnd)->auto { return TreeView_GetSelectedCount(hwnd); }),
-        xlb_f("TreeView_GetSelection", [](HWND hwnd)->auto { return TreeView_GetSelection(hwnd); }),
-        xlb_f("TreeView_GetTextColor", [](HWND hwnd)->auto { return TreeView_GetTextColor(hwnd); }),
-        xlb_f("TreeView_GetToolTips", [](HWND hwnd)->auto { return TreeView_GetToolTips(hwnd); }),
-        xlb_f("TreeView_GetUnicodeFormat", [](HWND hwnd)->auto { return TreeView_GetUnicodeFormat(hwnd); }),
-        xlb_f("TreeView_GetVisibleCount", [](HWND hwnd)->auto { return TreeView_GetVisibleCount(hwnd); }),
-        xlb_f("TreeView_HitTest", [](HWND hwnd, LPTVHITTESTINFO lpht)->auto { return TreeView_HitTest(hwnd, lpht); }),
-        xlb_f("TreeView_InsertItem", [](HWND hwnd, LPTVINSERTSTRUCT lpis)->auto { return TreeView_InsertItem(hwnd, lpis); }),
-        xlb_f("TreeView_MapAccIDToHTREEITEM", [](HWND hwnd, UINT id)->auto { return TreeView_MapAccIDToHTREEITEM(hwnd, id); }),
-        xlb_f("TreeView_MapHTREEITEMToAccID", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_MapHTREEITEMToAccID(hwnd, hitem); }),
-        xlb_f("TreeView_Select", [](HWND hwnd, HTREEITEM hitem, UINT code)->auto { return TreeView_Select(hwnd, hitem, code); }),
-        xlb_f("TreeView_SelectDropTarget", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_SelectDropTarget(hwnd, hitem); }),
-        xlb_f("TreeView_SelectItem", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_SelectItem(hwnd, hitem); }),
-        xlb_f("TreeView_SelectSetFirstVisible", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_SelectSetFirstVisible(hwnd, hitem); }),
-        xlb_f("TreeView_SetAutoScrollInfo", [](HWND hwnd, UINT uPixperSec, UINT uUpdateTime)->auto { return TreeView_SetAutoScrollInfo(hwnd, uPixperSec, uUpdateTime); }),
-        xlb_f("TreeView_SetBkColor", [](HWND hwnd, COLORREF clr)->auto { return TreeView_SetBkColor(hwnd, clr); }),
-        xlb_f("TreeView_SetBorder", [](HWND hwnd, DWORD dwFlags, SHORT xBorder, SHORT yBorder)->auto { return TreeView_SetBorder(hwnd, dwFlags, xBorder, yBorder); }),
-        xlb_f("TreeView_SetCheckState", [](HWND hwnd, HTREEITEM hitem, BOOL fCheck)->auto { TreeView_SetCheckState(hwnd, hitem, fCheck); }),
-        xlb_f("TreeView_SetExtendedStyle", [](HWND hwnd, DWORD dw, UINT mask)->auto { return TreeView_SetExtendedStyle(hwnd, dw, mask); }),
-        xlb_f("TreeView_SetHot", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_SetHot(hwnd, hitem); }),
-        xlb_f("TreeView_SetImageList", [](HWND hwnd, HIMAGELIST himl, INT iImage)->auto { return TreeView_SetImageList(hwnd, himl, iImage); }),
-        xlb_f("TreeView_SetIndent", [](HWND hwnd, INT indent)->auto { return TreeView_SetIndent(hwnd, indent); }),
-        xlb_f("TreeView_SetInsertMark", [](HWND hwnd, HTREEITEM hitem, BOOL fAfter)->auto { return TreeView_SetInsertMark(hwnd, hitem, fAfter); }),
-        xlb_f("TreeView_SetInsertMarkColor", [](HWND hwnd, COLORREF clr)->auto { return TreeView_SetInsertMarkColor(hwnd, clr); }),
-        xlb_f("TreeView_SetItem", [](HWND hwnd, LPTVITEM pitem)->auto { return TreeView_SetItem(hwnd, pitem); }),
-        xlb_f("TreeView_SetItemHeight", [](HWND hwnd, SHORT iHeight)->auto { return TreeView_SetItemHeight(hwnd, iHeight); }),
-        xlb_f("TreeView_SetItemState", [](HWND hwnd, HTREEITEM hitem, UINT data, UINT _mask)->auto { TreeView_SetItemState(hwnd, hitem, data, _mask); }),
-        xlb_f("TreeView_SetLineColor", [](HWND hwnd, COLORREF clr)->auto { return TreeView_SetLineColor(hwnd, clr); }),
-        xlb_f("TreeView_SetScrollTime", [](HWND hwnd, UINT uTime)->auto { return TreeView_SetScrollTime(hwnd, uTime); }),
-        xlb_f("TreeView_SetTextColor", [](HWND hwnd, COLORREF clr)->auto { return TreeView_SetTextColor(hwnd, clr); }),
-        xlb_f("TreeView_SetToolTips", [](HWND hwnd, HWND hwndTT)->auto { return TreeView_SetToolTips(hwnd, hwndTT); }),
-        xlb_f("TreeView_SetUnicodeFormat", [](HWND hwnd, BOOL fUnicode)->auto { return TreeView_SetUnicodeFormat(hwnd, fUnicode); }),
-        xlb_f("TreeView_ShowInfoTip", [](HWND hwnd, HTREEITEM hitem)->auto { return TreeView_ShowInfoTip(hwnd, hitem); }),
-        xlb_f("TreeView_SortChildren", [](HWND hwnd, HTREEITEM hitem, BOOL recurse)->auto { return TreeView_SortChildren(hwnd, hitem, recurse); }),
-        xlb_f("TreeView_SortChildrenCB", [](HWND hwnd, LPTVSORTCB psort, BOOL recurse)->auto { return TreeView_SortChildrenCB(hwnd, psort, recurse); }),
-        
+        xlb_f(
+            "TreeView_CreateDragImage", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_CreateDragImage(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_DeleteAllItems",
+            [](HWND hwnd) -> auto { return TreeView_DeleteAllItems(hwnd); }),
+        xlb_f(
+            "TreeView_DeleteItem", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_DeleteItem(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_EditLabel", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_EditLabel(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_EndEditLabelNow", [](HWND hwnd, BOOL fCancel) -> auto {
+              return TreeView_EndEditLabelNow(hwnd, fCancel);
+            }),
+        xlb_f(
+            "TreeView_EnsureVisible", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_EnsureVisible(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_Expand",
+            [](HWND hwnd, HTREEITEM hitem, UINT code) -> auto {
+              return TreeView_Expand(hwnd, hitem, code);
+            }),
+        xlb_f(
+            "TreeView_GetBkColor",
+            [](HWND hwnd) -> auto { return TreeView_GetBkColor(hwnd); }),
+        xlb_f(
+            "TreeView_GetCheckState", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_GetCheckState(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_GetChild", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_GetChild(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_GetCount",
+            [](HWND hwnd) -> auto { return TreeView_GetCount(hwnd); }),
+        xlb_f(
+            "TreeView_GetDropHilight",
+            [](HWND hwnd) -> auto { return TreeView_GetDropHilight(hwnd); }),
+        xlb_f(
+            "TreeView_GetEditControl",
+            [](HWND hwnd) -> auto { return TreeView_GetEditControl(hwnd); }),
+        xlb_f(
+            "TreeView_GetExtendedStyle",
+            [](HWND hwnd) -> auto { return TreeView_GetExtendedStyle(hwnd); }),
+        xlb_f(
+            "TreeView_GetFirstVisible",
+            [](HWND hwnd) -> auto { return TreeView_GetFirstVisible(hwnd); }),
+        xlb_f(
+            "TreeView_GetImageList", [](HWND hwnd, INT iImage) -> auto {
+              return TreeView_GetImageList(hwnd, iImage);
+            }),
+        xlb_f(
+            "TreeView_GetIndent",
+            [](HWND hwnd) -> auto { return TreeView_GetIndent(hwnd); }),
+        xlb_f(
+            "TreeView_GetInsertMarkColor", [](HWND hwnd) -> auto {
+              return TreeView_GetInsertMarkColor(hwnd);
+            }),
+        xlb_f(
+            "TreeView_GetISearchString", [](HWND hwnd, LPTSTR lpsz) -> auto {
+              return TreeView_GetISearchString(hwnd, lpsz);
+            }),
+        xlb_f(
+            "TreeView_GetItem", [](HWND hwnd, LPTVITEM pitem) -> auto {
+              return TreeView_GetItem(hwnd, pitem);
+            }),
+        xlb_f(
+            "TreeView_GetItemHeight",
+            [](HWND hwnd) -> auto { return TreeView_GetItemHeight(hwnd); }),
+        xlb_f(
+            "TreeView_GetItemPartRect",
+            [](HWND hwnd, HTREEITEM hitem, RECT * prc,
+               TVITEMPART partid) -> auto {
+              TreeView_GetItemPartRect(hwnd, hitem, prc, partid);
+            }),
+        xlb_f(
+            "TreeView_GetItemRect",
+            [](HWND hwnd, HTREEITEM hitem, LPRECT prc, BOOL code) -> auto {
+              return TreeView_GetItemRect(hwnd, hitem, prc, code);
+            }),
+        xlb_f(
+            "TreeView_GetItemState",
+            [](HWND hwnd, HTREEITEM hitem, UINT mask) -> auto {
+              return TreeView_GetItemState(hwnd, hitem, mask);
+            }),
+        xlb_f(
+            "TreeView_GetLastVisible",
+            [](HWND hwnd) -> auto { return TreeView_GetLastVisible(hwnd); }),
+        xlb_f(
+            "TreeView_GetLineColor",
+            [](HWND hwnd) -> auto { return TreeView_GetLineColor(hwnd); }),
+        xlb_f(
+            "TreeView_GetNextItem",
+            [](HWND hwnd, HTREEITEM hitem, UINT code) -> auto {
+              return TreeView_GetNextItem(hwnd, hitem, code);
+            }),
+        xlb_f(
+            "TreeView_GetNextSelected",
+            [](HWND hwnd, HTREEITEM * hitem) -> auto {
+              return TreeView_GetNextSelected(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_GetNextSibling", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_GetNextSibling(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_GetNextVisible", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_GetNextVisible(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_GetParent", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_GetParent(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_GetPrevSibling", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_GetPrevSibling(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_GetPrevVisible", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_GetPrevVisible(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_GetRoot",
+            [](HWND hwnd) -> auto { return TreeView_GetRoot(hwnd); }),
+        xlb_f(
+            "TreeView_GetScrollTime",
+            [](HWND hwnd) -> auto { return TreeView_GetScrollTime(hwnd); }),
+        xlb_f(
+            "TreeView_GetSelectedCount",
+            [](HWND hwnd) -> auto { return TreeView_GetSelectedCount(hwnd); }),
+        xlb_f(
+            "TreeView_GetSelection",
+            [](HWND hwnd) -> auto { return TreeView_GetSelection(hwnd); }),
+        xlb_f(
+            "TreeView_GetTextColor",
+            [](HWND hwnd) -> auto { return TreeView_GetTextColor(hwnd); }),
+        xlb_f(
+            "TreeView_GetToolTips",
+            [](HWND hwnd) -> auto { return TreeView_GetToolTips(hwnd); }),
+        xlb_f(
+            "TreeView_GetUnicodeFormat",
+            [](HWND hwnd) -> auto { return TreeView_GetUnicodeFormat(hwnd); }),
+        xlb_f(
+            "TreeView_GetVisibleCount",
+            [](HWND hwnd) -> auto { return TreeView_GetVisibleCount(hwnd); }),
+        xlb_f(
+            "TreeView_HitTest", [](HWND hwnd, LPTVHITTESTINFO lpht) -> auto {
+              return TreeView_HitTest(hwnd, lpht);
+            }),
+        xlb_f(
+            "TreeView_InsertItem",
+            [](HWND hwnd, LPTVINSERTSTRUCT lpis) -> auto {
+              return TreeView_InsertItem(hwnd, lpis);
+            }),
+        xlb_f(
+            "TreeView_MapAccIDToHTREEITEM", [](HWND hwnd, UINT id) -> auto {
+              return TreeView_MapAccIDToHTREEITEM(hwnd, id);
+            }),
+        xlb_f(
+            "TreeView_MapHTREEITEMToAccID",
+            [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_MapHTREEITEMToAccID(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_Select",
+            [](HWND hwnd, HTREEITEM hitem, UINT code) -> auto {
+              return TreeView_Select(hwnd, hitem, code);
+            }),
+        xlb_f(
+            "TreeView_SelectDropTarget",
+            [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_SelectDropTarget(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_SelectItem", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_SelectItem(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_SelectSetFirstVisible",
+            [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_SelectSetFirstVisible(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_SetAutoScrollInfo",
+            [](HWND hwnd, UINT uPixperSec, UINT uUpdateTime) -> auto {
+              return TreeView_SetAutoScrollInfo(hwnd, uPixperSec, uUpdateTime);
+            }),
+        xlb_f(
+            "TreeView_SetBkColor", [](HWND hwnd, COLORREF clr) -> auto {
+              return TreeView_SetBkColor(hwnd, clr);
+            }),
+        xlb_f(
+            "TreeView_SetBorder",
+            [](HWND hwnd, DWORD dwFlags, SHORT xBorder, SHORT yBorder) -> auto {
+              return TreeView_SetBorder(hwnd, dwFlags, xBorder, yBorder);
+            }),
+        xlb_f(
+            "TreeView_SetCheckState",
+            [](HWND hwnd, HTREEITEM hitem, BOOL fCheck) -> auto {
+              TreeView_SetCheckState(hwnd, hitem, fCheck);
+            }),
+        xlb_f(
+            "TreeView_SetExtendedStyle",
+            [](HWND hwnd, DWORD dw, UINT mask) -> auto {
+              return TreeView_SetExtendedStyle(hwnd, dw, mask);
+            }),
+        xlb_f(
+            "TreeView_SetHot", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_SetHot(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_SetImageList",
+            [](HWND hwnd, HIMAGELIST himl, INT iImage) -> auto {
+              return TreeView_SetImageList(hwnd, himl, iImage);
+            }),
+        xlb_f(
+            "TreeView_SetIndent", [](HWND hwnd, INT indent) -> auto {
+              return TreeView_SetIndent(hwnd, indent);
+            }),
+        xlb_f(
+            "TreeView_SetInsertMark",
+            [](HWND hwnd, HTREEITEM hitem, BOOL fAfter) -> auto {
+              return TreeView_SetInsertMark(hwnd, hitem, fAfter);
+            }),
+        xlb_f(
+            "TreeView_SetInsertMarkColor", [](HWND hwnd, COLORREF clr) -> auto {
+              return TreeView_SetInsertMarkColor(hwnd, clr);
+            }),
+        xlb_f(
+            "TreeView_SetItem", [](HWND hwnd, LPTVITEM pitem) -> auto {
+              return TreeView_SetItem(hwnd, pitem);
+            }),
+        xlb_f(
+            "TreeView_SetItemHeight", [](HWND hwnd, SHORT iHeight) -> auto {
+              return TreeView_SetItemHeight(hwnd, iHeight);
+            }),
+        xlb_f(
+            "TreeView_SetItemState",
+            [](HWND hwnd, HTREEITEM hitem, UINT data, UINT _mask) -> auto {
+              TreeView_SetItemState(hwnd, hitem, data, _mask);
+            }),
+        xlb_f(
+            "TreeView_SetLineColor", [](HWND hwnd, COLORREF clr) -> auto {
+              return TreeView_SetLineColor(hwnd, clr);
+            }),
+        xlb_f(
+            "TreeView_SetScrollTime", [](HWND hwnd, UINT uTime) -> auto {
+              return TreeView_SetScrollTime(hwnd, uTime);
+            }),
+        xlb_f(
+            "TreeView_SetTextColor", [](HWND hwnd, COLORREF clr) -> auto {
+              return TreeView_SetTextColor(hwnd, clr);
+            }),
+        xlb_f(
+            "TreeView_SetToolTips", [](HWND hwnd, HWND hwndTT) -> auto {
+              return TreeView_SetToolTips(hwnd, hwndTT);
+            }),
+        xlb_f(
+            "TreeView_SetUnicodeFormat", [](HWND hwnd, BOOL fUnicode) -> auto {
+              return TreeView_SetUnicodeFormat(hwnd, fUnicode);
+            }),
+        xlb_f(
+            "TreeView_ShowInfoTip", [](HWND hwnd, HTREEITEM hitem) -> auto {
+              return TreeView_ShowInfoTip(hwnd, hitem);
+            }),
+        xlb_f(
+            "TreeView_SortChildren",
+            [](HWND hwnd, HTREEITEM hitem, BOOL recurse) -> auto {
+              return TreeView_SortChildren(hwnd, hitem, recurse);
+            }),
+        xlb_f(
+            "TreeView_SortChildrenCB",
+            [](HWND hwnd, LPTVSORTCB psort, BOOL recurse) -> auto {
+              return TreeView_SortChildrenCB(hwnd, psort, recurse);
+            }),
 
-        xlb_class<NMTREEVIEWA>("NMTREEVIEWA") .constructor<>() .destructor()
+        xlb_class<NMTREEVIEWA>("NMTREEVIEWA")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTREEVIEWA::hdr)
             .property("action", &NMTREEVIEWA::action)
             .property("itemOld", &NMTREEVIEWA::itemOld)
             .property("itemNew", &NMTREEVIEWA::itemNew)
-            .property("ptDrag", &NMTREEVIEWA::ptDrag)
-            ,
+            .property("ptDrag", &NMTREEVIEWA::ptDrag),
 #if (_WIN32_IE > 0x0600)
-        xlb_class<NMTVASYNCDRAW>("NMTVASYNCDRAW") .constructor<>() .destructor()
+        xlb_class<NMTVASYNCDRAW>("NMTVASYNCDRAW")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTVASYNCDRAW::hdr)
             .property("pimldp", &NMTVASYNCDRAW::pimldp)
             .property("hr", &NMTVASYNCDRAW::hr)
             .property("hItem", &NMTVASYNCDRAW::hItem)
             .property("lParam", &NMTVASYNCDRAW::lParam)
             .property("dwRetFlags", &NMTVASYNCDRAW::dwRetFlags)
-            .property("iRetImageIndex", &NMTVASYNCDRAW::iRetImageIndex)
-            ,
+            .property("iRetImageIndex", &NMTVASYNCDRAW::iRetImageIndex),
 #endif
-        xlb_class<NMTVCUSTOMDRAW>("NMTVCUSTOMDRAW") .constructor<>() .destructor()
+        xlb_class<NMTVCUSTOMDRAW>("NMTVCUSTOMDRAW")
+            .constructor<>()
+            .destructor()
             .property("nmcd", &NMTVCUSTOMDRAW::nmcd)
             .property("clrText", &NMTVCUSTOMDRAW::clrText)
             .property("clrTextBk", &NMTVCUSTOMDRAW::clrTextBk)
-            .property("iLevel", &NMTVCUSTOMDRAW::iLevel)
-            ,
-        xlb_class<NMTVDISPINFOA>("NMTVDISPINFOA") .constructor<>() .destructor()
+            .property("iLevel", &NMTVCUSTOMDRAW::iLevel),
+        xlb_class<NMTVDISPINFOA>("NMTVDISPINFOA")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTVDISPINFOA::hdr)
-            .property("item", &NMTVDISPINFOA::item)
-            ,
-        xlb_class<NMTVDISPINFOEXA>("NMTVDISPINFOEXA") .constructor<>() .destructor()
+            .property("item", &NMTVDISPINFOA::item),
+        xlb_class<NMTVDISPINFOEXA>("NMTVDISPINFOEXA")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTVDISPINFOEXA::hdr)
-            .property("item", &NMTVDISPINFOEXA::item)
-            ,
-        xlb_class<NMTVGETINFOTIPA>("NMTVGETINFOTIPA") .constructor<>() .destructor()
+            .property("item", &NMTVDISPINFOEXA::item),
+        xlb_class<NMTVGETINFOTIPA>("NMTVGETINFOTIPA")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTVGETINFOTIPA::hdr)
             .property("pszText", &NMTVGETINFOTIPA::pszText)
             .property("cchTextMax", &NMTVGETINFOTIPA::cchTextMax)
             .property("hItem", &NMTVGETINFOTIPA::hItem)
-            .property("lParam", &NMTVGETINFOTIPA::lParam)
-            ,
-        xlb_class<NMTVITEMCHANGE>("NMTVITEMCHANGE") .constructor<>() .destructor()
+            .property("lParam", &NMTVGETINFOTIPA::lParam),
+        xlb_class<NMTVITEMCHANGE>("NMTVITEMCHANGE")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTVITEMCHANGE::hdr)
             .property("uChanged", &NMTVITEMCHANGE::uChanged)
             .property("hItem", &NMTVITEMCHANGE::hItem)
             .property("uStateNew", &NMTVITEMCHANGE::uStateNew)
             .property("uStateOld", &NMTVITEMCHANGE::uStateOld)
-            .property("lParam", &NMTVITEMCHANGE::lParam)
-            ,
+            .property("lParam", &NMTVITEMCHANGE::lParam),
         // NMTVITEMRECT // unsupported
-        xlb_class<NMTVKEYDOWN>("NMTVKEYDOWN") .constructor<>() .destructor()
+        xlb_class<NMTVKEYDOWN>("NMTVKEYDOWN")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTVKEYDOWN::hdr)
             .property("wVKey", &NMTVKEYDOWN::wVKey)
-            .property("flags", &NMTVKEYDOWN::flags)
-            ,
-        xlb_class<NMTVSTATEIMAGECHANGING>("NMTVSTATEIMAGECHANGING") .constructor<>() .destructor()
+            .property("flags", &NMTVKEYDOWN::flags),
+        xlb_class<NMTVSTATEIMAGECHANGING>("NMTVSTATEIMAGECHANGING")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTVSTATEIMAGECHANGING::hdr)
             .property("hti", &NMTVSTATEIMAGECHANGING::hti)
-            .property("iOldStateImageIndex", &NMTVSTATEIMAGECHANGING::iOldStateImageIndex)
-            .property("iNewStateImageIndex", &NMTVSTATEIMAGECHANGING::iNewStateImageIndex)
-            ,
-        xlb_class<TVGETITEMPARTRECTINFO>("TVGETITEMPARTRECTINFO") .constructor<>() .destructor()
+            .property("iOldStateImageIndex",
+                      &NMTVSTATEIMAGECHANGING::iOldStateImageIndex)
+            .property("iNewStateImageIndex",
+                      &NMTVSTATEIMAGECHANGING::iNewStateImageIndex),
+        xlb_class<TVGETITEMPARTRECTINFO>("TVGETITEMPARTRECTINFO")
+            .constructor<>()
+            .destructor()
             .property("hti", &TVGETITEMPARTRECTINFO::hti)
             .property("prc", &TVGETITEMPARTRECTINFO::prc)
-            .property("partID", &TVGETITEMPARTRECTINFO::partID)
-            ,
-        xlb_class<TVHITTESTINFO>("TVHITTESTINFO") .constructor<>() .destructor()
+            .property("partID", &TVGETITEMPARTRECTINFO::partID),
+        xlb_class<TVHITTESTINFO>("TVHITTESTINFO")
+            .constructor<>()
+            .destructor()
             .property("pt", &TVHITTESTINFO::pt)
             .property("flags", &TVHITTESTINFO::flags)
-            .property("hItem", &TVHITTESTINFO::hItem)
-            ,
-        xlb_class<TVINSERTSTRUCTA>("TVINSERTSTRUCTA") .constructor<>() .destructor()
+            .property("hItem", &TVHITTESTINFO::hItem),
+        xlb_class<TVINSERTSTRUCTA>("TVINSERTSTRUCTA")
+            .constructor<>()
+            .destructor()
             .property("hParent", &TVINSERTSTRUCTA::hParent)
             .property("hInsertAfter", &TVINSERTSTRUCTA::hInsertAfter)
             .property("itemex", &TVINSERTSTRUCTA::itemex)
-            .property("item", &TVINSERTSTRUCTA::item)
-            ,
-        xlb_class<TVITEMA>("TVITEMA") .constructor<>() .destructor()
+            .property("item", &TVINSERTSTRUCTA::item),
+        xlb_class<TVITEMA>("TVITEMA")
+            .constructor<>()
+            .destructor()
             .property("mask", &TVITEMA::mask)
             .property("hItem", &TVITEMA::hItem)
             .property("state", &TVITEMA::state)
@@ -3576,9 +4897,10 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("iImage", &TVITEMA::iImage)
             .property("iSelectedImage", &TVITEMA::iSelectedImage)
             .property("cChildren", &TVITEMA::cChildren)
-            .property("lParam", &TVITEMA::lParam)
-            ,
-        xlb_class<TVITEMEXA>("TVITEMEXA") .constructor<>() .destructor()
+            .property("lParam", &TVITEMA::lParam),
+        xlb_class<TVITEMEXA>("TVITEMEXA")
+            .constructor<>()
+            .destructor()
             .property("mask", &TVITEMEXA::mask)
             .property("hItem", &TVITEMEXA::hItem)
             .property("state", &TVITEMEXA::state)
@@ -3593,13 +4915,13 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
             .property("uStateEx", &TVITEMEXA::uStateEx)
             .property("hwnd", &TVITEMEXA::hwnd)
             .property("iExpandedImage", &TVITEMEXA::iExpandedImage)
-            .property("iReserved", &TVITEMEXA::iReserved)
-            ,
-        xlb_class<TVSORTCB>("TVSORTCB") .constructor<>() .destructor()
+            .property("iReserved", &TVITEMEXA::iReserved),
+        xlb_class<TVSORTCB>("TVSORTCB")
+            .constructor<>()
+            .destructor()
             .property("hParent", &TVSORTCB::hParent)
             .property("lpfnCompare", &TVSORTCB::lpfnCompare)
-            .property("lParam", &TVSORTCB::lParam)
-            ,
+            .property("lParam", &TVSORTCB::lParam),
 
         xlb_const("TVM_CREATEDRAGIMAGE", TVM_CREATEDRAGIMAGE),
         xlb_const("TVM_DELETEITEM", TVM_DELETEITEM),
@@ -3656,8 +4978,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("NM_CUSTOMDRAW", NM_CUSTOMDRAW),
         xlb_const("NM_DBLCLK", NM_DBLCLK),
         xlb_const("NM_KILLFOCUS", NM_KILLFOCUS),
-        xlb_const("NM_RCLICK", NM_RCLICK),
-        xlb_const("NM_RDBLCLK", NM_RDBLCLK),
+        xlb_const("NM_RCLICK", NM_RCLICK), xlb_const("NM_RDBLCLK", NM_RDBLCLK),
         xlb_const("NM_RETURN", NM_RETURN),
         xlb_const("NM_SETCURSOR", NM_SETCURSOR),
         xlb_const("NM_SETFOCUS", NM_SETFOCUS),
@@ -3678,7 +4999,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TVN_SELCHANGING", TVN_SELCHANGING),
         xlb_const("TVN_SETDISPINFO", TVN_SETDISPINFO),
         xlb_const("TVN_SINGLEEXPAND", TVN_SINGLEEXPAND),
-    
+
         xlb_const("TVS_EX_AUTOHSCROLL", TVS_EX_AUTOHSCROLL),
         xlb_const("TVS_EX_DIMMEDCHECKBOXES", TVS_EX_DIMMEDCHECKBOXES),
         xlb_const("TVS_EX_DOUBLEBUFFER", TVS_EX_DOUBLEBUFFER),
@@ -3690,8 +5011,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TVS_EX_NOSINGLECOLLAPSE", TVS_EX_NOSINGLECOLLAPSE),
         xlb_const("TVS_EX_PARTIALCHECKBOXES", TVS_EX_PARTIALCHECKBOXES),
         xlb_const("TVS_EX_RICHTOOLTIP", TVS_EX_RICHTOOLTIP),
-        xlb_const("TVIS_BOLD", TVIS_BOLD),
-        xlb_const("TVIS_CUT", TVIS_CUT),
+        xlb_const("TVIS_BOLD", TVIS_BOLD), xlb_const("TVIS_CUT", TVIS_CUT),
         xlb_const("TVIS_DROPHILITED", TVIS_DROPHILITED),
         xlb_const("TVIS_EXPANDED", TVIS_EXPANDED),
         xlb_const("TVIS_EXPANDEDONCE", TVIS_EXPANDEDONCE),
@@ -3729,29 +5049,30 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("TVGN_PARENT", TVGN_PARENT),
         xlb_const("TVGN_PREVIOUS", TVGN_PREVIOUS),
         xlb_const("TVGN_PREVIOUSVISIBLE", TVGN_PREVIOUSVISIBLE),
-        xlb_const("TVGN_ROOT", TVGN_ROOT),
-        xlb_const("TVGN_CARET", TVGN_CARET),
+        xlb_const("TVGN_ROOT", TVGN_ROOT), xlb_const("TVGN_CARET", TVGN_CARET),
         xlb_const("TVGN_DROPHILITE", TVGN_DROPHILITE),
         xlb_const("TVGN_FIRSTVISIBLE", TVGN_FIRSTVISIBLE),
         xlb_const("TVSBF_XBORDER", TVSBF_XBORDER),
         xlb_const("TVSBF_YBORDER", TVSBF_YBORDER),
         xlb_const("TVSIL_NORMAL", TVSIL_NORMAL),
         xlb_const("TVSIL_STATE", TVSIL_STATE),
-        //xlb_const("ADRF_DRAWIMAGE", ADRF_DRAWIMAGE), //FIXME: undeclared
-        //xlb_const("ADRF_DRAWSYNC", ADRF_DRAWSYNC),
-        //xlb_const("ADRF_DRAWNOTHING", ADRF_DRAWNOTHING),
+        // xlb_const("ADRF_DRAWIMAGE", ADRF_DRAWIMAGE), //FIXME: undeclared
+        // xlb_const("ADRF_DRAWSYNC", ADRF_DRAWSYNC),
+        // xlb_const("ADRF_DRAWNOTHING", ADRF_DRAWNOTHING),
 
         // Up-Down Control
         xlb_f("CreateUpDownControl", CreateUpDownControl),
-        xlb_class<NMUPDOWN>("NMUPDOWN") .constructor<>() .destructor()
+        xlb_class<NMUPDOWN>("NMUPDOWN")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMUPDOWN::hdr)
             .property("iPos", &NMUPDOWN::iPos)
-            .property("iDelta", &NMUPDOWN::iDelta)
-            ,
-        xlb_class<UDACCEL>("UDACCEL") .constructor<>() .destructor()
+            .property("iDelta", &NMUPDOWN::iDelta),
+        xlb_class<UDACCEL>("UDACCEL")
+            .constructor<>()
+            .destructor()
             .property("nSec", &UDACCEL::nSec)
-            .property("nInc", &UDACCEL::nInc)
-            ,
+            .property("nInc", &UDACCEL::nInc),
         xlb_const("UDM_GETACCEL", UDM_GETACCEL),
         xlb_const("UDM_GETBASE", UDM_GETBASE),
         xlb_const("UDM_GETBUDDY", UDM_GETBUDDY),
@@ -3779,21 +5100,21 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("UDS_NOTHOUSANDS", UDS_NOTHOUSANDS),
         xlb_const("UDS_SETBUDDYINT", UDS_SETBUDDYINT),
         xlb_const("UDS_WRAP", UDS_WRAP),
-    
+
         // General Control Reference
-        //xlb_f("DoReaderMode", DoReaderMode), // unavailable
-        xlb_f("DPA_Clone", DPA_Clone),
-        xlb_f("DPA_Create", DPA_Create),
+        // xlb_f("DoReaderMode", DoReaderMode), // unavailable
+        xlb_f("DPA_Clone", DPA_Clone), xlb_f("DPA_Create", DPA_Create),
         xlb_f("DPA_CreateEx", DPA_CreateEx),
         xlb_f("DPA_DeleteAllPtrs", DPA_DeleteAllPtrs),
         xlb_f("DPA_DeletePtr", DPA_DeletePtr),
         xlb_f("DPA_Destroy", DPA_Destroy),
-        xlb_class<xlb_cbf<DPA_DestroyCallback_t>>("DPA_DestroyCallback").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<DPA_EnumCallback_t>>("DPA_EnumCallback").constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<DPA_DestroyCallback_t>>("DPA_DestroyCallback")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<DPA_EnumCallback_t>>("DPA_EnumCallback")
+            .constructor<xlb_luafunc>(),
         xlb_f("DPA_GetPtr", DPA_GetPtr),
         xlb_f("DPA_GetPtrIndex", DPA_GetPtrIndex),
-        xlb_f("DPA_GetSize", DPA_GetSize),
-        xlb_f("DPA_Grow", DPA_Grow),
+        xlb_f("DPA_GetSize", DPA_GetSize), xlb_f("DPA_Grow", DPA_Grow),
         xlb_f("DPA_InsertPtr", DPA_InsertPtr),
         xlb_f("DPA_LoadStream", DPA_LoadStream),
         xlb_f<DPA_Merge_t>("DPA_Merge", DPA_Merge),
@@ -3802,126 +5123,191 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_f("DPA_SetPtr", DPA_SetPtr),
         xlb_f<DPA_Sort_t>("DPA_Sort", DPA_Sort),
         xlb_f("DrawShadowText", DrawShadowText),
-        //xlb_f("DrawTextExPrivWrap", DrawTextExPrivWrap), // not recommended
-        //xlb_f("DrawTextWrap", DrawTextWrap), // not recommended
-        xlb_f("DSA_Clone", DSA_Clone),
-        xlb_f("DSA_Create", DSA_Create),
+        // xlb_f("DrawTextExPrivWrap", DrawTextExPrivWrap), // not recommended
+        // xlb_f("DrawTextWrap", DrawTextWrap), // not recommended
+        xlb_f("DSA_Clone", DSA_Clone), xlb_f("DSA_Create", DSA_Create),
         xlb_f("DSA_DeleteAllItems", DSA_DeleteAllItems),
         xlb_f("DSA_DeleteItem", DSA_DeleteItem),
         xlb_f("DSA_Destroy", DSA_Destroy),
-        xlb_class<xlb_cbf<DPA_EnumCallback_t>>("DSA_DestroyCallback").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<DSA_EnumCallback_t>>("DSA_EnumCallback").constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<DPA_EnumCallback_t>>("DSA_DestroyCallback")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<DSA_EnumCallback_t>>("DSA_EnumCallback")
+            .constructor<xlb_luafunc>(),
         xlb_f("DSA_GetItem", DSA_GetItem),
         xlb_f("DSA_GetItemPtr", DSA_GetItemPtr),
         xlb_f("DSA_GetSize", DSA_GetSize),
         xlb_f("DSA_InsertItem", DSA_InsertItem),
         xlb_f("DSA_SetItem", DSA_SetItem),
         xlb_f<DSA_Sort_t>("DSA_Sort", DSA_Sort),
-        //xlb_f("ExtTextOutWrap", ExtTextOutWrap), // not recommended
+        // xlb_f("ExtTextOutWrap", ExtTextOutWrap), // not recommended
         xlb_f("GetEffectiveClientRect", GetEffectiveClientRect),
         xlb_f("GetMUILanguage", GetMUILanguage),
-        //xlb_f("GetTextExtentPoint32Wrap", GetTextExtentPoint32Wrap), // not recommended
+        // xlb_f("GetTextExtentPoint32Wrap", GetTextExtentPoint32Wrap), // not
+        // recommended
         xlb_f("InitCommonControls", InitCommonControls),
         xlb_f("InitCommonControlsEx", InitCommonControlsEx),
         xlb_f("InitMUILanguage", InitMUILanguage),
         xlb_f("LoadIconMetric", LoadIconMetric),
         xlb_f("LoadIconWithScaleDown", LoadIconWithScaleDown),
-        //xlb_f("MirrorIcon", MirrorIcon), // FIXME: 414, comctl32.dll
-        xlb_class<xlb_cbf<PFNDACOMPARE>>("PFNDACOMPARE").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<PFNDACOMPARECONST>>("PFNDACOMPARECONST").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<PFNDAENUMCALLBACK>>("PFNDAENUMCALLBACK").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<PFNDAENUMCALLBACKCONST>>("PFNDAENUMCALLBACKCONST").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<PFNDPACOMPARE>>("PFNDPACOMPARE").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<PFNDPACOMPARECONST>>("PFNDPACOMPARECONST").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<PFNDPAENUMCALLBACK>>("PFNDPAENUMCALLBACK").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<PFNDPAMERGE>>("PFNDPAMERGE").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<PFNDPAMERGECONST>>("PFNDPAMERGECONST").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<PFNDPASTREAM>>("PFNDPASTREAM").constructor<xlb_luafunc>(),
-        xlb_class<xlb_cbf<PFNDSAENUMCALLBACK>>("PFNDSAENUMCALLBACK").constructor<xlb_luafunc>(),
-        //xlb_class<xlb_cbf<ReaderScrollCallback>>("ReaderScroll").constructor<xlb_luafunc>(), // unavailable
+        // xlb_f("MirrorIcon", MirrorIcon), // FIXME: 414, comctl32.dll
+        xlb_class<xlb_cbf<PFNDACOMPARE>>("PFNDACOMPARE")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNDACOMPARECONST>>("PFNDACOMPARECONST")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNDAENUMCALLBACK>>("PFNDAENUMCALLBACK")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNDAENUMCALLBACKCONST>>("PFNDAENUMCALLBACKCONST")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNDPACOMPARE>>("PFNDPACOMPARE")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNDPACOMPARECONST>>("PFNDPACOMPARECONST")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNDPAENUMCALLBACK>>("PFNDPAENUMCALLBACK")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNDPAMERGE>>("PFNDPAMERGE")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNDPAMERGECONST>>("PFNDPAMERGECONST")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNDPASTREAM>>("PFNDPASTREAM")
+            .constructor<xlb_luafunc>(),
+        xlb_class<xlb_cbf<PFNDSAENUMCALLBACK>>("PFNDSAENUMCALLBACK")
+            .constructor<xlb_luafunc>(),
+        // xlb_class<xlb_cbf<ReaderScrollCallback>>("ReaderScroll").constructor<xlb_luafunc>(),
+        // // unavailable
         xlb_f("ShowHideMenuCtl", ShowHideMenuCtl),
-        //xlb_f("Str_GetPtr", Str_GetPtr), // unavailable, 233 Str_GetPtrA, 235 Str_GetPtrW comctl32.dll
+        // xlb_f("Str_GetPtr", Str_GetPtr), // unavailable, 233 Str_GetPtrA, 235
+        // Str_GetPtrW comctl32.dll
         xlb_f("Str_SetPtrW", Str_SetPtrW),
-        //xlb_class<xlb_cbf<TranslateDispatchCallback>>("TranslateDispatch").constructor<xlb_luafunc>(), // unavailable
+        // xlb_class<xlb_cbf<TranslateDispatchCallback>>("TranslateDispatch").constructor<xlb_luafunc>(),
+        // // unavailable
 
-        xlb_f("DPA_AppendPtr", [](HDPA hdpa, void* pitem)->auto { return DPA_AppendPtr(hdpa, pitem); }),
-        xlb_f("DPA_FastDeleteLastPtr", [](HDPA hdpa)->auto { return DPA_FastDeleteLastPtr(hdpa); }),
-        xlb_f("DPA_FastGetPtr", [](HDPA hdpa, int i)->auto { return DPA_FastGetPtr(hdpa, i); }),
-        xlb_f("DPA_GetPtrCount", [](HDPA hdpa)->auto { return DPA_GetPtrCount(hdpa); }),
-        xlb_f("DPA_GetPtrPtr", [](HDPA hdpa)->auto { return DPA_GetPtrPtr(hdpa); }),
-        xlb_f("DPA_SetPtrCount", [](HDPA hdpa, UINT cItems)->auto { return DPA_SetPtrCount(hdpa, cItems); }),
-        xlb_f("DPA_SortedInsertPtr", [](HDPA hdpa, void* pFind, int iStart, PFNDPACOMPARE pfnCompare, LPARAM lParam, UINT options, void* pitem)->auto { return DPA_SortedInsertPtr(hdpa, pFind, iStart, pfnCompare, lParam, options, pitem); }),
-        xlb_f("DSA_AppendItem", [](HDSA hdsa, void* pitem)->auto { return DSA_AppendItem(hdsa, pitem); }),
-        xlb_f("DSA_GetItemCount", [](HDSA hdsa)->auto { return DSA_GetItemCount(hdsa); }),
-        xlb_f("FORWARD_WM_NOTIFY", [](HWND hwnd, int idFrom, NMHDR* pnmhdr, LRESULT (*fn)(HWND,UINT,WPARAM,LPARAM) )->auto { return FORWARD_WM_NOTIFY(hwnd, idFrom, pnmhdr, fn); }),
-        xlb_f("HANDLE_WM_NOTIFY", [](HWND hwnd, WPARAM wParam, LPARAM lParam, LRESULT (*fn)(HWND,WPARAM,NMHDR*))->auto { return HANDLE_WM_NOTIFY(hwnd, wParam, lParam, fn); }),
-        xlb_f("INDEXTOSTATEIMAGEMASK", [](UINT i)->auto { return INDEXTOSTATEIMAGEMASK(i); }),
+        xlb_f(
+            "DPA_AppendPtr", [](HDPA hdpa, void *pitem) -> auto {
+              return DPA_AppendPtr(hdpa, pitem);
+            }),
+        xlb_f(
+            "DPA_FastDeleteLastPtr",
+            [](HDPA hdpa) -> auto { return DPA_FastDeleteLastPtr(hdpa); }),
+        xlb_f(
+            "DPA_FastGetPtr",
+            [](HDPA hdpa, int i) -> auto { return DPA_FastGetPtr(hdpa, i); }),
+        xlb_f(
+            "DPA_GetPtrCount",
+            [](HDPA hdpa) -> auto { return DPA_GetPtrCount(hdpa); }),
+        xlb_f(
+            "DPA_GetPtrPtr",
+            [](HDPA hdpa) -> auto { return DPA_GetPtrPtr(hdpa); }),
+        xlb_f(
+            "DPA_SetPtrCount", [](HDPA hdpa, UINT cItems) -> auto {
+              return DPA_SetPtrCount(hdpa, cItems);
+            }),
+        xlb_f(
+            "DPA_SortedInsertPtr",
+            [](HDPA hdpa, void *pFind, int iStart, PFNDPACOMPARE pfnCompare,
+               LPARAM lParam, UINT options, void *pitem) -> auto {
+              return DPA_SortedInsertPtr(hdpa, pFind, iStart, pfnCompare,
+                                         lParam, options, pitem);
+            }),
+        xlb_f(
+            "DSA_AppendItem", [](HDSA hdsa, void *pitem) -> auto {
+              return DSA_AppendItem(hdsa, pitem);
+            }),
+        xlb_f(
+            "DSA_GetItemCount",
+            [](HDSA hdsa) -> auto { return DSA_GetItemCount(hdsa); }),
+        xlb_f(
+            "FORWARD_WM_NOTIFY",
+            [](HWND hwnd, int idFrom, NMHDR *pnmhdr,
+               LRESULT (*fn)(HWND, UINT, WPARAM, LPARAM)) -> auto {
+              return FORWARD_WM_NOTIFY(hwnd, idFrom, pnmhdr, fn);
+            }),
+        xlb_f(
+            "HANDLE_WM_NOTIFY",
+            [](HWND hwnd, WPARAM wParam, LPARAM lParam,
+               LRESULT(*fn)(HWND, WPARAM, NMHDR *)) -> auto {
+              return HANDLE_WM_NOTIFY(hwnd, wParam, lParam, fn);
+            }),
+        xlb_f(
+            "INDEXTOSTATEIMAGEMASK",
+            [](UINT i) -> auto { return INDEXTOSTATEIMAGEMASK(i); }),
 
-        xlb_class<COLORSCHEME>("COLORSCHEME") .constructor<>() .destructor()
+        xlb_class<COLORSCHEME>("COLORSCHEME")
+            .constructor<>()
+            .destructor()
             .property("dwSize", &COLORSCHEME::dwSize)
             .property("clrBtnHighlight", &COLORSCHEME::clrBtnHighlight)
-            .property("clrBtnShadow", &COLORSCHEME::clrBtnShadow)
-            ,
-        xlb_class<DPASTREAMINFO>("DPASTREAMINFO") .constructor<>() .destructor()
+            .property("clrBtnShadow", &COLORSCHEME::clrBtnShadow),
+        xlb_class<DPASTREAMINFO>("DPASTREAMINFO")
+            .constructor<>()
+            .destructor()
             .property("iPos", &DPASTREAMINFO::iPos)
-            .property("pvItem", &DPASTREAMINFO::pvItem)
-            ,
-        xlb_class<INITCOMMONCONTROLSEX>("INITCOMMONCONTROLSEX") .constructor<>() .destructor()
+            .property("pvItem", &DPASTREAMINFO::pvItem),
+        xlb_class<INITCOMMONCONTROLSEX>("INITCOMMONCONTROLSEX")
+            .constructor<>()
+            .destructor()
             .property("dwSize", &INITCOMMONCONTROLSEX::dwSize)
-            .property("dwICC", &INITCOMMONCONTROLSEX::dwICC)
-            ,
-        xlb_class<NMCHAR>("NMCHAR") .constructor<>() .destructor()
+            .property("dwICC", &INITCOMMONCONTROLSEX::dwICC),
+        xlb_class<NMCHAR>("NMCHAR")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMCHAR::hdr)
             .property("ch", &NMCHAR::ch)
             .property("dwItemPrev", &NMCHAR::dwItemPrev)
-            .property("dwItemNext", &NMCHAR::dwItemNext)
-            ,
-        xlb_class<NMCUSTOMSPLITRECTINFO>("NMCUSTOMSPLITRECTINFO") .constructor<>() .destructor()
+            .property("dwItemNext", &NMCHAR::dwItemNext),
+        xlb_class<NMCUSTOMSPLITRECTINFO>("NMCUSTOMSPLITRECTINFO")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMCUSTOMSPLITRECTINFO::hdr)
             .property("rcClient", &NMCUSTOMSPLITRECTINFO::rcClient)
             .property("rcButton", &NMCUSTOMSPLITRECTINFO::rcButton)
-            .property("rcSplit", &NMCUSTOMSPLITRECTINFO::rcSplit)
-            ,
-        xlb_class<NMCUSTOMTEXT>("NMCUSTOMTEXT") .constructor<>() .destructor()
+            .property("rcSplit", &NMCUSTOMSPLITRECTINFO::rcSplit),
+        xlb_class<NMCUSTOMTEXT>("NMCUSTOMTEXT")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMCUSTOMTEXT::hdr)
             .property("hDC", &NMCUSTOMTEXT::hDC)
             .property("lpString", &NMCUSTOMTEXT::lpString)
             .property("nCount", &NMCUSTOMTEXT::nCount)
             .property("lpRect", &NMCUSTOMTEXT::lpRect)
             .property("uFormat", &NMCUSTOMTEXT::uFormat)
-            .property("fLink", &NMCUSTOMTEXT::fLink)
-            ,
-        xlb_class<NMHDR>("NMHDR") .constructor<>() .destructor()
+            .property("fLink", &NMCUSTOMTEXT::fLink),
+        xlb_class<NMHDR>("NMHDR")
+            .constructor<>()
+            .destructor()
             .property("hwndFrom", &NMHDR::hwndFrom)
             .property("idFrom", &NMHDR::idFrom)
-            .property("code", &NMHDR::code)
-            ,
-        xlb_class<NMKEY>("NMKEY") .constructor<>() .destructor()
+            .property("code", &NMHDR::code),
+        xlb_class<NMKEY>("NMKEY")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMKEY::hdr)
             .property("nVKey", &NMKEY::nVKey)
-            .property("uFlags", &NMKEY::uFlags)
-            ,
-        xlb_class<NMMOUSE>("NMMOUSE") .constructor<>() .destructor()
+            .property("uFlags", &NMKEY::uFlags),
+        xlb_class<NMMOUSE>("NMMOUSE")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMMOUSE::hdr)
             .property("dwItemSpec", &NMMOUSE::dwItemSpec)
             .property("dwItemData", &NMMOUSE::dwItemData)
             .property("pt", &NMMOUSE::pt)
-            .property("dwHitInfo", &NMMOUSE::dwHitInfo)
-            ,
-        xlb_class<NMOBJECTNOTIFY>("NMOBJECTNOTIFY") .constructor<>() .destructor()
+            .property("dwHitInfo", &NMMOUSE::dwHitInfo),
+        xlb_class<NMOBJECTNOTIFY>("NMOBJECTNOTIFY")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMOBJECTNOTIFY::hdr)
             .property("iItem", &NMOBJECTNOTIFY::iItem)
             .property("piid", &NMOBJECTNOTIFY::piid)
             .property("pObject", &NMOBJECTNOTIFY::pObject)
             .property("hResult", &NMOBJECTNOTIFY::hResult)
-            .property("dwFlags", &NMOBJECTNOTIFY::dwFlags)
-            ,
-        xlb_class<NMTOOLTIPSCREATED>("NMTOOLTIPSCREATED") .constructor<>() .destructor()
+            .property("dwFlags", &NMOBJECTNOTIFY::dwFlags),
+        xlb_class<NMTOOLTIPSCREATED>("NMTOOLTIPSCREATED")
+            .constructor<>()
+            .destructor()
             .property("hdr", &NMTOOLTIPSCREATED::hdr)
-            .property("hwndToolTips", &NMTOOLTIPSCREATED::hwndToolTips)
-            ,
+            .property("hwndToolTips", &NMTOOLTIPSCREATED::hwndToolTips),
         // unsupported
-        //xlb_class<READERMODEINFO>("READERMODEINFO") .constructor<>() .destructor()
+        // xlb_class<READERMODEINFO>("READERMODEINFO") .constructor<>()
+        // .destructor()
         //    .property("cbSize", &READERMODEINFO::cbSize)
         //    .property("hwnd", &READERMODEINFO::hwnd)
         //    .property("fFlags", &READERMODEINFO::fFlags)
@@ -3944,8 +5330,7 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("NM_CUSTOMTEXT", NM_CUSTOMTEXT),
         xlb_const("NM_FONTCHANGED", NM_FONTCHANGED),
         xlb_const("NM_GETCUSTOMSPLITRECT", NM_GETCUSTOMSPLITRECT),
-        xlb_const("NM_HOVER", NM_HOVER),
-        xlb_const("NM_KEYDOWN", NM_KEYDOWN),
+        xlb_const("NM_HOVER", NM_HOVER), xlb_const("NM_KEYDOWN", NM_KEYDOWN),
         xlb_const("NM_KILLFOCUS", NM_KILLFOCUS),
         xlb_const("NM_LDOWN", NM_LDOWN),
         xlb_const("NM_NCHITTEST", NM_NCHITTEST),
@@ -3979,23 +5364,21 @@ xlb_class<NMLVSCROLL>("NMLVSCROLL") .constructor<>() .destructor()
         xlb_const("ICC_USEREX_CLASSES", ICC_USEREX_CLASSES),
         xlb_const("ICC_WIN95_CLASSES", ICC_WIN95_CLASSES),
         // unsupported
-        //xlb_const("RMF_ZEROCURSOR", RMF_ZEROCURSOR),
-        //xlb_const("RMF_VERTICALONLY", RMF_VERTICALONLY),
-        //xlb_const("RMF_HORIZONTALONLY", RMF_HORIZONTALONLY),
+        // xlb_const("RMF_ZEROCURSOR", RMF_ZEROCURSOR),
+        // xlb_const("RMF_VERTICALONLY", RMF_VERTICALONLY),
+        // xlb_const("RMF_HORIZONTALONLY", RMF_HORIZONTALONLY),
 
         // Network Management
         xlb_const("DSREG_UNKNOWN_JOIN", DSREG_UNKNOWN_JOIN),
         xlb_const("DSREG_DEVICE_JOIN", DSREG_DEVICE_JOIN),
-        xlb_const("DSREG_WORKPLACE_JOIN", DSREG_WORKPLACE_JOIN),
+        xlb_const("DSREG_WORKPLACE_JOIN", DSREG_WORKPLACE_JOIN)
 
 #ifdef compile
 #endif
 
 #endif // 0x0600
+  });  // module
+#endif // defined(BIND_CTRL)
 
-        xlb_const("CHECK_BIND_CTRL", CHECK_BIND_CTRL)
-    }); // module
-#endif // defined(CHECK_BIND_CTRL)
-
-    return 0;
+  return 0;
 } // load_ctrl

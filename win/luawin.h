@@ -12,13 +12,15 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#define luaf_declare(fn) \
-    int fn(lua_State*);
+#define luaf_declare(fn) int fn(lua_State *);
+
 
 //------------------------------------------------------------------------------------------------
-#define BIND_BASE
+#define BIND_WIN_CHECKED 0x1
+
+// #define BIND_BASE BIND_WIN_CHECKED
 //#define BIND_MSG
-//#define BIND_PROCESS
+//#define BIND_PROC
 //#define BIND_KM
 //#define BIND_RAS
 //#define BIND_GDI
@@ -28,18 +30,15 @@ extern "C" {
 //#define BIND_SHL
 //#define BIND_COM
 
-
 //------------------------------------------------------------------------------------------------
 #ifndef MODULE_NAME
 #define MODULE_NAME "luawin"
 #endif
 
-#define BIND_WIN_CHECKED 0x0001
-
 //------------------------------------------------------------------------------------------------
+#include <SDKDDKVer.h>
 #include <windows.h>
 #include <windowsx.h>
-#include <SDKDDKVer.h>
 
 #ifdef _WIN64
 using QWORD = unsigned __int64;
@@ -126,21 +125,22 @@ using QWORD = unsigned __int64;
 // Windows 2000 NTDDI_VERSION >= NTDDI_WIN2K
 
 //------------------------------------------------------------------------------------------------
-#include <winbase.h>
-#include <wingdi.h>
 #include <aclapi.h>
-#include <winuser.h>
 #include <cpl.h>
 #include <shellapi.h>
+#include <winbase.h>
+#include <wingdi.h>
+#include <winuser.h>
+
 //#include <ntifs.h> //<ntddk.h> //<wdm.h>
 #include <commctrl.h>
 #include <minwinbase.h>
 #include <richedit.h>
 
-#include <winnls.h>
 #include <fileapi.h>
-//#include <wfext.h>
+#include <winnls.h>
 
+//#include <wfext.h>
 
 #pragma comment(lib, "Gdi32.lib")
 #pragma comment(lib, "Winspool.lib")
@@ -152,19 +152,18 @@ using QWORD = unsigned __int64;
 //#pragma comment(lib, "ntoskrnl.lib")
 
 //
-#if defined(WINVER) && (WINVER>=0x0A00)
+#if defined(WINVER) && (WINVER >= 0x0A00)
 #pragma comment(lib, "OneCore.lib") // KernelBase.dll
 #endif
 
 #pragma comment(lib, "Kernel32.lib")
 
-
 #ifdef BIND_WIN_8_1_MINCORE_LIB
-#pragma comment(lib, "Mincore.lib") 
-//XXX:api-ms-win-core-processthreads-l1-1-2.dll
-//XXX:api-ms-win-shcore-scaling-l1-1-0.dll
-//XXX:api-ms-win-shcore-scaling-l1-1-1.dll
-//XXX:api-ms-win-core-psm-appnotify-l1-1-0.dll
+#pragma comment(lib, "Mincore.lib")
+// XXX:api-ms-win-core-processthreads-l1-1-2.dll
+// XXX:api-ms-win-shcore-scaling-l1-1-0.dll
+// XXX:api-ms-win-shcore-scaling-l1-1-1.dll
+// XXX:api-ms-win-core-psm-appnotify-l1-1-0.dll
 #endif
 
 //#include <scrnsave.h>
@@ -176,45 +175,41 @@ using QWORD = unsigned __int64;
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Mgmtapi.lib")
 
-
 //#include <nddeapi.h>
 //#pragma comment(lib, "Nddeapi.lib")
 
 #include <lm.h>
+#include <lmaccess.h>
 #include <lmat.h>
 #include <lmshare.h>
-#include <lmaccess.h>
+
 #pragma comment(lib, "Netapi32.lib")
-
-
-
-
 
 //------------------------------------------------------------------------------------------------
 // Windows Shell
 // https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb773177(v=vs.85)
 // https://docs.microsoft.com/en-us/windows/win32/api/_shell/
 #if ((defined(BIND_SHL) || defined(BIND_ALL)))
-#define CHECK_BIND_SHL BIND_WIN_CHECKED
 #include <Cscsearchapiif.hxx>
 #include <Pathcch.h>
 #pragma comment(lib, "Pathcch.lib")
-#include <shobjidl_core.h>
-#include <shobjidl.h>
 #include <objbase.h>
+#include <shobjidl.h>
+#include <shobjidl_core.h>
+
 #pragma comment(lib, "Ole32.lib")
 // API-MS-WIN-CORE-PATH-L1-1-0.DLL
-luaf_declare( load_shl                  );
+luaf_declare(load_shl);
 
-#if (WINVER==0x0500)
+#if (WINVER == 0x0500)
 #include <Wfext.h>
-using FMExtensionProc = LONG ( CALLBACK * ) ( HWND hwnd, WORD wMsg, LONG lParam);
+using FMExtensionProc = LONG(CALLBACK *)(HWND hwnd, WORD wMsg, LONG lParam);
 #endif
 
-using BrowseCallbackProc = int( CALLBACK * )( HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData );
-using MRUCMPPROC = int ( CALLBACK * )( LPCTSTR pString1, LPCTSTR pString2 );
+using BrowseCallbackProc = int(CALLBACK *)(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData);
+using MRUCMPPROC = int(CALLBACK *)(LPCTSTR pString1, LPCTSTR pString2);
 
-#if (WINVER>=0x0603)
+#if (WINVER >= 0x0603)
 #include <shellscalingapi.h>
 #endif
 
@@ -225,32 +220,30 @@ using MRUCMPPROC = int ( CALLBACK * )( LPCTSTR pString1, LPCTSTR pString2 );
 //#include <scrnsave.h>
 //#pragma comment(lib, "Scrnsave.lib")
 
-#include <syncmgr.h>
 #include <shellscalingapi.h>
+#include <syncmgr.h>
+
 #pragma comment(lib, "shcore.lib")
 ////#define STRICT_TYPED_ITEMIDS
 
-
-#include <wininet.h>//#define _WININET_ // for COMPONENT
 #include <shlobj.h>
 #include <shlobj_core.h>
-
+#include <wininet.h> //#define _WININET_ // for COMPONENT
 
 #include <intshcut.h>
 
 #include <appnotify.h>
-#pragma comment(lib, "Appnotify.lib") //Twinapi.core.dll
+#pragma comment(lib, "Appnotify.lib") // Twinapi.core.dll
 
-
+#include <Iphlpapi.h>
+#include <credentialprovider.h>
+#include <mobsync.h>
 #include <shappmgr.h>
 #include <shdeprecated.h>
-#include <credentialprovider.h>
-#include <shlguid.h>
 #include <shidfact.h>
-#include <Iphlpapi.h>
-#include <mobsync.h>
-#include <thumbnailstreamcache.h>
+#include <shlguid.h>
 #include <thumbcache.h>
+#include <thumbnailstreamcache.h>
 
 #include <appmgmt.h>
 #include <appnotify.h>
@@ -281,36 +274,69 @@ using MRUCMPPROC = int ( CALLBACK * )( LPCTSTR pString1, LPCTSTR pString2 );
 #include <userenv.h>
 #endif
 
+#include <tchar.h>
 //------------------------------------------------------------------------------------------------
+#include <xlb.h>
+
+//------------------------------------------------------------------------------------------------
+// for LoadLibrary GetProcAddress to get function pointer
+ struct Win32_libf {
+  struct Libf : public xlb_fmat_evthandler {
+    TCHAR *libn;
+    const char *funcn;
+    virtual ~Libf() {}
+  };
+
+  static xlb_fmat_evthandler *CreateFmatHandler(TCHAR* ln, const char* fn) {
+    auto h = new Libf();
+    h->libn = ln;
+    h->funcn = fn;
+    // h->on_registry = Win32_libf::register;
+    h->on_getf = Win32_libf::getf;
+    return h;
+  }
+
+  // static int registry(lua_State *L, xlb_fmat_evthandler *) { return 0; }
+  static void* getf(lua_State *L, xlb_fmat_evthandler *evth) { 
+    assert(evth);
+    auto libf = dynamic_cast<Libf*>(evth);
+    assert(libf);
+    assert(libf->libn);
+    assert(libf->funcn);
+    void* f = nullptr;
+    auto hlib = ::LoadLibrary(libf->libn);
+    assert(hlib!=NULL); //"fail to LoadLibrary"
+    f = ::GetProcAddress(hlib, libf->funcn);
+    assert(f!=NULL); // "fail to GetProcAddress"
+
+    return f;
+  }
+}; // Win32_libf
 
 //------------------------------------------------------------------------------------------------
 // XXX: special delete for interface, call release instead
-#include <xlb.h>
-
-template <typename T>
-struct xlb_win_interface_delete {
-    void operator ()(T * intf) {
-        assert(intf);
-        intf->Release();
-    }
+template <typename T> struct xlb_win_interface_delete {
+  void operator()(T *intf) {
+    assert(intf);
+    intf->Release();
+  }
 };
 
-template<typename T>
+template <typename T>
 using enable_if_interface = std::enable_if_t<std::is_base_of_v<IUnknown, xlb_completetype_t<T>>>;
 
-template <typename T>
-struct xlb_delete::xlb_tir<T, enable_if_interface<T>> {
-    using type = xlb_win_interface_delete<T>;
+template <typename T> struct xlb_delete::xlb_tir<T, enable_if_interface<T>> {
+  using type = xlb_win_interface_delete<T>;
 };
 
 //------------------------------------------------------------------------------------------------
 // Component Object Model (COM)
 // https://docs.microsoft.com/en-us/previous-versions/windows/embedded/ms885856(v=msdn.10)
 #if ((defined(BIND_COM) || defined(BIND_ALL)))
-#define CHECK_BIND_COM BIND_WIN_CHECKED
-#include <combaseapi.h>
-#include <Olectl.h>
 #include <IAccess.h>
+#include <Olectl.h>
+#include <combaseapi.h>
+
 #pragma comment(lib, "Oleaut32.lib")
 #include <Comcat.h>
 #include <objidl.h>
@@ -320,80 +346,63 @@ struct xlb_delete::xlb_tir<T, enable_if_interface<T>> {
 #include <Dccole.h>
 #endif
 
-luaf_declare( load_com                  );
+luaf_declare(load_com);
 
-template <typename T>
-struct xlb_interface : public xlb_base_class<T> {
-    using rr_t = xlb_interface&&;
-    using bc_t = xlb_base_class<T>;
-    using ri_t = xlb_regitem;
+template <typename T> struct xlb_interface : public xlb_base_class<T> {
+  using rr_t = xlb_interface &&;
+  using bc_t = xlb_base_class<T>;
+  using ri_t = xlb_regitem;
 
-    xlb_interface( const char* class_name ) {
-        bc_t::setup_names( class_name );
-    }
+  xlb_interface(const char *class_name) { bc_t::setup_names(class_name); }
 
-    virtual ~xlb_interface() {}
+  virtual ~xlb_interface() {}
 
-    xlb_interface( xlb_interface&& ) = delete;
+  xlb_interface(xlb_interface &&) = delete;
 
-    virtual void registry( xlb_ns* ns ) override {
-        bc_t::registry( ns->lua, ns->luaIndex );
-    }
+  virtual void registry(xlb_ns *ns) override { bc_t::registry(ns->lua, ns->luaIndex); }
 
-};  // xlb_interface
+}; // xlb_interface
 
-
-template <typename P>  // P=T * const
-int xlb_pushinterface( lua_State* L, P pointer, void* place = nullptr) {
-    using w_t = xlb_wrap<std::remove_pointer_t<P>, xlb_notpointer, xlb_win_interface_delete>;
-    auto wp = w_t::getplace( L, place );
-    new ( wp ) w_t( pointer, xlf_gc::yes, xlf_qlf::vp );
-    w_t::setmeta_pointer( L, -1 );
-    // xlb_debug("(0x%p)\n", pointer);
-    return { 1 };
+template <typename P> // P=T * const
+int xlb_pushinterface(lua_State *L, P pointer, void *place = nullptr) {
+  using w_t = xlb_wrap<std::remove_pointer_t<P>, xlb_notpointer, xlb_win_interface_delete>;
+  auto wp = w_t::getplace(L, place);
+  new (wp) w_t(pointer, xlf_gc::yes, xlf_qlf::vp);
+  w_t::setmeta_pointer(L, -1);
+  // xlb_debug("(0x%p)\n", pointer);
+  return {1};
 }
 
 #endif
-
-
-
 
 //------------------------------------------------------------------------------------------------
 // Windows Base
 // https://docs.microsoft.com/en-us/windows/win32/api/winbase/
 #if ((defined(BIND_BASE) || defined(BIND_ALL)))
-#define CHECK_BIND_BASE BIND_WIN_CHECKED
 #include <guiddef.h>
 #endif
 
-
-
-
 //------------------------------------------------------------------------------------------------
 // Simple Network Management Protocol
-// SNMP is available for use in the operating systems specified in the 
-// Requirements section. It may be altered or unavailable in subsequent 
-// versions. Instead, use Windows Remote Management, which is the Microsoft 
+// SNMP is available for use in the operating systems specified in the
+// Requirements section. It may be altered or unavailable in subsequent
+// versions. Instead, use Windows Remote Management, which is the Microsoft
 // implementation of WS-Man.
 // https://docs.microsoft.com/en-us/windows/desktop/api/_snmp/
 #if ((defined(BIND_SNMP) || defined(BIND_ALL)))
-#define CHECK_BIND_SNMP BIND_WIN_CHECKED
-#include <snmp.h>
 #include <mgmtapi.h>
+#include <snmp.h>
 #include <winsnmp.h>
+
 #pragma comment(lib, "Snmpapi.lib")
 #pragma comment(lib, "Wsnmp32.lib")
-luaf_declare( load_snmp                 );
+luaf_declare(load_snmp);
 #endif
-
-
-
 
 //------------------------------------------------------------------------------------------------
 // Windows GDI
 // https://docs.microsoft.com/en-us/windows/desktop/api/_gdi/
 #if ((defined(BIND_GDI) || defined(BIND_ALL)))
-#define CHECK_BIND_GDI BIND_WIN_CHECKED
 #include <fontsub.h>
 #include <mmsystem.h>
 #include <prnasnot.h>
@@ -406,17 +415,14 @@ luaf_declare( load_snmp                 );
 #pragma comment(lib, "FontSub.lib")
 #pragma comment(lib, "T2embed.lib")
 
-luaf_declare( load_gdi                  );
+luaf_declare(load_gdi);
 #endif
-
-
 
 //------------------------------------------------------------------------------------------------
 // Windows Controls
 // https://docs.microsoft.com/zh-cn/windows/win32/controls/window-controls
 // https://docs.microsoft.com/zh-cn/windows/win32/controls/individual-control-info
 #if ((defined(BIND_CTRL) || defined(BIND_ALL)))
-#define CHECK_BIND_CTRL BIND_WIN_CHECKED
 // https://docs.microsoft.com/zh-cn/windows/win32/controls/buttons
 // https://docs.microsoft.com/zh-cn/windows/win32/controls/combo-boxes
 // https://docs.microsoft.com/zh-cn/windows/win32/controls/edit-controls
@@ -429,31 +435,28 @@ luaf_declare( load_gdi                  );
 #include <prsht.h>
 #include <richole.h>
 
-luaf_declare( load_ctrl                 );
+luaf_declare(load_ctrl);
 
-using DPA_DestroyCallback_t = void ( * )( _In_ HDPA hdpa, _In_ PFNDAENUMCALLBACKCONST pfnCB,
-                                          _In_opt_ void *pData );
-using DPA_EnumCallback_t = void ( * )( _In_ HDPA hdpa, _In_ PFNDAENUMCALLBACKCONST pfnCB,
-                                       _In_opt_ void *pData );
-using DPA_Merge_t = BOOL ( * )( _Inout_ HDPA hdpaDest, _In_ HDPA hdpaSrc, _In_ DWORD dwFlags,
-                                _In_ PFNDACOMPARECONST pfnCompare, _In_ PFNDPAMERGECONST pfnMerge,
-                                _In_ LPARAM lParam );
-using DPA_Search_t = int ( * )( _In_ HDPA hdpa, _In_opt_ const void *pFind, _In_ int iStart,
-                                _In_ PFNDACOMPARECONST pfnCompare, _In_ LPARAM lParam,
-                                _In_ UINT options );
-using DPA_Sort_t = BOOL ( * )( _Inout_ HDPA hdpa, _In_ PFNDACOMPARECONST pfnCompare,
-                               _In_ LPARAM lParam );
-using DSA_DestroyCallback_t = void ( * )( _Inout_opt_ HDSA hdsa,
-                                          _In_ PFNDAENUMCALLBACKCONST pfnCB,
-                                          _In_opt_ void *pData );
-using DSA_EnumCallback_t = void ( * )( _In_ HDSA hdsa, _In_ PFNDAENUMCALLBACKCONST pfnCB,
-                                       _In_opt_ void *pData );
-using DSA_Sort_t = BOOL ( * )( _Inout_ HDSA hdsa, _In_ PFNDACOMPARECONST pfnCompare,
-                               _In_ LPARAM lParam );
+using DPA_DestroyCallback_t =
+    void (*)(_In_ HDPA hdpa, _In_ PFNDAENUMCALLBACKCONST pfnCB, _In_opt_ void *pData);
+using DPA_EnumCallback_t =
+    void (*)(_In_ HDPA hdpa, _In_ PFNDAENUMCALLBACKCONST pfnCB, _In_opt_ void *pData);
+using DPA_Merge_t = BOOL (*)(
+    _Inout_ HDPA hdpaDest, _In_ HDPA hdpaSrc, _In_ DWORD dwFlags, _In_ PFNDACOMPARECONST pfnCompare,
+    _In_ PFNDPAMERGECONST pfnMerge, _In_ LPARAM lParam);
+using DPA_Search_t = int (*)(
+    _In_ HDPA hdpa, _In_opt_ const void *pFind, _In_ int iStart, _In_ PFNDACOMPARECONST pfnCompare,
+    _In_ LPARAM lParam, _In_ UINT options);
+using DPA_Sort_t =
+    BOOL (*)(_Inout_ HDPA hdpa, _In_ PFNDACOMPARECONST pfnCompare, _In_ LPARAM lParam);
+using DSA_DestroyCallback_t =
+    void (*)(_Inout_opt_ HDSA hdsa, _In_ PFNDAENUMCALLBACKCONST pfnCB, _In_opt_ void *pData);
+using DSA_EnumCallback_t =
+    void (*)(_In_ HDSA hdsa, _In_ PFNDAENUMCALLBACKCONST pfnCB, _In_opt_ void *pData);
+using DSA_Sort_t =
+    BOOL (*)(_Inout_ HDSA hdsa, _In_ PFNDACOMPARECONST pfnCompare, _In_ LPARAM lParam);
 
 #endif
-
-
 
 //------------------------------------------------------------------------------------------------
 // Network Management
@@ -461,47 +464,41 @@ using DSA_Sort_t = BOOL ( * )( _Inout_ HDSA hdsa, _In_ PFNDACOMPARECONST pfnComp
 #if ((defined(BIND_NWM) || defined(BIND_ALL)))
 #include "atacct.h"
 #pragma comment(lib, "Mstask.lib")
-#define CHECK_BIND_NWM BIND_WIN_CHECKED
-luaf_declare( load_nwm                  );
+luaf_declare(load_nwm);
 #endif
-
 
 //------------------------------------------------------------------------------------------------
 // Windows and Messages
 // https://docs.microsoft.com/en-us/windows/desktop/api/_winmsg/
 #if ((defined(BIND_MSG) || defined(BIND_ALL)))
-#define CHECK_BIND_MSG BIND_WIN_CHECKED
-luaf_declare( load_msg                  );
+luaf_declare(load_msg);
 #endif
-
-
 
 //------------------------------------------------------------------------------------------------
 // Dialog Boxes
 // https://docs.microsoft.com/en-us/windows/desktop/api/_dlgbox/
 #if ((defined(BIND_DLG) || defined(BIND_ALL)))
-#define CHECK_BIND_DLG BIND_WIN_CHECKED
-#include <commdlg.h>
 #include <Prsht.h>
-luaf_declare( load_dialog               );
+#include <commdlg.h>
+
+luaf_declare(load_dlg);
 #endif
 
-
-
+using GETPROCESSHANDLEFROMHWND = HANDLE WINAPI (*)(HWND hwnd);
 //------------------------------------------------------------------------------------------------
 // System Services - Processes
 // https://docs.microsoft.com/zh-cn/windows/win32/procthread/process-and-thread-functions
-#if ((defined(BIND_PROCESS) || defined(BIND_ALL)))
-#define CHECK_BIND_PROCESS BIND_WIN_CHECKED
+#if ((defined(BIND_PROC) || defined(BIND_ALL)))
 
-#if (defined WINVER) && (WINVER>=0x0A00)
-#include <processthreadsapi.h>
+#if (defined WINVER) && (WINVER >= 0x0A00)
 #include <dispatcherqueue.h>
+#include <processthreadsapi.h>
+
 #pragma comment(lib, "CoreMessaging.lib")
 #include <wow64apiset.h>
 #endif
 
-#if (defined WINVER) && (WINVER>=0x0600)
+#if (defined WINVER) && (WINVER >= 0x0600)
 #include <avrt.h>
 #pragma comment(lib, "Avrt.lib")
 #endif
@@ -511,19 +508,16 @@ luaf_declare( load_dialog               );
 #include <wtsapi32.h>
 #pragma comment(lib, "wtsapi32.lib")
 
-luaf_declare( load_process              );
-#endif
 
+luaf_declare(load_proc);
+#endif
 
 //------------------------------------------------------------------------------------------------
 // Keyboard and Mouse Input
 // https://docs.microsoft.com/en-us/windows/win32/api/_inputdev/
 #if ((defined(BIND_KM) || defined(BIND_ALL)))
-#define CHECK_BIND_KM BIND_WIN_CHECKED
-luaf_declare( load_km                   );
+luaf_declare(load_km);
 #endif
-
-
 
 //------------------------------------------------------------------------------------------------
 //#include <lsapi.h>
@@ -535,12 +529,12 @@ luaf_declare( load_km                   );
 
 //------------------------------------------------------------------------------------------------
 using ADDPROPSHEETPAGEPROC = BOOL CALLBACK (*)(HPROPSHEETPAGE hpage, LPARAM lParam);
-using BROWSECALLBACKPROC   = int CALLBACK (*)(HWND hwnd,UINT uMsg,LPARAM lParam,LPARAM lpData);
-using FMEXTENSIONPROC      = LONG CALLBACK (*)(HWND hwnd, WORD wMsg, LONG lParam);
-using PROPSHEETPROC        = void CALLBACK (*)(HWND hwndDlg, UINT uMsg, LPARAM lParam);
-using PROPSHEETPAGEPROC    = UINT CALLBACK (*)(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp); 
+using BROWSECALLBACKPROC = int CALLBACK (*)(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData);
+using FMEXTENSIONPROC = LONG CALLBACK (*)(HWND hwnd, WORD wMsg, LONG lParam);
+using PROPSHEETPROC = void CALLBACK (*)(HWND hwndDlg, UINT uMsg, LPARAM lParam);
+using PROPSHEETPAGEPROC = UINT CALLBACK (*)(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
 
-luaf_declare( load_base                 );
-luaf_declare( bind_win_api_desktop_tech );
+luaf_declare(load_base);
+luaf_declare(bind_win_api_desktop_tech);
 
 //------------------------------------------------------------------------------------------------

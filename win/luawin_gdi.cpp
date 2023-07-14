@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------------------------
 int load_gdi(lua_State* L)
 {
-#if defined(CHECK_BIND_GDI)
+#if defined(BIND_GDI)
 
     xlb_module(L, MODULE_NAME) ({
         xlb_f("AbortPath", AbortPath),
@@ -1415,10 +1415,8 @@ int load_gdi(lua_State* L)
             .property("eM22", &XFORM::eM22)
             .property("eDx", &XFORM::eDx)
             .property("eDy", &XFORM::eDy)
-            ,
-        xlb_const("CHECK_BIND_GDI", CHECK_BIND_GDI)
     });
-#endif // defined(CHECK_BIND_GDI)
+#endif // defined(BIND_GDI)
 
     return 0;
 } // load_gdi

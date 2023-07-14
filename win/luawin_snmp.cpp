@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------------------------
 int load_snmp(lua_State* L)
 {
-#if defined(CHECK_BIND_SNMP)
+#if defined(BIND_SNMP)
 
     xlb_module(L, MODULE_NAME) ({
             xlb_class<xlb_cbf<SNMPAPI_CALLBACK>>("SNMPAPI_CALLBACK").constructor<xlb_luafunc>(),
@@ -162,12 +162,10 @@ int load_snmp(lua_State* L)
             xlb_class<SnmpVarBindList>("SnmpVarBindList") .constructor<>() .destructor()
                 .property("list", &SnmpVarBindList::list)
                 .property("len", &SnmpVarBindList::len)
-                ,
 #ifdef compile
 #endif
-            xlb_const("CHECK_BIND_SNMP", CHECK_BIND_SNMP)
     });
-#endif // defined(CHECK_BIND_SNMP)
+#endif // defined(BIND_SNMP)
 
     return 0;
 }
