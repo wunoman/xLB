@@ -1,9 +1,9 @@
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @file xlb.h
 // @brief bind c++ to Lua
 // @author wunoman@qq.com
 // @date 20170219
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #ifndef _XLB_H
 #define _XLB_H
 
@@ -26,7 +26,7 @@
 using namespace std;
 using namespace std::placeholders;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -37,13 +37,13 @@ extern "C" {
 }
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef DEBUG
 
 constexpr auto debug_mode = true;
 #define xlb_debug(format, ...)                                                                     \
-  printf("(%07d,%-15s,%-15s)" format, __LINE__, __FUNCTION__, __FILE__, ##__VA_ARGS__)
+  printf("(%07d,%-15s,%-15s) " format, __LINE__, __FUNCTION__, __FILE__, ##__VA_ARGS__)
 #define xlb_dbg() xlb_debug("\n")
 
 #else
@@ -54,35 +54,33 @@ constexpr auto debug_mode = false;
 
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // tir (Type Information Replenish)
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 static void xlb_donothing() {}
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_guard {};
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T> using xlb_t = typename T::type;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlt_each
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlt_each {
   template <class... T> xlt_each(T...) {}
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlt_typelist
-//------------------------------------------------------------------------------------------------
-template <typename... T> struct xlt_typelist {
-  static int const size = sizeof...(T);
-};
+//--------------------------------------------------------------------------------------------------
+template <typename... T> struct xlt_typelist { static int const size = sizeof...(T); };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlt_makeidx
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <int...> struct xlb_idx {};
 
 template <int, class Idx, int> struct xlt_makeidx;
@@ -98,7 +96,7 @@ template <int I, int... Idx> struct xlt_makeidx<I, xlb_idx<Idx...>, 0> {
 ///< index sequence zero-based
 template <int N> using xlb_idx_t = xlb_t<xlt_makeidx<0, xlb_idx<>, N>>;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename... T> struct xlb_tupsize {};
 template <typename... T> struct xlb_tupsize<std::tuple<T...> &> {
   static constexpr auto value = sizeof...(T);
@@ -108,9 +106,9 @@ template <typename... T> struct xlb_tupsize<std::tuple<T...>> {
 };
 template <typename TUP> inline constexpr auto xlb_tupsize_v = xlb_tupsize<TUP>::value;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // predeclare
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename X> struct xlb_base_class;
 template <typename X> struct xlb_class;
 template <typename F> struct xlb_fmate;
@@ -144,18 +142,18 @@ struct xlb_luafunc {
   int ref_id = LUA_NOREF;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_base_cbcf {
   virtual void setLua(lua_State *L) = 0;
   virtual void updatestatic(lua_State *L) = 0;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // type support
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <bool B, class T, class F> using xlt_ifelse_t = std::conditional_t<B, T, F>;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T> struct is_cp : std::false_type {};
 template <typename T> struct is_cp<T *const> : std::true_type {};
 template <typename T> inline constexpr auto is_cp_v = is_cp<T>::value;
@@ -168,12 +166,12 @@ template <typename T> struct is_p2cv : std::false_type {};
 template <typename T> struct is_p2cv<const T *> : std::true_type {};
 template <typename T> inline constexpr auto is_p2cv_v = is_p2cv<T>::value;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename T> struct is_lstruct : std::false_type {};
 template <typename Vt, typename T> struct is_lstruct<Vt, xlb_lstruct<Vt, T>> : std::true_type {};
 template <typename Vt, typename T> inline constexpr auto is_lstruct_v = is_lstruct<Vt, T>::value;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T, typename = void> struct is_complete : std::false_type {};
 template <typename T> struct is_complete<T, decltype(void(sizeof(T)))> : std::true_type {};
 template <typename T> inline constexpr auto is_complete_v = is_complete<T>::value;
@@ -184,7 +182,7 @@ template <typename T> struct xlb_completetype {
 
 template <typename T> using xlb_completetype_t = xlb_t<xlb_completetype<T>>;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T> constexpr auto xlb_sizeof() {
   return sizeof(
       // XXX: for incomplete type
@@ -192,10 +190,10 @@ template <typename T> constexpr auto xlb_sizeof() {
   // return sizeof(std::conditional_t<std::is_void_v<T>, int, T>);
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_ai
 // argument info, the argument value loaded from Lua
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_ai {
   int from = 0;  ///< fetch from
   int to = 0;    ///< fetch to, [from, to)
@@ -233,23 +231,23 @@ enum class xlf_gc : uint8_t {
   yesInplace = 0x08, ///< for in place new operator
 };                   // xlf_gc
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 constexpr auto XLB_UPVALUE_1 = 1;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // function arguments type match
-//------------------------------------------------------------------------------------------------
-#define XLB_E_AMI_SAME 0x00000000
-#define XLB_E_AMI_DEFAULT 0x00000000
+//--------------------------------------------------------------------------------------------------
+#define XLB_E_AMI_SAME      0x00000000
+#define XLB_E_AMI_DEFAULT   0x00000000
 #define XLB_E_AMI_TRANSLATE 0x00000001
 
-#define XLB_E_AMI_BAD 0x10000000
-#define XLB_E_AMI_DENY 0x10000001
-#define XLB_E_AMI_NONE 0x10000002
-#define XLB_E_AMI_FEW 0x10000003
+#define XLB_E_AMI_BAD    0x10000000
+#define XLB_E_AMI_DENY   0x10000001
+#define XLB_E_AMI_NONE   0x10000002
+#define XLB_E_AMI_FEW    0x10000003
 #define XLB_E_AMI_TOMUCH 0x10000003
-#define xlb_ambad(ami) (XLB_E_AMI_BAD <= (ami.match_result))
-#define xlb_amgood(ami) (XLB_E_AMI_BAD > (ami.match_result))
+#define xlb_ambad(ami)   (XLB_E_AMI_BAD <= (ami.match_result))
+#define xlb_amgood(ami)  (XLB_E_AMI_BAD > (ami.match_result))
 
 #define xlb_amfail(ami, e, msg)                                                                    \
   {                                                                                                \
@@ -280,9 +278,9 @@ struct xlb_ami {
   xlb_ami(int ac) : arg_count(ac) {}
 }; // xlb_ami
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // help struct
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 using xlb_djy = void; // da jiang you
 
 struct xpo_base_rier {};
@@ -295,18 +293,14 @@ struct xpo_readonly : public xpo_base_readonly {};
 
 struct xpo_no_newinplace {};
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb help template
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Base, bool IS_BASE_OF, typename... T> struct xlt_search_derived {};
 
-template <typename Base, typename Typelist> struct xlt_getderived {
-  using type = void;
-};
+template <typename Base, typename Typelist> struct xlt_getderived { using type = void; };
 
-template <typename BASE> struct xlt_getderived<BASE, xlt_typelist<>> {
-  using type = void;
-};
+template <typename BASE> struct xlt_getderived<BASE, xlt_typelist<>> { using type = void; };
 
 template <typename Base, typename Head, typename... Tail>
 struct xlt_getderived<Base, xlt_typelist<Head, Tail...>> {
@@ -316,7 +310,7 @@ struct xlt_getderived<Base, xlt_typelist<Head, Tail...>> {
 template <typename Base, typename Typelist>
 using xlt_getderived_t = xlb_t<xlt_getderived<Base, Typelist>>;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Base, typename Head, typename... Tail>
 struct xlt_search_derived<Base, false, Head, Tail...> {
   using type = xlt_getderived_t<Base, xlt_typelist<Tail...>>;
@@ -327,45 +321,49 @@ struct xlt_search_derived<Base, true, Head, Tail...> {
   using type = Head;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // MACRO
-//------------------------------------------------------------------------------------------------
-#define luaL_reg luaL_Reg
+//--------------------------------------------------------------------------------------------------
+#define luaL_reg        luaL_Reg
 #define XLB_EXISTS_FLAG 0x1
 
-#define XLB_META_PREFIX "xlb_meta_"
-#define XLB_STATEMENT_VALUE 1
-#define XLB_META_PREFIX_ARRAY "xlb_meta_array"
+#define XLB_META_PREFIX         "xlb_meta_"
+#define XLB_STATEMENT_VALUE     1
+#define XLB_META_PREFIX_ARRAY   "xlb_meta_array"
 #define XLB_META_PREFIX_POINTER "xlb_meta_pointer"
 
 #define XLB_SIV static inline void
 #define XLB_SII static inline int
 #define XLB_SIT static inline auto
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+struct xlb_fmat_evthandler {
+  using self_t = xlb_fmat_evthandler;
+  using ptr_t = std::unique_ptr<xlb_fmat_evthandler>;
+  using on_registry_t = int (*)(lua_State *L, self_t *);
+  using on_getf_t = void *(*)(lua_State *L, self_t *);
+
+  on_registry_t on_registry = nullptr;
+  on_getf_t on_getf = nullptr;
+  virtual ~xlb_fmat_evthandler(){};
+};
+
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_base_func_ptr
-// @brief base struct for function pointer, NEE this without pointer type
-// information
-//------------------------------------------------------------------------------------------------
+// @brief base struct for function pointer, this struct have no pointer type information
+//--------------------------------------------------------------------------------------------------
 struct xlb_base_func_ptr {
   using ptr_t = std::unique_ptr<xlb_base_func_ptr>;
-  using onregistry_t = int (*)(lua_State *L, xlb_base_func_ptr *);
-
-  /** @brief one process opportunity on pushing upvalue
-   * @retval count of upvalue
-   */
-  onregistry_t onRegistry;
-
-  xlb_base_func_ptr(onregistry_t callback = nullptr) : onRegistry(callback) {}
-
-  virtual int pushupvalue(lua_State *L) { return 0; }
+  xlb_base_func_ptr() {}
+  virtual int pushupvalue(lua_State *L, xlb_fmat_evthandler *evt = nullptr) { return 0; }
   virtual ~xlb_base_func_ptr() {}
 }; // xlb_base_func_ptr
+//
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_propmate
 // @brief class property pointer mate
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_base_prop_ptr {
   using ptr_t = std::unique_ptr<xlb_base_prop_ptr>;
 };
@@ -387,10 +385,10 @@ template <typename FT> inline auto xlb_makefuncptr(FT f) {
 
 inline auto xlb_makefuncptr() { return xlb_base_func_ptr::ptr_t(nullptr); }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_prophandler
 // @brief property include member data or member function
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 struct xlb_prophandler {
   using ptr_t = xlb_base_prop_ptr::ptr_t;
@@ -416,9 +414,9 @@ struct xlb_prophandler {
 
 }; // xlb_prophandler
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_funchandler
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_funchandler {
   using func_t = lua_CFunction;
 
@@ -447,14 +445,14 @@ struct xlb_funchandler {
   }
 }; // xlb_funchandler
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_base_agent {
   virtual void getarg(lua_State *L, xlb_ami &ami) {}
   virtual void pusharg(lua_State *L, int &rc) {}
   virtual ~xlb_base_agent() {}
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_base_property {
   using self_t = xlb_base_property;
   using ptr_t = std::unique_ptr<self_t>;
@@ -470,17 +468,17 @@ struct xlb_base_property {
   virtual int do_func(lua_State *L, xlf_prop flag) { return 0; }
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 using xlb_regs_t = std::vector<luaL_reg>;
-using xlb_closure_t = std::tuple<const char *, lua_CFunction, xlb_base_func_ptr::ptr_t>;
-using xlb_classfuncs_t = std::vector<xlb_closure_t>;
+using xlb_cf_t = std::tuple<const char *, lua_CFunction, xlb_base_func_ptr::ptr_t>;
+using xlb_cfs_t = std::vector<xlb_cf_t>;
 using xlb_consts_t = std::vector<std::pair<const char *, int>>;
 using xlb_member_t = std::unordered_map<string, std::unique_ptr<xlb_base_property>>;
 using xlb_metas_t = std::vector<const char **>;
 using xlb_meta_t = const char *;
 using xlb_static_member_t = std::unordered_map<string, std::unique_ptr<xlb_base_agent>>;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 static int xlu_search_getter(lua_State *L, xlb_meta_t metaName, const xlb_metas_t &superNames) {
   int nfound = 0;
   for (auto &metaName : superNames) {
@@ -506,7 +504,7 @@ static int xlu_search_getter(lua_State *L, xlb_meta_t metaName, const xlb_metas_
   return nfound;
 } // xlu_search_getter
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 static int xlu_search_setter(lua_State *L, xlb_meta_t metaName, const xlb_metas_t &superNames) {
   int nfound = 0;
   for (auto &metaName : superNames) {
@@ -532,9 +530,9 @@ static int xlu_search_setter(lua_State *L, xlb_meta_t metaName, const xlb_metas_
   return nfound;
 } // xlu_search_setter
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // search super tree for metaName
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 static bool xlu_checksuper(lua_State *L, int index, xlb_meta_t metaName) {
   //-1:xlb_super={...}
   std::vector<string> table_names;
@@ -566,10 +564,10 @@ static bool xlu_checksuper(lua_State *L, int index, xlb_meta_t metaName) {
   return false;
 } // xlu_checksuper
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_meta value of userdata equal to metaName
 // or userdata's ancient those metaName equal to metaName
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 static bool xlu_checkudata(lua_State *L, int index, xlb_meta_t metaName) {
   assert(metaName != nullptr);
   bool checked = false;
@@ -618,9 +616,10 @@ static bool xlu_checkudata(lua_State *L, int index, xlb_meta_t metaName) {
   return checked;
 } // xlu_checkudata
 
-//------------------------------------------------------------------------------------------------
-static void xlu_newobjmeta(lua_State *L, xlb_meta_t metaName, const xlb_regs_t &metaFuncs,
-                           const xlb_classfuncs_t &methodFuncs, const xlb_metas_t &superMetas) {
+//--------------------------------------------------------------------------------------------------
+static void xlu_newobjmeta(
+    lua_State *L, xlb_meta_t metaName, const xlb_regs_t &metaFuncs, const xlb_cfs_t &upvalueFuncs,
+    const xlb_metas_t &superMetas) {
   // xlb_debug("%s\n", metaName);
   luaL_newmetatable(L, metaName); // XXX: push table on #-1
   if (1 < metaFuncs.size()) {
@@ -652,7 +651,7 @@ static void xlu_newobjmeta(lua_State *L, xlb_meta_t metaName, const xlb_regs_t &
   /** XXX:class method with upvalues,
    * __index and __newindex are in metatable
    */
-  for (auto &finfo : methodFuncs) {
+  for (auto &finfo : upvalueFuncs) {
     lua_pushstring(L, std::get<0>(finfo)); ///< [0]==function name
     auto upvalue_count = std::get<2>(finfo)->pushupvalue(L);
     lua_pushcclosure(L, std::get<1>(finfo), upvalue_count);
@@ -662,10 +661,10 @@ static void xlu_newobjmeta(lua_State *L, xlb_meta_t metaName, const xlb_regs_t &
   lua_pop(L, 1); // XXX:pop metatable in #1
 } // xlu_newobjmeta
 
-//------------------------------------------------------------------------------------------------
-static void xlu_newtypelib(lua_State *L, const char *typeName, xlb_regs_t &typeTable,
-                           const xlb_static_member_t &staticMember, int typeSize,
-                           int parentTableIndex) {
+//--------------------------------------------------------------------------------------------------
+static void xlu_newtypelib(
+    lua_State *L, const char *typeName, xlb_regs_t &typeTable,
+    const xlb_static_member_t &staticMember, int typeSize, int parentTableIndex) {
   if (0 != parentTableIndex) {
     lua_pushstring(L, typeName);
   }
@@ -701,7 +700,7 @@ static void xlu_newtypelib(lua_State *L, const char *typeName, xlb_regs_t &typeT
   }
 } // xlu_newtypelib
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 static void xlb_setwrapuservalue(lua_State *L, int index) {
   lua_pushlightuserdata(L, (void *)L);
   lua_setuservalue(L, index);
@@ -715,9 +714,9 @@ static bool xlb_testwrapuservalue(lua_State *L, int index) {
   return r;
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // wrap obj those type is T=eT[N]
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename ARR>
 int xlb_pusharraypointer(lua_State *L, ARR v, xlf_gc gcf, void *place = nullptr) {
   using eT = std::remove_extent_t<ARR>;
@@ -739,9 +738,9 @@ int xlb_pusharraypointer(lua_State *L, ARR v, xlf_gc gcf, void *place = nullptr)
   return {1};
 } // xlb_pusharraypointer
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // wrap obj with value
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename X> int xlb_pushobj(lua_State *L, X &v, xlf_gc gcf, void *place = nullptr) {
   using w_t = xlb_wrap<X>;
   auto wp = w_t::getplace(L, place);
@@ -751,9 +750,9 @@ template <typename X> int xlb_pushobj(lua_State *L, X &v, xlf_gc gcf, void *plac
   return {1};
 } // xlb_pushobj
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // wrap obj those class have xlb_base_class<PT>
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename X> int xlb_pushstructval(lua_State *L, X &v, xlf_gc gcf, void *place = nullptr) {
   using w_t = xlb_wrap<std::remove_const_t<X>>;
 
@@ -769,9 +768,9 @@ template <typename X> int xlb_pushstructval(lua_State *L, X &v, xlf_gc gcf, void
   return {1};
 } // xlb_pushstructval
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // wrap obj those class have xlb_base_class<PT>
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename X> int xlb_pushstructref(lua_State *L, X &v, xlf_gc gcf, void *place = nullptr) {
   using w_t = xlb_wrap<X>;
   auto pointer{&v};
@@ -781,9 +780,9 @@ template <typename X> int xlb_pushstructref(lua_State *L, X &v, xlf_gc gcf, void
   return {1};
 } // xlb_pushstructref
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // wrap obj those class have xlb_base_class<PT>
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename X>
 int xlb_pushstructref(lua_State *L, const X &v, xlf_gc gcf, void *place = nullptr) {
   auto pointer = &v;
@@ -795,12 +794,13 @@ int xlb_pushstructref(lua_State *L, const X &v, xlf_gc gcf, void *place = nullpt
   return {1};
 } // xlb_pushstructref
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // wrap obj those class is not xlb_base_class<PT>
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename P, typename AT> // P==const T*
-int xlb_pushrefaspointer(lua_State *L, P pointer, xlf_gc gcf, void *place = nullptr,
-                         std::enable_if_t<is_p2cv_v<P>> * = 0) {
+int xlb_pushrefaspointer(
+    lua_State *L, P pointer, xlf_gc gcf, void *place = nullptr,
+    std::enable_if_t<is_p2cv_v<P>> * = 0) {
   using w_t = xlb_wrap<typename AT::type, AT>;
   auto wp = w_t::getplace(L, place);
   new (wp) w_t(pointer, gcf, xlf_qlf::cref);
@@ -808,12 +808,13 @@ int xlb_pushrefaspointer(lua_State *L, P pointer, xlf_gc gcf, void *place = null
   return {1};
 } // xlb_pushrefaspointer
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // wrap obj those class is not xlb_base_class<PT>
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename P, typename AT> // P==T*
-int xlb_pushrefaspointer(lua_State *L, P pointer, xlf_gc gcf, void *place = nullptr,
-                         std::enable_if_t<!is_p2cv_v<P>> * = 0) {
+int xlb_pushrefaspointer(
+    lua_State *L, P pointer, xlf_gc gcf, void *place = nullptr,
+    std::enable_if_t<!is_p2cv_v<P>> * = 0) {
   using w_t = xlb_wrap<typename AT::type, AT>;
   auto wp = w_t::getplace(L, place);
   new (wp) w_t(pointer, gcf, xlf_qlf::ref);
@@ -821,10 +822,10 @@ int xlb_pushrefaspointer(lua_State *L, P pointer, xlf_gc gcf, void *place = null
   return {1};
 } // xlb_pushrefaspointer
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_base_wrap : wrap lightuserdata(pointer) which have xlb_base_class to user
 // data
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 struct xlb_base_wrap {
   xlf_gc gcFlag;
@@ -874,7 +875,7 @@ inline auto xlb_wpisconstfeignpointer(xlb_base_wrap *wp) {
 //        || wp->tQlf==xlf_qlf::vp;
 //}
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 template <typename P, typename NU = std::enable_if_t<std::is_pointer_v<P>>>
 XLB_SIT xlb_aspointer(lua_State *L, int index) {
@@ -886,16 +887,16 @@ template <typename T> XLB_SIT xlb_touserdata(lua_State *L, int index) {
 }
 
 XLB_SIT xlb_tobasewrap(lua_State *L, int index) {
-  xlb_base_wrap *wp{xlb_testwrapuservalue(L, index)
-                        ? reinterpret_cast<xlb_base_wrap *>(lua_touserdata(L, index))
-                        : nullptr};
+  xlb_base_wrap *wp{
+      xlb_testwrapuservalue(L, index) ? reinterpret_cast<xlb_base_wrap *>(lua_touserdata(L, index))
+                                      : nullptr};
   return wp;
 }
 
 template <typename T> XLB_SIT xlb_towrap(lua_State *L, int index) {
-  xlb_wrap<T> *wp{xlb_testwrapuservalue(L, index)
-                      ? reinterpret_cast<xlb_wrap<T> *>(lua_touserdata(L, index))
-                      : nullptr};
+  xlb_wrap<T> *wp{
+      xlb_testwrapuservalue(L, index) ? reinterpret_cast<xlb_wrap<T> *>(lua_touserdata(L, index))
+                                      : nullptr};
   return wp;
 }
 
@@ -921,7 +922,7 @@ template <typename T> auto xlb_toself(lua_State *L, int index) {
   return pobj;
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 template <typename P, typename WP> XLB_SIT xlb_getwppointer(WP *wp) {
   assert(wp);
@@ -932,14 +933,14 @@ template <typename T> XLB_SIT xlb_issametypeindex(xlb_base_wrap *wp) {
   return wp->issametypeindex(xlb_wrap<T>::typeidx);
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename eT, typename WP> int xlu_arrayitem_setter(lua_State *L) { // ud,k,v
   if constexpr (!std::is_const_v<eT>) {
     constexpr const auto ud_index{1};
     constexpr const auto key_index{2};
     constexpr const auto val_index{3};
 
-    auto wp{reinterpret_cast<WP *>(lua_tousaerdata(L, ud_index))}; // ud
+    auto wp{reinterpret_cast<WP *>(lua_touserdata(L, ud_index))}; // ud
     assert(wp);
     auto array_length{wp->len};
 
@@ -972,33 +973,49 @@ template <typename Vt, typename eT, typename WP> int xlu_arrayitem_setter(lua_St
   return {0};
 } // xlu_arrayitem_setter
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename eT, typename WP> int xlu_arrayitem_getter(lua_State *L) { // ud,k
   constexpr const auto ud_index{1};
   constexpr const auto key_index{2};
 
   auto wp{reinterpret_cast<WP *>(lua_touserdata(L, ud_index))}; // ud
   auto array_length{wp->len};
+  using PARR = std::add_pointer_t<eT[]>;
+  auto p = xlb_getwppointer<PARR>(wp);
 
-  auto item_index{(size_t)lua_tointeger(L, key_index)};
   auto rc{0};
-  if (item_index > 0 && item_index <= array_length) {
-    using PARR = std::add_pointer_t<eT[]>;
-    auto &arr = (*xlb_getwppointer<PARR>(wp));
-
-    // xlb_debug( "(%p,%lld,eT=%s)\n", &arr, item_index, typeid(eT).name() );
-
-    eT *pointer{arr + item_index - 1};
-    xlb_at<Vt, eT> v{pointer};
-    // xlb_debug( "(%p(%llu)[%lld],%s)\n", &arr, array_length, item_index,
-    // typeid(decltype(v)).name() ); xlb_debug( "(%p,%s)\n", pointer,
-    // typeid(eT).name() );
-    v.pusharg(L, rc);
+  if (lua_isinteger(L, key_index)) {
+    auto item_index{(size_t)lua_tointeger(L, key_index)};
+    if (item_index > 0 && item_index <= array_length) {
+      auto &arr = (*p);
+      // xlb_debug( "(%p,%lld,eT=%s)\n", &arr, item_index, typeid(eT).name() );
+      eT *pointer{arr + item_index - 1};
+      xlb_at<Vt, eT> v{pointer};
+      // xlb_debug( "(%p(%llu)[%lld],%s)\n", &arr, array_length, item_index,
+      // typeid(decltype(v)).name() ); xlb_debug( "(%p,%s)\n", pointer,
+      // typeid(eT).name() );
+      v.pusharg(L, rc);
+    } // else index out of bounds
+  } else if (lua_isstring(L, key_index)) {
+    auto key = lua_tostring(L, key_index);
+    if (0 == strcmp(key, "len")) {
+      lua_pushinteger(L, wp->len);
+      rc += 1;
+    } else if (0 == strcmp(key, "tostring")) {
+      if constexpr (std::is_same_v<eT, char>) {
+        lua_pushlstring(L, (const char *)p, wp->len);
+        rc += 1;
+      }
+      if constexpr (std::is_same_v<eT, wchar_t>) {
+        lua_pushlstring(L, (const char *)p, 2 * wp->len);
+        rc += 1;
+      }
+    }
   }
   return rc;
 } // xlu_arrayitem_getter
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename eT> void xlu_arraymetaname(std::string &meta_name) {
   meta_name.clear();
   meta_name = XLB_META_PREFIX_ARRAY;
@@ -1009,7 +1026,7 @@ template <typename eT> void xlu_arraymetaname(std::string &meta_name) {
   meta_name += "[])";
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename eT, typename WP> int xlu_newarraylib(lua_State *L) {
   std::string meta_name;
   xlu_arraymetaname<eT>(meta_name);
@@ -1025,7 +1042,7 @@ template <typename Vt, typename eT, typename WP> int xlu_newarraylib(lua_State *
   return {1};
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T> void xlu_pointermetaname(std::string &meta_name) {
   meta_name.clear();
   meta_name = XLB_META_PREFIX_POINTER;
@@ -1107,7 +1124,7 @@ static auto xlb_tobasewphaveprefix(lua_State *L, int index, const char *prefix) 
                                                                   : (xlb_base_wrap *)nullptr;
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <unsigned N> struct xlb_assignarrary {
   template <typename LEFT, typename RIGHT>
   XLB_SIV go(LEFT &left, RIGHT &right, bool isMoved = false) {
@@ -1129,10 +1146,10 @@ template <unsigned N> struct xlb_assignarrary {
   }
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_wrap
 // wrap object's address as ud, and then we can set metatable on it.
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 template <typename T, typename Deref_AT, typename WRO_DEL> class xlb_wrap : public xlb_base_wrap {
   using type = T;
@@ -1211,8 +1228,8 @@ public:
   virtual int lvaluereference(lua_State *L) override {
     int rc{0};
     if constexpr (!std::is_same_v<deref_at, xlb_notpointer>) {
-      if constexpr (!std::is_same_v<xlb_t<deref_at>, void> &&
-                    !std::is_same_v<xlb_t<deref_at>, const void>) {
+      if constexpr (
+          !std::is_same_v<xlb_t<deref_at>, void> && !std::is_same_v<xlb_t<deref_at>, const void>) {
         using origin_t = xlb_t<deref_at>;                    // T
         using ref_t = std::add_lvalue_reference_t<origin_t>; // T&
         using ref_at = xlb_at<typename deref_at::vter, ref_t>;
@@ -1307,8 +1324,7 @@ public:
 
   static void setmeta_pointer(lua_State *L, int index) {
     xlu_newpointerlib<xlb_vter, T, xlb_wrap>(L);
-    lua_setmetatable(L,
-                     (index < 0) ? --index : index); // ud.metatable = metatable
+    lua_setmetatable(L, (index < 0) ? --index : index); // ud.metatable = metatable
     xlb_setwrapuservalue(L, index);
   }
 
@@ -1330,8 +1346,7 @@ public:
     using eT = std::remove_extent_t<T>;
     // xlb_debug("(eT=%s,%s)\n", typeid(eT).name(), typeid(T).name());
     xlu_newarraylib<Vt, eT, xlb_wrap>(L);
-    lua_setmetatable(L,
-                     (index < 0) ? --index : index); // ud.metatable = metatable
+    lua_setmetatable(L, (index < 0) ? --index : index); // ud.metatable = metatable
     xlb_setwrapuservalue(L, index);
   }
 
@@ -1342,12 +1357,12 @@ public:
 
 }; // xlb_wrap
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_pushpointer : (T* const) type pointer as userdata
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename P, typename Deref_AT> // P=T * const
-int xlb_pushpointer(lua_State *L, P pointer, void *place = nullptr,
-                    std::enable_if_t<is_cp_v<P>> * = 0) {
+int xlb_pushpointer(
+    lua_State *L, P pointer, void *place = nullptr, std::enable_if_t<is_cp_v<P>> * = 0) {
   using w_t = xlb_wrap<std::remove_pointer_t<P>, Deref_AT>;
   auto wp = w_t::getplace(L, place);
   new (wp) w_t(pointer, xlf_gc::no, xlf_qlf::cp);
@@ -1356,12 +1371,13 @@ int xlb_pushpointer(lua_State *L, P pointer, void *place = nullptr,
   return {1};
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_pushpointer : (T*) type pointer as userdata
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename P, typename Deref_AT> // P=T*
-int xlb_pushpointer(lua_State *L, P pointer, void *place = nullptr,
-                    std::enable_if_t<!is_p2cv_v<P> && is_vp_v<P>> * = 0) {
+int xlb_pushpointer(
+    lua_State *L, P pointer, void *place = nullptr,
+    std::enable_if_t<!is_p2cv_v<P> && is_vp_v<P>> * = 0) {
   // xlb_debug("(%s)\n", typeid(P).name());
   using w_t = xlb_wrap<std::remove_pointer_t<P>, Deref_AT>;
   auto wp = w_t::getplace(L, place);
@@ -1370,12 +1386,12 @@ int xlb_pushpointer(lua_State *L, P pointer, void *place = nullptr,
   return {1};
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_pushpointer : (const T*) type pointer as userdata
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename P, typename Deref_AT> // P=const T *
-int xlb_pushpointer(lua_State *L, P pointer, void *place = nullptr,
-                    std::enable_if_t<is_p2cv_v<P>> * = 0) {
+int xlb_pushpointer(
+    lua_State *L, P pointer, void *place = nullptr, std::enable_if_t<is_p2cv_v<P>> * = 0) {
   // xlb_debug("(0x%p)\n", pointer);
   using w_t = xlb_wrap<std::remove_pointer_t<P>, Deref_AT>;
   auto wp = w_t::getplace(L, place);
@@ -1384,9 +1400,9 @@ int xlb_pushpointer(lua_State *L, P pointer, void *place = nullptr,
   return {1};
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb argument agent
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T> struct xlb_selfagent {
   XLB_SIV getarg(lua_State *L, xlb_ami &ami) {
     auto extmsg{"xlb: invalid self"};
@@ -1417,9 +1433,9 @@ template <typename T> struct xlb_selfagent<const T> {
   }
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_ignore
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_ignore {
   XLB_SIV getarg(lua_State *, xlb_ami &ami) {
     // xlb_debug("(%d)\n", ami.arg_index);
@@ -1429,9 +1445,9 @@ struct xlb_ignore {
   }
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_lpointer
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 template <typename Vt, typename Dtor>
 struct xlb_lpointer<Vt, void *, void *, Dtor> : public xlb_base_agent // void*
@@ -1463,6 +1479,13 @@ struct xlb_lpointer<Vt, void *, void *, Dtor> : public xlb_base_agent // void*
         }
       }
     }
+    // RULE: accept nil as nullptr
+    if (!got) {
+      if (lua_isnil(L, ami.arg_index)) {
+        pointer = nullptr;
+        got = true;
+      }
+    }
     if (!got && lua_isuserdata(L, ami.arg_index)) {
       // accept lightuserdata
       pointer = lua_touserdata(L, ami.arg_index);
@@ -1482,7 +1505,7 @@ struct xlb_lpointer<Vt, void *, void *, Dtor> : public xlb_base_agent // void*
   }
 }; // xlb_lpointer<Vt, void*, void*>
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename Dtor>
 struct xlb_lpointer<Vt, const void *, const void *, Dtor> : public xlb_base_agent // const void*
 {
@@ -1504,14 +1527,23 @@ struct xlb_lpointer<Vt, const void *, const void *, Dtor> : public xlb_base_agen
   void getarg(lua_State *L, xlb_ami &ami) override {
     pointer = nullptr;
     // xlb_debug("(0x%p)\n", this);
+    auto got{false};
     if (auto wp{xlb_tobasewphaveprefix(L, ami.arg_index, XLB_META_PREFIX_POINTER)}) {
       if (xlb_issametypeindex<const void>(wp)) {
         if (wp->tQlf == xlf_qlf::vp) { // T*
           pointer = xlb_getwppointer<pointer_t>(wp);
+          got = true;
         }
       }
     }
-    if (pointer) {
+    // RULE: accept nil as nullptr
+    if (!got) {
+      if (lua_isnil(L, ami.arg_index)) {
+        pointer = nullptr;
+        got = true;
+      }
+    }
+    if (got) {
       ++ami.arg_index;
     } else {
       xlb_amfail(ami, XLB_E_AMI_BAD, "wrong type, const void* expected");
@@ -1525,7 +1557,7 @@ struct xlb_lpointer<Vt, const void *, const void *, Dtor> : public xlb_base_agen
   }
 }; // xlb_lpointer<Vt, const void*, const void*>
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename T, typename U, typename Dtor>
 struct xlb_lpointer<Vt, T *, U, Dtor> : public xlb_base_agent // T* or T&
 {
@@ -1545,10 +1577,10 @@ struct xlb_lpointer<Vt, T *, U, Dtor> : public xlb_base_agent // T* or T&
     return (*this);
   }
   operator pointer_t() { return pointer; }
-  operator reference_t() {
-    assert(pointer);
-    return *pointer;
-  }
+  // operator reference_t() {
+  //   assert(pointer);
+  //   return *pointer;
+  // }
 
   void getarg(lua_State *L, xlb_ami &ami) override {
     pointer = nullptr;
@@ -1630,9 +1662,20 @@ struct xlb_lpointer<Vt, T *, U, Dtor> : public xlb_base_agent // T* or T&
       }
     }
 
+    // RULE: because U&, do not accept nil as nullptr
+    if constexpr (!std::is_reference_v<U>) { // U==T*
+      // RULE: accept nil as nullptr
+      if (!got) {
+        if (lua_isnil(L, ami.arg_index)) {
+          pointer = nullptr;
+          got = true;
+        }
+      }
+    }
+
     // xlb_debug("(%d,0x%p)\n", got, pointer);
-    if (got || lua_isnil(L, ami.arg_index)) {
-      ++ami.arg_index; // RULE: accept nil as nullptr
+    if (got) {
+      ++ami.arg_index;
     } else {
       if constexpr (debug_mode) {
         using TT = xlb_completetype_t<T>;
@@ -1655,14 +1698,19 @@ struct xlb_lpointer<Vt, T *, U, Dtor> : public xlb_base_agent // T* or T&
         rc += xlb_pushrefaspointer<pointer_t, deref_at>(L, pointer, xlf_gc::no);
       }
     } else {
-      // xlb_debug("(%s,%s)\n", typeid(pointer_t).name(),
-      // typeid(deref_at).name());
-      rc += xlb_pushpointer<pointer_t, deref_at>(L, pointer);
+      // xlb_debug("(%s,%s)\n", typeid(pointer_t).name(), typeid(deref_at).name());
+      // RULE: when U==T*, push nullptr as nil
+      if (pointer == nullptr) {
+        lua_pushnil(L);
+        rc += 1;
+      } else {
+        rc += xlb_pushpointer<pointer_t, deref_at>(L, pointer);
+      }
     }
   } // putarg
 };  // xlb_lpointer<T*, U>
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename T, typename U, typename Dtor>
 struct xlb_lpointer<Vt, T *const, U, Dtor> : public xlb_base_agent // T *const
 {
@@ -1692,6 +1740,15 @@ struct xlb_lpointer<Vt, T *const, U, Dtor> : public xlb_base_agent // T *const
         got = true;
       }
     }
+
+    // RULE: accept nil as nullptr
+    if (!got) {
+      if (lua_isnil(L, ami.arg_index)) {
+        pointer = nullptr;
+        got = true;
+      }
+    }
+
     if (got) {
       ++ami.arg_index;
     } else {
@@ -1701,12 +1758,17 @@ struct xlb_lpointer<Vt, T *const, U, Dtor> : public xlb_base_agent // T *const
 
   void pusharg(lua_State *L, int &rc) override {
     using deref_at = xlb_at<Vt, deref_t>;
-    rc += xlb_pushpointer<pointer_t, deref_at>(L, pointer);
-    // xlb_debug( "(0x%p)\n", this);
+    if (pointer == nullptr) {
+      lua_pushnil(L);
+      rc += 1;
+    } else {
+      rc += xlb_pushpointer<pointer_t, deref_at>(L, pointer);
+      // xlb_debug( "(0x%p)\n", this);
+    }
   }
 }; // xlb_lpointer<Vt, T* const, U>
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename T, typename U, typename Dtor>
 struct xlb_lpointer<Vt, const T *, U, Dtor> : public xlb_base_agent // const T*, const T&
 {
@@ -1760,6 +1822,32 @@ struct xlb_lpointer<Vt, const T *, U, Dtor> : public xlb_base_agent // const T*,
         pointer = xlb_getwppointer<pointer_t>(wp);
         got = true;
       }
+      if constexpr (std::is_same_v<T, char>) {
+        if (lua_type(L, ami.arg_index) == LUA_TSTRING) {
+          pointer = const_cast<char *>(lua_tostring(L, ami.arg_index));
+          got = true;
+        }
+      }
+      if constexpr (std::is_same_v<T, wchar_t>) {
+        auto tp = lua_type(L, ami.arg_index);
+        if (tp == LUA_TSTRING) {
+          pointer = reinterpret_cast<wchar_t *>(const_cast<char *>(lua_tostring(L, ami.arg_index)));
+          got = true;
+        } else if (tp == LUA_TNIL) {
+          pointer = nullptr;
+          got = true;
+        }
+      }
+    }
+    // RULE: because U&, do not accept nil as nullptr
+    if constexpr (!std::is_reference_v<U>) { // U==T*
+      // RULE: accept nil as nullptr
+      if (!got) {
+        if (lua_isnil(L, ami.arg_index)) {
+          pointer = nullptr;
+          got = true;
+        }
+      }
     }
 
     if (got) {
@@ -1786,13 +1874,18 @@ struct xlb_lpointer<Vt, const T *, U, Dtor> : public xlb_base_agent // const T*,
         rc += xlb_pushrefaspointer<pointer_t, deref_at>(L, pointer, xlf_gc::no);
       }
     } else {
-      rc += xlb_pushpointer<pointer_t, deref_at>(L, pointer);
+      if (pointer == nullptr) {
+        lua_pushnil(L);
+        rc += 1;
+      } else {
+        rc += xlb_pushpointer<pointer_t, deref_at>(L, pointer);
+      }
       // xlb_debug("(0x%p)\n", this);
     }
   }
 }; // xlb_lpointer<const T*, U> or const T&
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename Dtor>
 struct xlb_lpointer<Vt, const char *, const char *, Dtor> : public xlb_base_agent {
   using vter = Vt;
@@ -1816,12 +1909,13 @@ struct xlb_lpointer<Vt, const char *, const char *, Dtor> : public xlb_base_agen
   }
 
   void pusharg(lua_State *L, int &rc) override {
+    // If pointer is nullptr, pushes nil and returns  nullptr.
     lua_pushstring(L, pointer);
     ++rc;
   }
 }; // xlb_lpointer<const char*>
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt> struct xlb_lstruct<Vt, void> : public xlb_base_agent {
   using vter = Vt;
   using type = void;
@@ -1832,10 +1926,10 @@ template <typename Vt> struct xlb_lstruct<Vt, const void> : public xlb_base_agen
   using type = const void;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_lstruct for xlb_base_class<T>
 // agent for T v, do not copy the object in the lua, just keep it's address
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename T> struct xlb_lstruct : public xlb_base_agent {
   using vter = Vt;
   using type = T;
@@ -1895,7 +1989,7 @@ template <typename Vt, typename T> struct xlb_lstruct : public xlb_base_agent {
   }
 }; // xlb_lstruct<T>
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // T === const X or X
 template <typename Vt, typename T>
 struct xlb_lstruct<Vt, T &> : public xlb_base_agent // reference, do not copy
@@ -1943,7 +2037,7 @@ struct xlb_lstruct<Vt, T &> : public xlb_base_agent // reference, do not copy
   }
 }; // xlb_lstruct<T&>
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename T> struct xlb_lnumber : public xlb_base_agent {
   using vter = Vt;
   using type = T;
@@ -1967,7 +2061,7 @@ template <typename Vt, typename T> struct xlb_lnumber : public xlb_base_agent {
   }
 }; // xlb_lnumber
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename T> struct xlb_lintegral : public xlb_base_agent {
   using vter = Vt;
   using type = T;
@@ -2002,7 +2096,7 @@ template <typename Vt, typename T> struct xlb_lintegral : public xlb_base_agent 
         ++ami.arg_index;
       } else {
         stringstream ss;
-        ss << "xlb: #" << ami.arg_index << "integer expected.";
+        ss << "xlb: #" << ami.arg_index << " integer expected.";
         xlb_amfail(ami, XLB_E_AMI_BAD, ss.str());
       }
     }
@@ -2014,9 +2108,9 @@ template <typename Vt, typename T> struct xlb_lintegral : public xlb_base_agent 
   }
 }; // xlb_lintegral
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_larray
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, int N, typename T> struct xlb_larray : public xlb_base_agent {
   using vter = Vt;
   using type = T[N];
@@ -2152,7 +2246,7 @@ template <typename Vt, int N, typename T> struct xlb_larray : public xlb_base_ag
   }
 }; // xlb_larray<Vt, N, T>
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 template <typename Vt, typename T> struct xlb_lboolean : public xlb_base_agent {
   using vter = Vt;
@@ -2179,7 +2273,7 @@ template <typename Vt, typename T> struct xlb_lboolean : public xlb_base_agent {
   }
 }; // xlb_lboolean
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt> struct xlb_lfunc : public xlb_base_agent {
   using vter = Vt;
   using type = xlb_luafunc;
@@ -2207,9 +2301,9 @@ template <typename Vt> struct xlb_lfunc : public xlb_base_agent {
   }
 }; // xlb_lfunc
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // GC wrap, destructe wrap object
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T> int xlb_wpdtor(lua_State *L) {
   if (auto wp = xlb_testwrap<T>(L, 1)) {
     assert(wp);
@@ -2229,9 +2323,9 @@ template <typename T, auto freef> int xlb_wpdtor(lua_State *L) {
   return 0;
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //  xlt_typelist
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <class Vt, class FT> struct xlb_typeforge {};
 
 template <class Vt, class R, class Tx, class... A> struct xlb_typeforge<Vt, R (Tx::*)(A...)> {
@@ -2270,7 +2364,7 @@ struct xlb_typeforge<Vt, R (__stdcall Tx::*)(A...)> {
 };
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #ifndef _WIN64
 template <class Vt, class R, class... A> struct xlb_typeforge<Vt, R(__cdecl *)(A...)> {
   using tuple_t = std::tuple<xlb_at<Vt, A>...>;
@@ -2313,10 +2407,10 @@ template <class Vt, class... A> struct xlb_typeforge<Vt, void (*)(A...)> {
   using const_t = false_type;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_dfer
 // function with default parameters provider
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 struct xlb_dfer : public xpo_base_dfer {
   template <class TUP> XLB_SII go(TUP &tup, int dc) { return 0; }
@@ -2334,10 +2428,11 @@ struct xlb_setdefaultval<TUP, xlb_idx<idx...>, T...> {
     constexpr auto tsize = xlb_tupsize_v<TUP>;
     constexpr auto dsize = sizeof...(Dvs);
     static_assert(tsize >= dsize, "too much default value");
-    xlt_each{((idx >= (dsize - dc)) ? (std::get<tsize - dsize + idx>(tup) = std::forward<T>(Dvs),
-                                       // xlb_debug("(%d-%d,%d,%d)\n", tsize, dsize, idx, dc),
-                                       XLB_STATEMENT_VALUE)
-                                    : XLB_STATEMENT_VALUE)...};
+    xlt_each{
+        ((idx >= (dsize - dc)) ? (std::get<tsize - dsize + idx>(tup) = std::forward<T>(Dvs),
+                                  // xlb_debug("(%d-%d,%d,%d)\n", tsize, dsize, idx, dc),
+                                  XLB_STATEMENT_VALUE)
+                               : XLB_STATEMENT_VALUE)...};
   }
 };
 
@@ -2350,10 +2445,10 @@ template <typename TUP, typename... T> XLB_SII xlb_putdefault(TUP &tup, int dc, 
   return sizeof...(Dvs);
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_getargs
 // decltype(AIs)===array<xlb_ai, ...>
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename TUP, typename Idx, typename Dft> struct xlb_getargs {};
 
 template <typename TUP, typename Dft> struct xlb_getargs<TUP, xlb_idx<>, Dft> {
@@ -2407,9 +2502,9 @@ struct xlb_getargs<TUP, xlb_idx<Param_i, idxs...>, Dft> {
   }
 }; // xlb_getargs
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //  default value support
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Lam> struct xlb_derived_dfer : public xpo_base_dfer {
   ///< use static member to keep lambda instead non static member
   inline static Lam *plmd{nullptr};
@@ -2422,7 +2517,7 @@ template <typename Lam> auto xpo_default(Lam lmd) {
   return po_default_t(lmd);
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Idx, auto... Dvs> struct xlb_assign_default_value {};
 template <int... idx, auto... Dvs> struct xlb_assign_default_value<xlb_idx<idx...>, Dvs...> {
   template <typename TUP> XLB_SIV go(TUP &tup, int dc) {
@@ -2443,18 +2538,18 @@ template <auto... Dvs> auto xpo_dvs() {
   return xpo_default(lmd);
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //  xlb_derived_rier
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 template <int... PLACEHOLDERS> struct xlb_derived_rier : public xpo_base_rier {};
 
 using xlb_rier = void;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //  xlb_pushfrv
 //  push addition parameters of function into lua_State
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_pushfrv {
   template <typename, typename> struct xlb_tir {};
 };
@@ -2474,10 +2569,10 @@ struct xlb_pushfrv::xlb_tir<xlb_derived_rier<RPI...>, std::tuple<A...>> {
   }
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_ctor_r
 // @brief trait for result of constructor
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T> class xlb_ctor_r {
 public:
   using type = T;
@@ -2507,7 +2602,7 @@ template <typename T, typename... A> xlb_ctor_r<T> xlb_ctor(xlb_ignore, A... arg
 /** XXX: must ignore #1 as normal xlb_ctor */
 template <typename T, T *(*f)(void)> xlb_ctor_r<T> xlb_ctor_c_style(xlb_ignore) { return {f()}; }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_memblock {
   void *memblock = nullptr;
   xlb_memblock(void *p) : memblock(p) {}
@@ -2547,15 +2642,15 @@ xlb_ctor_inplace_r<T> xlb_ctor_inplace(xlb_ignore, xlb_memblock place, A... args
   return {new ((void *)place) T(args...)};
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T> struct is_ctor_r : std::false_type {};
 template <typename T> struct is_ctor_r<xlb_ctor_r<T>> : std::true_type {};
 template <typename T> struct is_ctor_r<xlb_ctor_inplace_r<T>> : std::true_type {};
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_rv2l
 // @brief push result of function into lua_State
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_rv2l {
   template <typename R, typename AT> struct xlb_tir {
     XLB_SIV go(lua_State *L, AT &r, int &rc) { r.pusharg(L, rc); }
@@ -2578,29 +2673,27 @@ struct xlb_rv2l {
   };
 }; // xlb_rv2l
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_delete {
-  template <typename T, typename = void> struct xlb_tir {
-    using type = std::default_delete<T>;
-  };
+  template <typename T, typename = void> struct xlb_tir { using type = std::default_delete<T>; };
 };
 
 template <typename T> using xlb_delete_t = xlb_t<xlb_delete::xlb_tir<T>>;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_vter, help us to get AT(agent type) that is used to
 // 1. load variable from Lua
 // 2. store variable
 // 3. and push WT(wrap value) variable to Lua
 // usage: using t = xlb_vter::xlb_tir<T>::type
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_vter {
   template <typename X, typename Partial = xlb_djy> struct xlb_tir {};
 }; // xlb_vter
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // ignore this var, it's a special val such as self object
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <> struct xlb_vter::xlb_tir<xlb_ignore> {
   using vter = xlb_vter;
   using type = xlb_ignore;
@@ -2611,20 +2704,20 @@ template <> struct xlb_vter::xlb_tir<xlb_memblock> {
   using type = xlb_lmemblock<vter>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // type for result value that with xlt_rvtrait of function
 // that is constructor; constructor function return xlb_ctor_r<X>;
 // xlt_rvtrait means var is the result of function
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename X> struct xlb_vter::xlb_tir<xlt_rvtrait<xlb_ctor_r<X>>> {
   using vter = xlb_vter;
   using type = xlb_ctor_r<X>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // reference as pointer, and take it as pointer,
 // pass xlb_vter to help get more information about the pointer type.
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename X> struct xlb_vter::xlb_tir<xlt_rvtrait<X &>> {
   using vter = xlb_vter;
   using type = xlb_lpointer<vter, X *, X &, xlb_delete_t<X>>;
@@ -2667,7 +2760,7 @@ template <typename X> struct xlb_vter::xlb_tir<xlt_rvtrait<const X *const>> {
   using type = xlb_lpointer<vter, const X *const, const X *const, xlb_delete_t<X>>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <> struct xlb_vter::xlb_tir<void> {
   using vter = xlb_vter;
   using type = xlb_lstruct<vter, void>;
@@ -2678,20 +2771,21 @@ template <> struct xlb_vter::xlb_tir<void *> {
   using type = xlb_lpointer<vter, void *, void *, xlb_delete_t<void *>>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <> struct xlb_vter::xlb_tir<xlb_luafunc> {
   using vter = xlb_vter;
   using type = xlb_lfunc<vter>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // pointer and reference
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 template <typename T> struct xlb_vter::xlb_tir<T &> {
   using vter = xlb_vter;
-  using type = xlt_ifelse_t<std::is_array_v<T>, xlb_t<xlb_vter::xlb_tir<T>>,
-                            xlb_lpointer<vter, T *, T &, xlb_delete_t<T>>>;
+  using type = xlt_ifelse_t<
+      std::is_array_v<T>, xlb_t<xlb_vter::xlb_tir<T>>,
+      xlb_lpointer<vter, T *, T &, xlb_delete_t<T>>>;
 };
 
 template <typename T> struct xlb_vter::xlb_tir<T *> {
@@ -2709,17 +2803,17 @@ template <typename T> struct xlb_vter::xlb_tir<T *const> {
   using type = xlb_lpointer<vter, T *const, T *const, xlb_delete_t<T>>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // TCHAR array
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <int N, typename T> struct xlb_vter::xlb_tir<T[N]> {
   using vter = xlb_vter;
   using type = xlb_larray<vter, N, T>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // TODO: make it extend
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename, typename, typename> struct xlt_vter_query {};
 struct xlt_fit_floating {};
 struct xlt_fit_bool {};
@@ -2741,7 +2835,7 @@ template <typename T> struct xlt_cond_floating {
 };
 template <typename T> using xlt_cond_floating_t = typename xlt_cond_floating<T>::type;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Vt, typename X, typename COND>
 using xlt_vter_query_t = typename xlt_vter_query<Vt, X, COND>::type;
 
@@ -2763,7 +2857,7 @@ template <typename Vt, typename X> struct xlt_vter_query<Vt, X, xlt_fit_floating
   using type = xlb_lnumber<Vt, X>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename X> struct xlb_vter::xlb_tir<X> {
   using type = xlt_vter_query_t<xlb_vter, X, xlt_cond_floating_t<X>>;
 };
@@ -2773,43 +2867,27 @@ struct xlb_vter::xlb_tir<xlt_rvtrait<X>> {
   using type = xlt_vter_query_t<xlb_vter, X, xlt_cond_floating_t<X>>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // PO selector
-//------------------------------------------------------------------------------------------------
-template <typename T> struct xpo_vter_selector {
-  using type = T;
-};
-template <> struct xpo_vter_selector<void> {
-  using type = xlb_vter;
-};
+//--------------------------------------------------------------------------------------------------
+template <typename T> struct xpo_vter_selector { using type = T; };
+template <> struct xpo_vter_selector<void> { using type = xlb_vter; };
 
-template <typename T> struct xpo_dfer_selector {
-  using type = T;
-};
-template <> struct xpo_dfer_selector<void> {
-  using type = xlb_dfer;
-};
+template <typename T> struct xpo_dfer_selector { using type = T; };
+template <> struct xpo_dfer_selector<void> { using type = xlb_dfer; };
 
-template <typename T> struct xpo_rier_selector {
-  using type = T;
-};
-template <> struct xpo_rier_selector<void> {
-  using type = xlb_rier;
-};
+template <typename T> struct xpo_rier_selector { using type = T; };
+template <> struct xpo_rier_selector<void> { using type = xlb_rier; };
 
-template <typename T> struct xpo_readonly_selector {
-  using type = xpo_readonly;
-};
-template <> struct xpo_readonly_selector<void> {
-  using type = xpo_none;
-};
+template <typename T> struct xpo_readonly_selector { using type = xpo_readonly; };
+template <> struct xpo_readonly_selector<void> { using type = xpo_none; };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename BASE, template <typename> class SELECTOR, typename... PO> struct xlt_searchlist {
   using type = xlb_t<SELECTOR<xlt_getderived_t<BASE, xlt_typelist<PO...>>>>;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename... PO>
 using xpo_get_readonly =
     typename xlt_searchlist<xpo_base_readonly, xpo_readonly_selector, PO...>::type;
@@ -2823,9 +2901,9 @@ using xpo_get_default = typename xlt_searchlist<xpo_base_dfer, xpo_dfer_selector
 template <typename... PO>
 using xpo_get_rier = typename xlt_searchlist<xpo_base_rier, xpo_rier_selector, PO...>::type;
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //  xlb_selfobj
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename X, typename CONST_T> struct xlb_selfobj {
   template <typename TUP, typename AIs> XLB_SIV go(lua_State *L, TUP &tup, xlb_ami &ami, AIs &ais) {
     xlb_selfagent<const X>().getarg(L, ami);
@@ -2843,20 +2921,21 @@ template <> struct xlb_selfobj<void, false_type> {
   template <typename TUP, typename AIs> XLB_SIV go(lua_State *, TUP &tup, xlb_ami &, AIs &ais) {}
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_invoke
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_invoke {
-  template <typename R, bool, typename R_AT, typename Tx, bool, typename FT, typename Idx,
-            typename TYPELIST, typename R2L>
+  template <
+      typename R, bool, typename R_AT, typename Tx, bool, typename FT, typename Idx,
+      typename TYPELIST, typename R2L>
   struct xlb_tir {};
 };
 
 ///< for r pobj->f(...)
-template <typename R, typename R_AT, typename Tx, typename FT, typename... A, int... idxs,
-          typename R2L>
-struct xlb_invoke::xlb_tir<R, false, R_AT, Tx, false, FT, xlb_idx<idxs...>, xlt_typelist<A...>,
-                           R2L> {
+template <
+    typename R, typename R_AT, typename Tx, typename FT, typename... A, int... idxs, typename R2L>
+struct xlb_invoke::xlb_tir<
+    R, false, R_AT, Tx, false, FT, xlb_idx<idxs...>, xlt_typelist<A...>, R2L> {
   template <typename... Arg> XLB_SIV go(lua_State *L, xlb_ami &ami, FT f, std::tuple<Arg...> &tup) {
     // AT do not copy the arguments and so no std::move() used
     // xlb_debug("(%s)\n", typeid(R_AT).name());
@@ -2868,8 +2947,8 @@ struct xlb_invoke::xlb_tir<R, false, R_AT, Tx, false, FT, xlb_idx<idxs...>, xlt_
 
 ///< for void pobj->f(...)
 template <typename Tx, typename FT, typename... A, int... idxs, typename R2L>
-struct xlb_invoke::xlb_tir<void, true, xlt_rvtrait<void>, Tx, false, FT, xlb_idx<idxs...>,
-                           xlt_typelist<A...>, R2L> {
+struct xlb_invoke::xlb_tir<
+    void, true, xlt_rvtrait<void>, Tx, false, FT, xlb_idx<idxs...>, xlt_typelist<A...>, R2L> {
   template <typename... Arg> XLB_SIV go(lua_State *L, xlb_ami &ami, FT f, std::tuple<Arg...> &tup) {
     (reinterpret_cast<Tx *>(ami.obj)->*f)((A)std::get<idxs>(tup)...);
   }
@@ -2877,8 +2956,8 @@ struct xlb_invoke::xlb_tir<void, true, xlt_rvtrait<void>, Tx, false, FT, xlb_idx
 
 ///< for r f(...)
 template <typename R, typename R_AT, typename FT, typename... A, int... idxs, typename R2L>
-struct xlb_invoke::xlb_tir<R, false, R_AT, void, true, FT, xlb_idx<idxs...>, xlt_typelist<A...>,
-                           R2L> {
+struct xlb_invoke::xlb_tir<
+    R, false, R_AT, void, true, FT, xlb_idx<idxs...>, xlt_typelist<A...>, R2L> {
   template <typename... Arg> XLB_SIV go(lua_State *L, xlb_ami &ami, FT f, std::tuple<Arg...> &tup) {
     auto &&tmp_return = std::move(f((A)std::get<idxs>(tup)...));
 
@@ -2900,16 +2979,16 @@ struct xlb_invoke::xlb_tir<R, false, R_AT, void, true, FT, xlb_idx<idxs...>, xlt
 
 ///< for void f(...)
 template <typename FT, typename... A, int... idxs, typename R2L>
-struct xlb_invoke::xlb_tir<void, true, xlt_rvtrait<void>, void, true, FT, xlb_idx<idxs...>,
-                           xlt_typelist<A...>, R2L> {
+struct xlb_invoke::xlb_tir<
+    void, true, xlt_rvtrait<void>, void, true, FT, xlb_idx<idxs...>, xlt_typelist<A...>, R2L> {
   template <typename... Arg> XLB_SIV go(lua_State *L, xlb_ami &, FT f, std::tuple<Arg...> &tup) {
     f((A)std::get<idxs>(tup)...);
   }
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //  xlt_each_ovlfunc
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 template <lua_CFunction... fcandidate> struct xlt_call_ovl;
 
@@ -2936,7 +3015,7 @@ template <lua_CFunction f, lua_CFunction... fcandidate> struct xlt_call_ovl<f, f
 };
 
 using xlb_ovlfs_t = std::vector<lua_CFunction>;
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 static int xlb_ovlfsagent(lua_State *L) {
   auto p_fsv = xlb_aspointer<xlb_ovlfs_t *>(L, lua_upvalueindex(XLB_UPVALUE_1));
   assert(p_fsv);
@@ -2961,12 +3040,13 @@ static int xlb_ovlfsagent(lua_State *L) {
   return ami.rc;
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_cfunction
 // @brief overload function candidate
-//------------------------------------------------------------------------------------------------
-template <typename FT, FT f, typename Dft = xlb_dfer, typename rpi_po = xlb_rier,
-          typename R2L = xlb_rv2l, typename PTER = xlb_pushfrv, typename Vt = xlb_vter>
+//--------------------------------------------------------------------------------------------------
+template <
+    typename FT, FT f, typename Dft = xlb_dfer, typename rpi_po = xlb_rier, typename R2L = xlb_rv2l,
+    typename PTER = xlb_pushfrv, typename Vt = xlb_vter>
 int xlb_cfunction(lua_State *L) {
   using forge_t = xlb_typeforge<Vt, FT>;
   using tuple_t = typename forge_t::tuple_t;
@@ -3001,8 +3081,9 @@ int xlb_cfunction(lua_State *L) {
   }
 
   if (!xlb_ambad(ami)) {
-    xlb_invoke::template xlb_tir<rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>,
-                                 FT, idx_t, param_t, xlb_rv2l>::go(L, ami, f, tup);
+    xlb_invoke::template xlb_tir<
+        rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>, FT, idx_t, param_t,
+        xlb_rv2l>::go(L, ami, f, tup);
     PTER::template xlb_tir<rpi_po, tuple_t>::go(L, tup, ais, ami.rc);
   } else {
     if (ptr_ami.get() == nullptr) { // XXX: f is inner function
@@ -3015,10 +3096,10 @@ int xlb_cfunction(lua_State *L) {
   return ami.rc;
 } // xlb_cfunction
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_ovlfunction
 // @brief overload function
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <lua_CFunction f, lua_CFunction... fcandidate> int xlb_ovlfunction(lua_State *L) {
   xlb_ami ami(lua_gettop(L));
   xlt_call_ovl<f, fcandidate...>::go(L, ami);
@@ -3028,42 +3109,48 @@ template <lua_CFunction f, lua_CFunction... fcandidate> int xlb_ovlfunction(lua_
   return ami.rc;
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_fmate help to handle cf's upvalue such as function pointer
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 template <class FT> struct xlb_fmate : public xlb_base_func_ptr {
   using self_t = xlb_fmate;
   FT fpointer;
+  xlb_fmat_evthandler::ptr_t evtptr;
 
-  xlb_fmate(FT f = nullptr, onregistry_t callback = nullptr)
-      : xlb_base_func_ptr(callback), fpointer(f) {}
+  xlb_fmate(FT f = nullptr, xlb_fmat_evthandler *evt = nullptr) : fpointer(f) { evtptr.reset(evt); }
 
-  virtual int pushupvalue(lua_State *L) override {
+  virtual int pushupvalue(lua_State *L, xlb_fmat_evthandler *evt = nullptr) override {
     int rc{0};
-
     auto place = lua_newuserdata(L, sizeof(self_t));
-    new (place) self_t(fpointer); // XXX:wrap fpointer as upvalue
+    new (place) self_t(fpointer, evt); // XXX:wrap fpointer as upvalue
     ++rc;
-
-    if (nullptr != onRegistry) {
-      rc += onRegistry(L, this);
-    }
     return rc;
   }
 
-  FT topointer(lua_State *L, int index) {
+  static FT topointer(lua_State *L, int index) {
     auto p = lua_touserdata(L, lua_upvalueindex(index));
     auto fmat = reinterpret_cast<self_t *>(p);
     assert(fmat != nullptr);
+    if (fmat->fpointer == nullptr) {
+      if constexpr (!std::is_member_function_pointer_v<FT>) {
+        auto evth = fmat->evtptr.get();
+        if (evth) {
+          if (evth->on_getf) {
+            fmat->fpointer = reinterpret_cast<FT>(evth->on_getf(L, evth));
+          }
+        }
+      }
+      assert(fmat->fpointer);
+    }
     return fmat->fpointer;
   }
 
-  FT topointer() { return fpointer; }
+  // FT topointer() { return fpointer; }
 
-  XLB_SII newuserdata(lua_State *L, FT f) {
+  XLB_SII newuserdata(lua_State *L, FT f, xlb_fmat_evthandler::ptr_t &fevth) {
     auto place = lua_newuserdata(L, sizeof(self_t));
-    new (place) self_t(f); // XXX:wrap fpointer as upvalue
+    new (place) self_t(f, fevth.release()); // XXX:wrap fpointer as upvalue
     return {1};
   }
 
@@ -3071,10 +3158,10 @@ template <class FT> struct xlb_fmate : public xlb_base_func_ptr {
 
 }; // xlb_fmate
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_cbf
 // @brief call back function
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename FT, typename... PO> struct xlb_cbf {};
 
 template <typename R, typename... A, class... PO>
@@ -3127,7 +3214,7 @@ struct xlb_cbf<R(__stdcall *)(A...), PO...> : public xlb_base_cbcf {
 
 }; // xlb_cbf
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #ifndef _WIN64
 template <typename R, typename... A, class... PO>
 struct xlb_cbf<R (*)(A...), PO...> : public xlb_base_cbcf {
@@ -3182,10 +3269,10 @@ struct xlb_cbf<R (*)(A...), PO...> : public xlb_base_cbcf {
 
 #endif
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_f2cf_pure
 // @brief no upvalue for cfunction
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <auto f, class... PO> int xlb_f2cf_pure(lua_State *L) {
   using Vt = xpo_get_vter<PO...>;
   using Dft = xpo_get_default<PO...>;
@@ -3219,8 +3306,9 @@ template <auto f, class... PO> int xlb_f2cf_pure(lua_State *L) {
   }
 
   ami.rc = 0;
-  xlb_invoke::template xlb_tir<rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>, FT,
-                               idx_t, param_t, xlb_rv2l>::go(L, ami, f, tup);
+  xlb_invoke::template xlb_tir<
+      rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>, FT, idx_t, param_t,
+      xlb_rv2l>::go(L, ami, f, tup);
 
   xlb_pushfrv::template xlb_tir<rpi_po, tuple_t>::go(L, tup, ais, ami.rc);
   // xlb_debug("%d\n", ami.rc);
@@ -3228,7 +3316,7 @@ template <auto f, class... PO> int xlb_f2cf_pure(lua_State *L) {
 
 } // xlb_f2cf_pure
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_f2cf_ovlcand
 // @brief overload functions candidate
 //--------------------------------------------------------------------------------------------------
@@ -3271,8 +3359,9 @@ template <auto f, class... PO> int xlb_f2cf_ovlcand(lua_State *L) {
   }
 
   if (xlb_amgood(ami)) {
-    xlb_invoke::template xlb_tir<rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>,
-                                 FT, idx_t, param_t, xlb_rv2l>::go(L, ami, f, tup);
+    xlb_invoke::template xlb_tir<
+        rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>, FT, idx_t, param_t,
+        xlb_rv2l>::go(L, ami, f, tup);
     xlb_pushfrv::template xlb_tir<rpi_po, tuple_t>::go(L, tup, ais, ami.rc);
   } else {
     if (nullptr == ptr_ami.get()) { // f is inner function ( get xlb_ami upvalue )
@@ -3285,7 +3374,7 @@ template <auto f, class... PO> int xlb_f2cf_ovlcand(lua_State *L) {
 
 } // xlb_f2cf_ovlcand
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // @struct xlb_f2cf_upvalue
 // @brief with upvalue
 //--------------------------------------------------------------------------------------------------
@@ -3319,12 +3408,12 @@ template <class FT, /*FT f,*/ class... PO> int xlb_f2cf_upvalue(lua_State *L) {
     return luaL_argerror(L, ami.arg_index, ami.extmsg.c_str());
   }
 
-  xlb_fmate<FT> fpa;
-  auto f = fpa.topointer(L, XLB_UPVALUE_1);
+  auto f = xlb_fmate<FT>::topointer(L, XLB_UPVALUE_1);
 
   ami.rc = 0;
-  xlb_invoke::template xlb_tir<rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>, FT,
-                               idx_t, param_t, xlb_rv2l>::go(L, ami, f, tup);
+  xlb_invoke::template xlb_tir<
+      rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>, FT, idx_t, param_t,
+      xlb_rv2l>::go(L, ami, f, tup);
 
   xlb_pushfrv::template xlb_tir<rpi_po, tuple_t>::go(L, tup, ais, ami.rc);
   // xlb_debug("ami.rc=%d\n", ami.rc);
@@ -3332,26 +3421,28 @@ template <class FT, /*FT f,*/ class... PO> int xlb_f2cf_upvalue(lua_State *L) {
 
 } // xlb_f2cf_upvalue
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //  module namespace
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_module;
 struct xlb_ns;
 
+//--------------------------------------------------------------------------------------------------
 struct xlb_regitem {
   std::string name;
   xlb_regitem(const char *n = "") : name(n) {}
-  // virtual void registry(xlb_ns *ns) { }
+  // virtual void registry(xlb_ns *ns) {}
   virtual void registry(xlb_ns *ns) = 0;
 }; // xlb_regitem
 
+//--------------------------------------------------------------------------------------------------
 struct xlb_regchain : public std::vector<xlb_regitem *> {
   template <class... T> xlb_regchain(const T &...regitem) {
     xlt_each{(push_back((xlb_regitem *)&regitem), XLB_STATEMENT_VALUE)...};
   }
 }; // xlb_regchain
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_ns {
   lua_State *lua{nullptr};
   const char *table_name{(const char *)nullptr};
@@ -3359,12 +3450,14 @@ struct xlb_ns {
   int parentTableIndex = 0;
 }; // xlb_ns
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename FT, class... PO> struct xlb_function : public xlb_regitem {
   using rr_t = xlb_function &&;
   FT fpointer;
+  xlb_fmat_evthandler::ptr_t fevth;
 
-  xlb_function(const char *fn, FT f) : xlb_regitem(fn), fpointer(f) {}
+  xlb_function(const char *fn, FT f, xlb_fmat_evthandler *feh = nullptr)
+      : xlb_regitem(fn), fpointer(f), fevth(feh) {}
 
   virtual ~xlb_function() {}
 
@@ -3372,14 +3465,14 @@ template <typename FT, class... PO> struct xlb_function : public xlb_regitem {
     assert(ns);
     auto &L = ns->lua;
     lua_pushstring(L, name.c_str());
-    auto count_upvalue = xlb_fmate<FT>::newuserdata(L, fpointer);
+    auto count_upvalue = xlb_fmate<FT>::newuserdata(L, fpointer, fevth);
     lua_pushcclosure(L, xlb_f2cf_upvalue<FT, PO...>, count_upvalue);
     lua_rawset(L, ns->luaIndex);
   }
 
 }; // xlb_function
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_function_ovl : public xlb_regitem {
   using rr_t = xlb_function_ovl &&;
   xlb_ovlfs_t fs;
@@ -3401,7 +3494,7 @@ struct xlb_function_ovl : public xlb_regitem {
 
 }; // xlb_function_ovl
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_cf : public xlb_regitem {
   using rr_t = xlb_cf &&;
   lua_CFunction fpointer;
@@ -3419,18 +3512,25 @@ struct xlb_cf : public xlb_regitem {
 
 }; // xlb_cf
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename FT, typename... PO>
-auto xlb_f(const char *fn, FT f,
-           std::enable_if_t<std::is_function_v<std::remove_pointer_t<FT>>> * = 0) {
+auto xlb_f(
+    const char *fn, FT f, std::enable_if_t<std::is_function_v<std::remove_pointer_t<FT>>> * = 0) {
   return xlb_function<FT, PO...>(fn, f);
+}
+
+template <typename FT, typename... PO>
+auto xlb_f(
+    const char *fn, FT f, xlb_fmat_evthandler *evth,
+    std::enable_if_t<std::is_function_v<std::remove_pointer_t<FT>>> * = 0) {
+  return xlb_function<FT, PO...>(fn, f, evth);
 }
 
 static auto xlb_f(const char *fn, lua_CFunction f) { return xlb_cf(fn, f); }
 
 #define xlb_func(f) xlb_f(#f, f)
-//------------------------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------------------------
 template <typename Lambda> struct xlt_lambda {
   template <typename T> struct deduce_type {};
   template <typename R, typename obj_t, typename... A>
@@ -3441,13 +3541,14 @@ template <typename Lambda> struct xlt_lambda {
 };
 
 template <typename Lambda>
-auto xlb_f(const char *fn, Lambda lambda,
-           std::enable_if_t<!std::is_function_v<std::remove_pointer_t<Lambda>>> * = 0) {
+auto xlb_f(
+    const char *fn, Lambda lambda,
+    std::enable_if_t<!std::is_function_v<std::remove_pointer_t<Lambda>>> * = 0) {
   using lambda_ft = xlb_t<xlt_lambda<decltype(&Lambda::operator())>>;
   return xlb_function<lambda_ft>(fn, (lambda_ft)lambda);
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Lambda> static constexpr auto xlb_lambda2f(const Lambda &t) {
   using f_type = xlb_t<xlt_lambda<decltype(&Lambda::operator())>>;
   return (f_type)t;
@@ -3456,9 +3557,8 @@ template <typename Lambda> static constexpr auto xlb_lambda2f(const Lambda &t) {
 // static lua_CFunction xlb_magicf2cf_ovl( lua_CFunction f ) { return f; }
 
 template <typename Lambda>
-lua_CFunction
-xlb_magicf2cf_ovl(Lambda f,
-                  std::enable_if_t<!std::is_function_v<std::remove_pointer_t<Lambda>>> * = 0) {
+lua_CFunction xlb_magicf2cf_ovl(
+    Lambda f, std::enable_if_t<!std::is_function_v<std::remove_pointer_t<Lambda>>> * = 0) {
   return xlb_f2cf_ovlcand<xlb_lambda2f(f)>;
 }
 
@@ -3475,14 +3575,14 @@ auto xlb_f(const char *fn, F1 f1, F2 f2, Fs... fs) {
   return xlb_function_ovl(fn, std::move(v));
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename Lambda> struct xlt_lambda2cf_pure {
   static constexpr lua_CFunction cast(Lambda f) { return xlb_f2cf_pure<xlb_lambda2f(f)>; }
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_propgetter
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <class Pro_t> struct xlb_propforge {};
 
 template <class P, class Tx> struct xlb_propforge<P Tx::*> {
@@ -3517,8 +3617,9 @@ XLB_SIV xlb_pushprop(lua_State *L, Prop_t &prop, int &rc, xlf_prop vor) {
 } // xlb_pushprop
 
 template <class Prop_t, class... PO>
-int xlb_propgetter(lua_State *L, void *vmate,
-                   xlf_prop vor = xlf_prop::smart) { // t,k
+int xlb_propgetter(
+    lua_State *L, void *vmate,
+    xlf_prop vor = xlf_prop::smart) { // t,k
   auto rc{0};
   using Vt = xpo_get_vter<PO...>;
   using forge_t = xlb_propforge<Prop_t>;
@@ -3532,8 +3633,9 @@ int xlb_propgetter(lua_State *L, void *vmate,
 } // xlb_propgetter
 
 template <class Prop_t, class... PO>
-int xlb_propsetter(lua_State *L, void *vmate,
-                   xlf_prop vor = xlf_prop::byval) { // t,k,v
+int xlb_propsetter(
+    lua_State *L, void *vmate,
+    xlf_prop vor = xlf_prop::byval) { // t,k,v
   using Vt = xpo_get_vter<PO...>;
   using forge_t = xlb_propforge<Prop_t>;
   using obj_t = typename forge_t::obj_t;
@@ -3583,10 +3685,10 @@ int xlb_propsetter(lua_State *L, void *vmate,
   return 0;
 } // xlb_propsetter
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //  @struct xlb_property
 //  @brief property include function and member, read write flag
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 struct xlb_property : public xlb_base_property {
   using self_t = xlb_property;
@@ -3637,8 +3739,8 @@ struct xlb_property : public xlb_base_property {
 
 }; // xlb_property
 
-//------------------------------------------------------------------------------------------------
-#define XLB_BF3ARG(T, b) #b, [](T *obj) { return obj->b; }, [](T *obj, int64_t v) { obj->b = v; }
+//--------------------------------------------------------------------------------------------------
+#define XLB_BF3ARG(T, b) #b, [](T * obj) { return obj->b; }, [](T * obj, int64_t v) { obj->b = v; }
 
 struct xlb_bitfieldprop : public xlb_base_property {
   using self_t = xlb_bitfieldprop;
@@ -3680,7 +3782,7 @@ struct xlb_bitfieldprop : public xlb_base_property {
     return rc;
   }
 };
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_namespace : public xlb_ns, public xlb_regitem {
   xlb_regchain chain;
   xlb_namespace(const char *space_name = nullptr) : xlb_regitem(space_name) {
@@ -3708,7 +3810,7 @@ struct xlb_namespace : public xlb_ns, public xlb_regitem {
 
 }; // xlb_namespace
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_const : public xlb_regitem {
   uint32_t vtype;
   union {
@@ -3722,14 +3824,15 @@ struct xlb_const : public xlb_regitem {
   };
 
   template <class T>
-  xlb_const(const char *name, T v,
-            std::enable_if_t<std::is_integral_v<T> || std::is_enum_v<T>> * = 0)
+  xlb_const(
+      const char *name, T v, std::enable_if_t<std::is_integral_v<T> || std::is_enum_v<T>> * = 0)
       : xlb_regitem(name), cv(v), vtype(0) {}
   xlb_const(const char *name, const char *v) : xlb_regitem(name), vtype(1), cs(v) {}
   xlb_const(const char *name, const wchar_t *v) : xlb_regitem(name), vtype(2), wcs(v) {}
   template <class T>
-  xlb_const(const char *name, const T &v, unsigned len = sizeof(T),
-            std::enable_if_t<std::is_class_v<T>> * = 0)
+  xlb_const(
+      const char *name, const T &v, unsigned len = sizeof(T),
+      std::enable_if_t<std::is_class_v<T>> * = 0)
       : xlb_regitem(name), blk{&v, len}, vtype(3) {}
 
   virtual void registry(xlb_ns *parentNS) override {
@@ -3756,7 +3859,7 @@ struct xlb_const : public xlb_regitem {
   }
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T, typename Vt = xlb_vter> struct xlb_cref : public xlb_regitem {
   const T &cv;
 
@@ -3774,7 +3877,7 @@ template <typename T, typename Vt = xlb_vter> struct xlb_cref : public xlb_regit
   }
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 struct xlb_module : public xlb_ns, public xlb_regitem {
   xlb_module(lua_State *L, const char *table_name = nullptr, int pti = 0) {
     xlb_ns::table_name = table_name;
@@ -3829,7 +3932,7 @@ struct xlb_module : public xlb_ns, public xlb_regitem {
 
 }; // xlb_module
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //  xlb_base_class
 //--------------------------------------------------------------------------------------------------
 template <typename X> struct xlb_base_class : public xlb_regitem {
@@ -3843,7 +3946,7 @@ template <typename X> struct xlb_base_class : public xlb_regitem {
   inline static xlb_metas_t superNames{};
   inline static xlb_regs_t metaFuncs{};
   inline static xlb_regs_t typeTable{};
-  inline static xlb_classfuncs_t methodFuncs{};
+  inline static xlb_cfs_t upvalueFuncs{};
   inline static xlb_member_t memberMap{};
   inline static xlb_static_member_t staticmemberMap{};
 
@@ -3878,12 +3981,12 @@ template <typename X> struct xlb_base_class : public xlb_regitem {
       return luaL_argerror(L, ami.arg_index, ami.extmsg.c_str());
     }
 
-    xlb_fmate<FT> fpa;
-    auto f = fpa.topointer(L, XLB_UPVALUE_1);
+    auto f = xlb_fmate<FT>::topointer(L, XLB_UPVALUE_1);
 
     ami.rc = 0;
-    xlb_invoke::template xlb_tir<rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>,
-                                 FT, idx_t, param_t, xlb_rv2l>::go(L, ami, f, tup);
+    xlb_invoke::template xlb_tir<
+        rv_t, std::is_void_v<rv_t>, rv_at, obj_t, std::is_void_v<obj_t>, FT, idx_t, param_t,
+        xlb_rv2l>::go(L, ami, f, tup);
 
     xlb_pushfrv::template xlb_tir<rpi_po, tuple_t>::go(L, tup, ais, ami.rc);
     return ami.rc;
@@ -4044,8 +4147,9 @@ template <typename X> struct xlb_base_class : public xlb_regitem {
   }
 
   template <typename Reader_t, typename Writer_t>
-  rr_t property(const char prop_name[], Reader_t reader, Writer_t writer,
-                std::enable_if_t<std::is_class_v<std::remove_pointer_t<Reader_t>>> * = 0) {
+  rr_t property(
+      const char prop_name[], Reader_t reader, Writer_t writer,
+      std::enable_if_t<std::is_class_v<std::remove_pointer_t<Reader_t>>> * = 0) {
     memberMap[prop_name] = xlb_bitfieldprop::create(reader, writer);
     return std::move(*this);
   }
@@ -4059,7 +4163,7 @@ template <typename X> struct xlb_base_class : public xlb_regitem {
 
     // xlb_debug("(%s)\n", typeName);
     xlu_newtypelib(L, typeName, typeTable, staticmemberMap, xlb_sizeof<X>(), parentTableIndex);
-    xlu_newobjmeta(L, metaName, metaFuncs, methodFuncs, superNames);
+    xlu_newobjmeta(L, metaName, metaFuncs, upvalueFuncs, superNames);
 
     metaFuncs.clear();
     typeTable.clear();
@@ -4075,11 +4179,12 @@ template <typename X> struct xlb_base_class : public xlb_regitem {
     typeName = typeNameBuf.c_str();
   }
 
+  virtual void registry(xlb_ns *ns) override {}
 }; // xlb_base_class
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // xlb_class
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 template <typename T> struct xlb_class : public xlb_base_class<T> {
   using rr_t = xlb_class &&;
   using bc_t = xlb_base_class<T>;
@@ -4101,7 +4206,7 @@ template <typename T> struct xlb_class : public xlb_base_class<T> {
 
 }; // xlb_class
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 static int xlb_type(lua_State *L) {
   auto rc{1};
   if (auto wp = xlb_touserdata<xlb_base_wrap>(L, 1)) {
@@ -4145,25 +4250,33 @@ static int xlb_type(lua_State *L) {
   return rc;
 }
 
+//--------------------------------------------------------------------------------------------------
 static int xlb_pvtostring(lua_State *L) {
+  using pv_t = void *;
+  using lpointer_t = xlb_lpointer<xlb_vter, pv_t, pv_t, std::default_delete<pv_t>>;
   auto rc{1};
-  xlb_lpointer<xlb_vter, void *, void *, std::default_delete<void *>> lpointer;
+  lpointer_t lpointer;
   xlb_ami ami(lua_gettop(L));
+
   ami.arg_index = 1;
   lpointer.getarg(L, ami);
   if (xlb_ambad(ami)) {
     return luaL_argerror(L, ami.arg_index, ami.extmsg.c_str());
   }
   auto s{reinterpret_cast<const char *>(lpointer.pointer)};
-  auto len{(lua_isnumber(L, 2)) ? lua_tointeger(L, 2) : -1};
+  auto len{(lua_isinteger(L, 2)) ? lua_tointeger(L, 2) : -1};
   (len == -1) ? lua_pushstring(L, s) : lua_pushlstring(L, s, len);
   return rc;
 }
 
+//--------------------------------------------------------------------------------------------------
 static int xlb_pvtointeger(lua_State *L) {
+  using pv_t = void *;
+  using lpointer_t = xlb_lpointer<xlb_vter, pv_t, pv_t, std::default_delete<pv_t>>;
   auto rc{1};
-  xlb_lpointer<xlb_vter, void *, void *, std::default_delete<void *>> lpointer;
+  lpointer_t lpointer;
   xlb_ami ami(lua_gettop(L));
+
   ami.arg_index = 1;
   lpointer.getarg(L, ami);
   if (xlb_ambad(ami)) {
@@ -4191,7 +4304,7 @@ static int xlb_pvtointeger(lua_State *L) {
   return rc;
 }
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // custom data type
 // for string(char array) with len
 struct xlb_lstr {
@@ -4231,5 +4344,5 @@ template <> struct xlb_vter::xlb_tir<xlt_rvtrait<xlb_lstr>> {
   using type = xlb_lstr_agent_t;
 };
 
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 #endif //__XLB_H__
