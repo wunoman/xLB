@@ -101,15 +101,56 @@ xlb is another library for binding C++ to Lua. It depends on C++17, and it's jus
     ---b.nToPage=2
     ---b=(0x000001B028EA7720 : T)
 ```
++ LoadLibrary and GetProcAddress
+implement xlb_fmat_evthandler's getf and xlb_f(name, nullptr, Win32_libf::getf(...))
+```
+// for LoadLibrary GetProcAddress to get function pointer
+ struct Win32_libf {
+  struct Libf : public xlb_fmat_evthandler {
+    TCHAR *libn;
+    const char *funcn;
+    virtual ~Libf() {}
+  };
+
+  static xlb_fmat_evthandler *CreateFmatHandler(TCHAR* ln, const char* fn) {
+    auto h = new Libf();
+    h->libn = ln;
+    h->funcn = fn;
+    // h->on_registry = Win32_libf::register;
+    h->on_getf = Win32_libf::getf;
+    return h;
+  }
+
+  // static int registry(lua_State *L, xlb_fmat_evthandler *) { return 0; }
+  static void* getf(lua_State *L, xlb_fmat_evthandler *evth) { 
+    assert(evth);
+    auto libf = dynamic_cast<Libf*>(evth);
+    assert(libf);
+    assert(libf->libn);
+    assert(libf->funcn);
+    void* f = nullptr;
+    auto hlib = ::LoadLibrary(libf->libn);
+    assert(hlib!=NULL); //"fail to LoadLibrary"
+    f = ::GetProcAddress(hlib, libf->funcn);
+    assert(f!=NULL); // "fail to GetProcAddress"
+
+    return f;
+  }
+}; // Win32_libf
+
+```
+
                 
 ## Sample
 + bind Windows API to Lua ( BASE, MESSAGE, GUI, Dialog and SNMP )
 
 ## History
+- 20230714 add some function to support char* to wchar_t* utf_8
+- 20230714 allow delay get function pointer for LoadLibray and GetProcAddress
+- 20230714 accept nil as nullptr and push nullptr as nil
 - 20230521 bind C style library with xlb_class, method, constructor, destructor
 - 20230521 bind boolean with AT xlb_lboolean
 - 20230521 custom data type xlb_lstr AT for string with length just like lua's string type
 
 ## License
 + Licensed under the [MIT License](https://www.lua.org/license.html).
-
