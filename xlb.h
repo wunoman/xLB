@@ -3523,6 +3523,7 @@ template <typename FT, typename... PO>
 auto xlb_f(
     const char *fn, FT f, xlb_fmat_evthandler *evth,
     std::enable_if_t<std::is_function_v<std::remove_pointer_t<FT>>> * = 0) {
+  static_assert(!std::is_member_function_pointer_v<FT>);
   return xlb_function<FT, PO...>(fn, f, evth);
 }
 
