@@ -1,6 +1,6 @@
 <img src="https://www.lua.org/images/logo.gif" />
 
-# xLB ( ver 0.0.1 )
+# xLB ( ver 0.0.2 )
 xlb is another library for binding C++ to Lua. It depends on C++17, and it's just one header file.
 
 ## Features
@@ -81,7 +81,7 @@ xlb is another library for binding C++ to Lua. It depends on C++17, and it's jus
         print('---sizeof PRINTPAGERANGE=' .. luawin.PRINTPAGERANGE.typesize)
         local a = luawin.malloc(luawin.PRINTPAGERANGE.typesize)
         print('---a=' .. luawin.type(a))
-        local b = luawin.PRINTPAGERANGE:newin(a)
+        local b = luawin.PRINTPAGERANGE:newinplace(a)
         b.nFromPage = 1
         b.nToPage = 2
         print('---b.nFromPage=' .. b.nFromPage)
@@ -142,10 +142,10 @@ implement xlb_fmat_evthandler's getf and xlb_f(name, nullptr, Win32_libf::getf(.
 
                 
 ## Sample
-+ bind Windows API to Lua ( BASE, MESSAGE, GUI, Dialog and SNMP )
++ bind Windows API to Lua ( BASE, MESSAGE, GUI, Dialog and SNMP, ... )
 
 ## History
-- 20230714 add some function to support char* to wchar_t* utf_8
+- 20230714 add some function(a2w,a2u,...) to support convert char* to wchar_t* utf_8
 - 20230714 allow delay get function pointer for LoadLibray and GetProcAddress
 - 20230714 accept nil as nullptr and push nullptr as nil
 - 20230521 bind C style library with xlb_class, method, constructor, destructor
